@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class JobPermitFile extends Model
+{
+
+    protected $fillable = [
+        'job_id',
+        'permit_file_name',
+        'permit_file',
+        'company_id',
+    ];
+
+    protected $casts = [
+        'permit_file_name' => 'array',
+        'permit_file' => 'array',
+    ];
+
+    public function job(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Job::class);
+    }
+
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+}
