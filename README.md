@@ -1,4 +1,4 @@
-## Andrus
+## US Aetos Property Management
 
 This is a traditional Laravel + Vite + Inertia App
 
