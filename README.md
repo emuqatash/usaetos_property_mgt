@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Andrus
 
 This is a traditional Laravel + Vite + Inertia App
@@ -16,3 +17,6 @@ This is a traditional Laravel + Vite + Inertia App
 _If the app is not accessible via the Vite url, you can run this in an additional terminal:_
 
 `php artisan serve`
+=======
+# usaetos_property_mgt
+>>>>>>> origin/main
