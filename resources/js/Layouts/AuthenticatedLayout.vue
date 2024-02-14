@@ -5,7 +5,7 @@
                 <div class="flex items-center col-span-7 sm:col-span-1 xl:col-span-2">
                     <Link :href="route('dashboard')" class="flex items-center ">
                         <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800 mr-2" />
-                        <div class="hidden xl:block text-lg font-semibold">Andrus Brothers Roofing</div>
+                        <div class="hidden xl:block text-lg font-semibold">Usaetos Property Management</div>
                      </Link>
                 </div>
                 <div class="hidden sm:flex sm:col-span-5 xl:col-span-4 justify-center  overflow-x-auto">
