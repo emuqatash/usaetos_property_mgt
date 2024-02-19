@@ -2,15 +2,16 @@
     <AuthenticatedLayout :sub-menu="'SETTINGS'">
         <!-- Modal -->
         <AppModal :modalActive="modalActive">
-            <form @submit.prevent="validateRequest">
+            <div class="overflow-y-auto h-screen md:h-auto">
+            <form @submit.prevent="submit">
                 <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                     {{ form.progress.percentage }}%
                 </progress>
                 <div class="lg:flex">
                     <div class="p-7 relative border-b border-gray-100 space-y-4">
-                        <p class=" text-xl font-semibold mb-6">Create Contact</p>
+                        <p class=" text-xl font-semibold mb-6">Create Tenant</p>
 
-                        <div class="flex gap-2">
+                        <div class="lg:flex gap-2">
                             <div>
                                 <Editable type="text"
                                           label="First Name"
@@ -29,16 +30,28 @@
                                     required/>
                             </div>
                         </div>
-                        <div class="flex gap-2">
+
+                        <div class="lg:flex gap-2">
                             <div>
                                 <Editable
                                     type="text"
-                                    label="Phone Number"
-                                    :input-value="form.phone_number"
-                                    @update:value="form.phone_number = $event"
-                                    :error="form.errors.phone_number"
+                                    label="Phone Number 1"
+                                    :input-value="form.phone_number_1"
+                                    @update:value="form.phone_number_1 = $event"
+                                    :error="form.errors.phone_number_1"
                                     required/>
                             </div>
+                            <div>
+                                <Editable
+                                    type="text"
+                                    label="Phone Number 2"
+                                    :input-value="form.phone_number_2"
+                                    @update:value="form.phone_number_2 = $event"
+                                    :error="form.errors.phone_number_2"
+                                    />
+                            </div>
+                        </div>
+                        <div class="lg:flex gap-2">
                             <div>
                                 <Editable
                                     type="text"
@@ -48,15 +61,15 @@
                                     :error="form.errors.email"
                                     required/>
                             </div>
-                        </div>
-                        <div>
-                            <Editable
-                                type="text"
-                                label="Address"
-                                :input-value="form.address"
-                                @update:value="form.address = $event"
-                                :error="form.errors.address"
-                                required/>
+                            <div>
+                                <Editable
+                                    type="text"
+                                    label="Document ID"
+                                    :input-value="form.document_id"
+                                    @update:value="form.document_id = $event"
+                                    :error="form.errors.document_id"
+                                    required/>
+                            </div>
                         </div>
                         <div>
                             <label for="State" class="labelClass">
@@ -74,6 +87,15 @@
                             />
                             <div v-if="form.errors.state_id" v-text="form.errors.state_id"
                                  class="text-red-500 text-xs mt-1"></div>
+                        </div>
+                        <div>
+                            <Editable
+                                type="text"
+                                label="Address"
+                                :input-value="form.address"
+                                @update:value="form.address = $event"
+                                :error="form.errors.address"
+                                required/>
                         </div>
                         <div class="flex gap-2">
                             <div>
@@ -97,7 +119,7 @@
                         </div>
                         <!-- Radio-->
                         <div class=" mb-4">
-                            <p class="mt-4 text-md">Contact Type</p>
+                            <p :class="labelClass">Tenant Type</p>
                             <div class="md:flex md:space-x-6 mt-4">
                                 <div v-for="contactType in contactTypes" :key="contactType.id"
                                      class="flex items-center">
@@ -115,27 +137,65 @@
                             <div v-if="form.errors.contact_type_id" v-text="form.errors.contact_type_id"
                                  class="text-red-500 text-xs mt-1"></div>
                         </div>
-                    </div>
-                    <!--photo-->
-                    <div class="p-16 flex flex-col place-items-center ">
-                        <div>
-                            <UserIcon v-if="!url" class="rounded-full bg-gray-400 text-gray-50 p-2 w-32 h-32"/>
-                            <img v-if="url" :src="url" alt="Preview" class="rounded-full p-2 w-36 h-36"/>
-                        </div>
-                        <div class="p-8">
-                            <AppButton class="px-8 py-2.5" onclick="document.getElementById('getFile').click()">
-                                Add photo
-                            </AppButton>
-                            <input
-                                type='file'
-                                name="image"
-                                id="getFile"
-                                style="display:none"
-                                @change="onFileChange"
-                            />
+                        <div class="w-full">
+                            <Editable
+                                type="textarea"
+                                label="Remarks"
+                                :input-value="form.remarks"
+                                @update:value="form.remarks = $event"
+                                :error="form.errors.remarks"
+                                />
                         </div>
                     </div>
+
+
+                    <!--Upload attachments-->
+                    <div class="space-y-2 lg:pt-20">
+                        <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
+                        <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
+                            <div
+                                class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-20 py-10">
+                                <div class="text-center ">
+                                    <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
+                                    <div id="app" class="z-10">
+                                        <ul>
+                                            <li v-for="(file,index) in attachmentFileList" :key="file.id">
+                                                <a
+                                                    :href="getFileURL(file.attachment_file)" target="_blank">
+                                                    {{ file.attachment_file_name }}
+                                                </a>
+                                                <button @click="removeAttachmentFile(index, file.id)"
+                                                        class="text-red-500">- remove
+                                                </button>
+                                            </li>
+                                        </ul>
+                                        <file-upload
+                                            input-id="attachment-file"
+                                            :multiple="true"
+                                            @input-file="inputAttachmentFile"
+                                            @input-filter="inputFilter"
+                                            ref="uploadAttachment"
+                                            v-model="attachmentFileModel"
+                                            drop
+                                            :drop-directory="true"
+                                        >
+                                            <div
+                                                class="mt-4 flex text-sm leading-6 text-gray-600"
+                                            >
+                                                <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                                <p class="pl-1 mt-4">or drag and drop</p>
+                                            </div>
+                                        </file-upload>
+                                        <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+
                 <!--Buttons-->
                 <div class="p-8 flex justify-around md:justify-start gap-2 bg-gray-50">
                     <div>
@@ -145,19 +205,14 @@
                         </LoadingButton>
                     </div>
                     <div>
-                        <SecondaryButton @click="showContactList">
+                        <SecondaryButton @click="showTenantList">
                             Cancel
                         </SecondaryButton>
                     </div>
                 </div>
             </form>
+            </div>
         </AppModal>
-
-        <!---- View On duplicate first name, last name and phone number-->
-        <div>
-            <Show v-if="duplicateError" :contact="form" :selectedState="selectedState" :url="url"
-                  :selectedContactType="selectedContactType" @submit-form="submit" @cancel="handleCancel"/>
-        </div>
     </AuthenticatedLayout>
 </template>
 
@@ -167,84 +222,113 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import Editable from "@/Components/Editable.vue";
 import {useForm, router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
-import AppButton from "@/Components/AppButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {UserIcon} from '@heroicons/vue/solid';
+import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
-import Show from "@/Pages/Contact/Show.vue";
-
-const modalActive = ref(true)
-const isLoading = ref(false);
-const url = ref('');
-const selectedState = ref([]);
-const selectedImage = ref(null);
-const duplicateError = ref(null);
-const selectedContactType = ref([]);
 
 let props = defineProps({
+    contact: Object,
     states: Object,
     contactTypes: Object,
 })
 
+const modalActive = ref(true)
+const isLoading = ref(false);
+const selectedState = ref([]);
+
 let form = useForm({
-    'first_name': '',
-    'last_name': '',
-    'contact_type_id': '',
-    'phone_number': '',
-    'email': '',
-    'address': '',
-    'city': '',
-    'state_id': '',
-    'zip': '',
-    'profile_photo_path': '',
-    'image': '',
+    'id': props.contact ? props.contact.id : '',
+    'first_name': props.contact ? props.contact.first_name : '',
+    'last_name': props.contact ? props.contact.last_name : '',
+    'contact_type_id': props.contact ? props.contact.contact_type_id : '',
+    'phone_number_1': props.contact ? props.contact.phone_number_1 : '',
+    'phone_number_2': props.contact ? props.contact.phone_number_2 : '',
+    'email': props.contact ? props.contact.email : '',
+    'address': props.contact ? props.contact.email : '',
+    'city': props.contact ? props.contact.city : '',
+    'state_id': props.contact ? props.contact.state_id : '',
+    'zip': props.contact ? props.contact.zip : '',
+    'document_id': props.contact ? props.contact.document_id : '',
+    'profile_photo_path': props.contact ? props.contact.profile_photo_path : '',
+    'remarks': props.contact ? props.contact.remarks : '',
+    'image': props.contact ? props.contact.image : '',
+    'attachment_file_name': props.contact ? props.contact.contact_attachment_files : [],
+    'attachment_file': props.contact ? props.contact.attachment_file : '',
+    'attachmentFiles': props.contact ? props.contact.attachmentFiles : '',
 })
 
-let validateRequest = () => {
-    form.image = selectedImage.value
-    form.post(route('contacts.validateRequest'), {
-        onStart: () => {
-            isLoading.value = true
-        },
-        onError: () => {
-            if (Object.keys(form.errors).length === 1 && form.errors['first_name'] === 'Duplicate first, last name and phone number') {
-                if (form.contact_type_id) {
-                    selectedContactType.value = props.contactTypes.find(e => e.id === form.contact_type_id)
-                }
-                form.image = selectedImage.value
-                duplicateError.value = true
-            }
-            isLoading.value = false
-        },
-        onSuccess: () => {
-            form.clearErrors()
-            form.post(route('contacts.store'))
-        },
+// handle upload attachment files
+const inputFilter = (newFile, oldFile, prevent) => {
+    if (newFile && !oldFile) {
+        const MAX_FILE_SIZE_MB = 10
+        const fileSizeMB = newFile.size / (1024 * 1024);
+        if (!/\.(jpeg|jpe|jpg|gif|png|pdf|webp)$/i.test(newFile.name)) {
+            alert('File type must be jpeg, jpe, jpg, gif, pdf, png or webp');
+            return prevent();
+        }
+        if (fileSizeMB > MAX_FILE_SIZE_MB) {
+            alert('File size should not be more than ' + MAX_FILE_SIZE_MB + ' MB');
+            return prevent();
+        }
+    }
+}
+
+const attachmentFileList = ref([])
+attachmentFileList.value = form?.attachment_file_name
+const attachmentFileModel = ref([])
+
+const getFileURL = (url) => {
+    return url.startsWith('blob')? url : `/storage/${url.slice(7)}`
+}
+
+const inputAttachmentFile = () => {
+    form.attachmentFiles = attachmentFileModel.value.map(file => file.file)
+    for (let i = 0; i < attachmentFileModel.value.length;i++){
+        if(!attachmentFileList.value.find(file=> file.id ===attachmentFileModel.value[i].id)){
+            const file =attachmentFileModel.value[i];
+            attachmentFileList.value.push({
+                id: file.id,
+                attachment_file_name: file.name,
+                attachment_file: URL.createObjectURL(file.file)
+            });
+        }
+    }
+}
+const removeAttachmentFile = (index, attachmentFileId) => {
+    attachmentFileList.value.splice(index, 1)
+    attachmentFileModel.value.splice(attachmentFileModel.value.findIndex(file => file.id === attachmentFileId), 1)
+    form.attachmentFiles = attachmentFileModel.value.map(file => file.file)
+    form.delete(route('contact-attachment-files.destroy', attachmentFileId), {
+        preserveScroll: true,
     })
 }
 
 let submit = () => {
-    form.clearErrors()
-    form.image = selectedImage.value
-    form.post(route('contacts.store'))
+    form.post(route('contacts.store'), {
+        onStart: () => {
+            isLoading.value = true
+        },
+        onError: () => {
+            isLoading.value = false
+        },
+        onSuccess: () => {
+            form.clearErrors()
+        },
+    })
 }
-const showContactList = () => {
+
+const showTenantList = () => {
     router.get(route('contacts.index'))
 }
 
+selectedState.value = props.states.find(e => e.id === form.state_id)
 watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;
 });
 
-const onFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        selectedImage.value = file;
-        url.value = URL.createObjectURL(file);
-    }
-};
-const handleCancel = () => {
-    duplicateError.value = false;
-}
+const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
+const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
+    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
+    'hover:text-indigo-500')
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

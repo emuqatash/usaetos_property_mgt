@@ -10,10 +10,12 @@ use Pest\Arch\Options\LayerOptions;
 use Pest\Arch\Repositories\ObjectsRepository;
 use Pest\Arch\Support\AssertLocker;
 use Pest\Arch\Support\Composer;
+use Pest\Arch\Support\PhpCoreExpressions;
 use Pest\Arch\ValueObjects\Dependency;
 use Pest\Arch\ValueObjects\Targets;
 use Pest\Arch\ValueObjects\Violation;
 use Pest\TestSuite;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use PHPUnit\Architecture\ArchitectureAsserts;
 use PHPUnit\Architecture\Elements\ObjectDescription;
@@ -63,7 +65,7 @@ final class Blueprint
         AssertLocker::incrementAndLock();
 
         foreach ($this->target->value as $targetValue) {
-            $targetLayer = $this->layerFactory->make($options, $targetValue);
+            $targetLayer = $this->layerFactory->make($options, $targetValue, false);
 
             foreach ($this->dependencies->values as $dependency) {
                 $dependencyLayer = $this->layerFactory->make($options, $dependency->value);
@@ -164,7 +166,7 @@ final class Blueprint
         AssertLocker::incrementAndLock();
 
         foreach (Composer::userNamespaces() as $namespace) {
-            $namespaceLayer = $this->layerFactory->make($options, $namespace);
+            $namespaceLayer = $this->layerFactory->make($options, $namespace, false);
 
             foreach ($this->dependencies->values as $dependency) {
                 $namespaceLayer = $namespaceLayer->excludeByNameStart($dependency->value);
@@ -227,14 +229,20 @@ final class Blueprint
         /** @var ObjectDescription $dependOnObject */
         $dependOnObject = array_pop($dependOnObjects);
 
-        $names = ServiceContainer::$nodeFinder->findInstanceOf(
+        $class = PhpCoreExpressions::getClass($target) ?? Name::class;
+
+        $nodes = ServiceContainer::$nodeFinder->findInstanceOf(
             $dependOnObject->stmts,
-            Name::class,
+            $class,
         );
 
-        /** @var array<int, Name> $names */
+        /** @var array<int, Name|Expr> $nodes */
         $names = array_values(array_filter(
-            $names, static fn (Name $name): bool => $name->toString() === $target, // @phpstan-ignore-line
+            $nodes, static function ($node) use ($target): bool {
+                $name = $node instanceof Name ? $node->toString() : PhpCoreExpressions::getName($node);
+
+                return $name === $target;
+            }
         ));
 
         if ($names === []) {

@@ -24,7 +24,7 @@ class StoreContactRequest extends FormRequest
                     $exists = DB::table('contacts')
                         ->where('first_name', $this->input('first_name'))
                         ->where('last_name', $this->input('last_name'))
-                        ->where('phone_number', $this->input('phone_number'))
+                        ->where('phone_number_1', $this->input('phone_number_1'))
                         ->where('id', '!=', $this->input('id'))
                         ->exists();
                     if ($exists) {
@@ -33,7 +33,7 @@ class StoreContactRequest extends FormRequest
                 },
             ],
             'last_name' => 'required',
-            'phone_number' => 'required',
+            'phone_number_1' => 'required',
             'email' => ['required', 'email'],
             'address' => 'required',
             'city' => 'required',

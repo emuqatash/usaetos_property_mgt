@@ -8,6 +8,7 @@ use App\Models\State;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreContactRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ContactController extends Controller
 {
@@ -16,8 +17,8 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia('Contact/Index', [
-            'contact' => Contact::query()
+        $contacts = Cache::remember('articles', 60, function () use ($request) {
+            return Contact::query()
                 ->with('contactType')
                 ->with('state')
                 ->with('company')
@@ -33,23 +34,33 @@ class ContactController extends Controller
                     'first_name' => $contact->first_name,
                     'last_name' => $contact->last_name,
                     'contact_type_name' => $contact->contactType->name,
-                    'phone_number' => $contact->phone_number,
+                    'phone_number_1' => $contact->phone_number_1,
+                    'phone_number_2' => $contact->phone_number_2,
                     'email' => $contact->email,
                     'address' => $contact->address,
                     'city' => $contact->city,
                     'state_name' => $contact->state->name,
                     'zip' => $contact->zip,
+                    'document_id' => $contact->document_id,
                     'company_name' => $contact->company->name,
                     'profile_photo_path' => $contact->profile_photo_path,
-                ]),
+                    'remarks' => $contact->remarks,
+                ]);
+        });
+
+        return Inertia('Contact/Index', [
+            'contact' => $contacts,
             'filters' => $request->only(['search']),
-            'selectedContactId' => (int) $request->input('selectedContactId'),
+            'selectedContactId' => (int)$request->input('selectedContactId'),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Returns all 500 without Caching
+//    public function allWithoutCache()
+//    {
+//        return Contact::all();
+//    }
+
     public function create()
     {
         $states = State::all();
@@ -57,30 +68,29 @@ class ContactController extends Controller
         return Inertia('Contact/Create', compact('states', 'contactTypes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    public function validateRequest(StoreContactRequest $request)
+    public function store(StoreContactRequest $request)
     {
-        $request->validated();
-    }
+        $contact = $request->all();
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->all();
-        if ($request->hasFile('image')) {
-            $fileName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->storeAs('public/contact_images', $fileName);
-            $validatedData['profile_photo_path'] = 'contact_images/'.$fileName;
-        }
         if ($request->input('id') > 0) {
+            $contact_data = $request->all();
             $contact = Contact::find($request->input('id'));
-            $contact->profile_photo_path = $validatedData['profile_photo_path'] ?? $contact->profile_photo_path;
-            $contact->update($validatedData);
+            $contact->update($contact_data);
         } else {
-            $validatedData['company_id'] = Auth::user()->company_id;
-            $contact = Contact::create($validatedData);
+            $contact['company_id'] = Auth::user()->company_id;
+            $contact = Contact::create($contact);
+        }
+
+        if ($request->hasfile('attachmentFiles')) {
+            foreach ($request->file('attachmentFiles') as $file) {
+                $attachmentFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.' . $file->getClientOriginalExtension();
+                $attachmentFilePath = $file->storeAs('public/contact_attachment_files', $attachmentFileName);
+                $contact->contactAttachmentFiles()->create([
+                    'company_id' => Auth::user()->company_id,
+                    'attachment_file_name' => $attachmentFileName,
+                    'attachment_file' => $attachmentFilePath,
+                ]);
+            }
         }
         return redirect()->route('contacts.index', ['selectedContactId' => $contact->id]);
     }
@@ -98,12 +108,16 @@ class ContactController extends Controller
 
     public function edit(Contact $contact)
     {
+        $contact = Contact::where('id', $contact->id)
+            ->with('contactAttachmentFiles')
+            ->with('state')
+            ->first();
         $states = State::all();
         $contactTypes = ContactType::all();
-        return Inertia('Contact/Edit', [
+        return Inertia('Contact/Create', [
             'contact' => $contact,
             'states' => $states,
-            'contactTypes' => $contactTypes,
+            'contactTypes' => $contactTypes
         ]);
     }
 }

@@ -237,11 +237,11 @@ final class WrapperRunner implements RunnerInterface
 
     private function destroyWorker(int $token): void
     {
-        // Mutation Testing tells us that the following `unset()` already destroys
-        // the `WrapperWorker`, which destroys the Symfony's `Process`, which
-        // automatically calls `Process::stop` within `Process::__destruct()`.
-        // But we prefer to have an explicit stops.
         $this->workers[$token]->stop();
+        // We need to wait for ApplicationForWrapperWorker::end to end
+        while ($this->workers[$token]->isRunning()) {
+            usleep(self::CYCLE_SLEEP);
+        }
 
         unset($this->workers[$token]);
     }
@@ -280,6 +280,7 @@ final class WrapperRunner implements RunnerInterface
                 array_merge_recursive($testResultSum->phpDeprecations(), $testResult->phpDeprecations()),
                 array_merge_recursive($testResultSum->phpNotices(), $testResult->phpNotices()),
                 array_merge_recursive($testResultSum->phpWarnings(), $testResult->phpWarnings()),
+                $testResultSum->numberOfIssuesIgnoredByBaseline() + $testResult->numberOfIssuesIgnoredByBaseline(),
             );
         }
 

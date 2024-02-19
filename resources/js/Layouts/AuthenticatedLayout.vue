@@ -11,9 +11,9 @@
                 <div class="hidden sm:flex sm:col-span-5 xl:col-span-4 justify-center  overflow-x-auto">
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-6">
+                            <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Contracts</Link>
                             <Link :href="route('jobs.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Jobs</Link>
                             <Link :href="route('estimates.drafts')" :class="[$page.url.startsWith('/estimates') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Estimates</Link>
-                            <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Contracts</Link>
                             <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>
                             <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>
                             <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Supply</Link>
@@ -26,10 +26,10 @@
                         @click="showContact()"
                     >
                         <UserAddIcon  class="w-6 lg:h-5 section-button-icon xl:mr-2" />
-                        Contacts
+                        Tenants
                     </AppButton>
                     <Link :href="route('settings.profile')" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-500">
-                        <span class="font-medium leading-none text-white">BH</span>
+                        <span class="font-medium leading-none text-white">{{ userInitials }}</span>
                     </Link>
                     <div class="flex items-center sm:hidden">
                         <!-- Mobile menu button-->
@@ -50,22 +50,22 @@
             </nav>
             <div v-if="showMobileMenu" class="flex sm:hidden bg-gray-100 px-8" id="mobile-menu">
                 <div class="space-y-1 py-4 w-full">
+                    <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contracts</Link>
                     <Link :href="route('jobs.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Jobs</Link>
                     <Link :href="route('estimates.drafts')" :class="[$page.url.startsWith('/estimates') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Estimates</Link>
-                    <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contracts</Link>
                     <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Invoices</Link>
                     <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">PO</Link>
                     <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Supply</Link>
-                    <a href="#" class="block text-black hover:bg-gray-100 hover:text-gray-800 rounded-md px-3 py-2 text-base font-medium" @click="showContact()">Contacts</a>
+                    <a href="#" class="block text-black hover:bg-gray-100 hover:text-gray-800 rounded-md px-3 py-2 text-base font-medium" @click="showContact()">Tenants</a>
                     <Link :href="route('settings.profile')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Profile</Link>
                 </div>
             </div>
             <div class="bg-white grid grid-cols-8 py-4 px-8 sm:min-h-screen sm:mt-4">
                 <div class="flex flex-col col-span-8 sm:col-span-2 mb-16 sm:mb-4">
+                    <contracts-side-menu v-if="props.subMenu === 'CONTRACTS'" />
                     <settings-side-menu v-if="props.subMenu === 'SETTINGS'" />
                     <jobs-side-menu v-if="props.subMenu === 'JOBS'" />
                     <estimates-side-menu v-if="props.subMenu === 'ESTIMATES'" />
-                    <contracts-side-menu v-if="props.subMenu === 'CONTRACTS'" />
                     <invoices-side-menu v-if="props.subMenu === 'INVOICES'" />
                     <purchase-orders-side-menu v-if="props.subMenu === 'PURCHASE_ORDERS'" />
                     <supply-side-menu v-if="props.subMenu === 'SUPPLY'" />
@@ -85,20 +85,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import ApplicationLogo from '@/Components/ApplicationLogo.vue'
-import {Link, router} from '@inertiajs/vue3'
-import SettingsSideMenu from '@/Components/SideMenus/SettingsSideMenu.vue'
-import JobsSideMenu from '@/Components/SideMenus/JobsSideMenu.vue'
-import EstimatesSideMenu from '@/Components/SideMenus/EstimatesSideMenu.vue'
-import ContractsSideMenu from '@/Components/SideMenus/ContractsSideMenu.vue'
-import InvoicesSideMenu from '@/Components/SideMenus/InvoicesSideMenu.vue'
-import PurchaseOrdersSideMenu from '@/Components/SideMenus/PurchaseOrdersSideMenu.vue'
-import SupplySideMenu from '@/Components/SideMenus/SupplySideMenu.vue'
+import {ref,computed} from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import {Link, router, usePage} from '@inertiajs/vue3';
+import SettingsSideMenu from '@/Components/SideMenus/SettingsSideMenu.vue';
+import JobsSideMenu from '@/Components/SideMenus/JobsSideMenu.vue';
+import EstimatesSideMenu from '@/Components/SideMenus/EstimatesSideMenu.vue';
+import ContractsSideMenu from '@/Components/SideMenus/ContractsSideMenu.vue';
+import InvoicesSideMenu from '@/Components/SideMenus/InvoicesSideMenu.vue';
+import PurchaseOrdersSideMenu from '@/Components/SideMenus/PurchaseOrdersSideMenu.vue';
+import SupplySideMenu from '@/Components/SideMenus/SupplySideMenu.vue';
 import AppButton from "@/Components/AppButton.vue";
 import { UserAddIcon } from "@heroicons/vue/solid/esm";
-const showMobileMenu = ref(false)
 
+const showMobileMenu = ref(false)
+const page = usePage()
 
 const props = defineProps({
     subMenu: {
@@ -107,6 +108,18 @@ const props = defineProps({
         required: true
     },
     errors: Object,
+})
+
+let userInitials = computed(() => {
+    if (page.props.user && page.props.user.name) {
+        let nameParts = page.props.user.name.split(' ')
+        let initials = nameParts[0].slice(0, 1)
+        if (nameParts.length > 1) {
+            initials += nameParts[nameParts.length - 1].slice(0, 1)
+        }
+        return initials.toUpperCase()
+    }
+    return 'PM' // default value
 })
 
 const showContact = () => {

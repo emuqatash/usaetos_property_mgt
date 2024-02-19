@@ -13,14 +13,18 @@ class Contact extends Model
         'first_name',
         'last_name',
         'contact_type_id',
-        'phone_number',
+        'phone_number_1',
+        'phone_number_2',
         'email',
         'address',
         'city',
         'state_id',
         'zip',
-        'company_id',
+        'document_id',
         'profile_photo_path',
+        'remarks',
+        'company_id',
+        'active',
     ];
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -41,5 +45,10 @@ class Contact extends Model
     public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Job::class);
+    }
+
+    public function contactAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ContactAttachmentFile::class);
     }
 }

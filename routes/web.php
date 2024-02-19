@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\contactAttachmentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobAttachmentFileController;
 use App\Http\Controllers\JobController;
@@ -66,7 +67,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/supply/items', \App\Http\Controllers\Supply\SupplyItemController::class)->name('supply.items');
 
-    Route::post('/contacts/validate-request', [ContactController::class, 'validateRequest'])->name('contacts.validateRequest');
+    Route::delete('/contact-attachment-files/{id}', [ContactAttachmentController::class, 'destroy'])->name('contact-attachment-files.destroy');
     Route::resource('contacts', ContactController::class);
 
     Route::delete('/job-permit-files/{id}', [JobPermitFileController::class, 'destroy'])->name('job-permit-files.destroy');
