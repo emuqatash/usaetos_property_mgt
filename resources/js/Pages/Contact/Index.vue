@@ -5,7 +5,7 @@
             <div class="w-full h-full p-4 flex justify-between border-b border-gray-100">
                 <div class="flex items-center">
                     <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>
-                    <input v-model="search" type="text" placeholder="Search Contacts..."
+                    <input v-model="search" type="text" placeholder="Search Tenants..."
                            class="border-0 text-base text-lg p-0"/>
                 </div>
                 <div class="flex items-center">
@@ -14,7 +14,7 @@
                         @click="newContact()"
                     >
                         <UserAddIcon class="w-5 h-5 inline-block section-button-icon xl:mr-2 text-blue-800"/>
-                        <span class="hidden md:inline-block">New Contact</span>
+                        <span class="hidden md:inline-block">New Tenant</span>
                     </SecondaryButton>
                     <XIcon class="flex bg-white text-black items-center h-6 w-6 ml-4 cursor-pointer"
                            @click="modalActive = false"/>
@@ -29,13 +29,15 @@
                                 @click="selectRow(eachContact)"
                                 :class="{ 'bg-gray-100': selectedId === eachContact.id }">
                                 <div class="flex">
-                                    <img
-                                        v-if="eachContact.profile_photo_path"
-                                        :src="getImageUrl(eachContact.profile_photo_path)"
-                                        alt="Contact Photo"
-                                        class="h-12 w-12 flex-none rounded-full bg-gray-50">
-                                    <UserIcon v-if="!eachContact.profile_photo_path"
-                                              class="rounded-full bg-gray-400 text-gray-50 p-1 h-12 w-12 flex-none"/>
+<!--                                    <img-->
+<!--                                        v-if="eachContact.profile_photo_path"-->
+<!--                                        :src="getImageUrl(eachContact.profile_photo_path)"-->
+<!--                                        alt="Contact Photo"-->
+<!--                                        class="h-12 w-12 flex-none rounded-full bg-gray-50 hidden md:inline-block">-->
+<!--                                    <UserIcon v-if="!eachContact.profile_photo_path"-->
+<!--                                              class="rounded-full bg-gray-400 text-gray-50 p-1 h-12 w-12 flex-none-->
+<!--                                               hidden md:inline-block"-->
+<!--                                    />-->
                                     <div class="min-w-0">
                                         <p class="text-sm font-semibold leading-6 text-gray-900 ml-2">
                                             {{ eachContact.first_name }}
@@ -61,18 +63,18 @@
                     </template>
                 </div>
                 <div class="w-2/3 flex flex-col items-center justify-center" v-if="selectedId === null">
-                    <p class="md:text-2xl font-bold text-gray-400 p-0 lg:p-72 whitespace-nowrap">No Selected Contact</p>
+                    <p class="md:text-2xl font-bold text-gray-400 p-0 lg:p-72 whitespace-nowrap">No Selected Tenant</p>
                 </div>
 
                 <div class="w-2/3 flex flex-col items-center justify-center p-0 lg:p-20" v-if="selectedId !== null">
-                    <img
-                        v-if="selectedContact.profile_photo_path"
-                        :src="getImageUrl(selectedContact.profile_photo_path)"
-                        alt="Contact Photo"
-                        class="inline-block h-32 w-32 rounded-full"
-                    >
-                    <UserIcon v-if="!selectedContact.profile_photo_path"
-                              class="rounded-full bg-gray-400 text-gray-50 p-1 h-32 w-32 flex-none"/>
+<!--                    <img-->
+<!--                        v-if="selectedContact.profile_photo_path"-->
+<!--                        :src="getImageUrl(selectedContact.profile_photo_path)"-->
+<!--                        alt="Contact Photo"-->
+<!--                        class="inline-block h-32 w-32 rounded-full"-->
+<!--                    >-->
+<!--                    <UserIcon v-if="!selectedContact.profile_photo_path"-->
+<!--                              class="rounded-full bg-gray-400 text-gray-50 p-1 h-32 w-32 flex-none"/>-->
                     <p class="mt-4 text-xl font-semibold">{{ selectedContact.first_name }} {{
                             selectedContact.last_name
                         }}</p>
@@ -137,7 +139,6 @@ watch(search, debounce(() => {
             })
     }, 500)
 )
-
 
 const toggleSelection = (id) => {
     const index = selectedRows.value.indexOf(id);
