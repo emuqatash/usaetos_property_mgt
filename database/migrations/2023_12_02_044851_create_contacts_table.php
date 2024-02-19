@@ -16,14 +16,18 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->foreignId('contact_type_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('phone_number', 32);
+            $table->string('phone_number1', 32);
+            $table->string('phone_number2', 32)->nullable();
             $table->string('email')->unique();
-            $table->string('address', 128);
-            $table->string('city', 64);
+            $table->string('address', 128)->nullable();
+            $table->string('city', 64)->nullable();
             $table->foreignId('state_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('zip', 16);
-            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('zip', 16)->nullable();
+            $table->string('document_id', 64)->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            $table->string('remarks')->nullable();
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
+            $table->integer('active')->default(1);
             $table->timestamps();
         });
     }

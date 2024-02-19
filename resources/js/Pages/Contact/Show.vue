@@ -5,8 +5,8 @@
             <div class="p-14 relative border-b border-gray-100 space-y-4">
                 <div class="flex flex-col items-center justify-center mb-4">
                     <div class="flex flex-col items-center justify-center">
-                        <p class="text-xl font-semibold">A Similar contact already exists</p>
-                        <p class="text-xl mb-6 mt-1">Do you want to proceed and save a new contact</p>
+                        <p class="text-xl font-semibold">A Similar Tenant already exists</p>
+                        <p class="text-xl mb-6 mt-1">Do you want to proceed and save a new Tenant</p>
                     </div>
                     <div class="mt-6 flex flex-col items-center justify-center">
                         <div v-if="url" class="relative inline-block">

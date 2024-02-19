@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Pest;
 
+use Attribute;
 use BadMethodCallException;
 use Closure;
+use InvalidArgumentException;
+use OutOfRangeException;
 use Pest\Arch\Contracts\ArchExpectation;
 use Pest\Arch\Expectations\Targeted;
 use Pest\Arch\Expectations\ToBeUsedIn;
@@ -28,12 +31,10 @@ use Pest\Expectations\OppositeExpectation;
 use Pest\Matchers\Any;
 use Pest\Support\ExpectationPipeline;
 use PHPUnit\Architecture\Elements\ObjectDescription;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
+use ReflectionEnum;
 
 /**
- * @internal
- *
  * @template TValue
  *
  * @property OppositeExpectation $not Creates the opposite expectation.
@@ -190,7 +191,7 @@ final class Expectation
      *
      * @return EachExpectation<TValue>
      */
-    public function each(callable $callback = null): EachExpectation
+    public function each(?callable $callback = null): EachExpectation
     {
         if (! is_iterable($this->value)) {
             throw new BadMethodCallException('Expectation value is not iterable.');
@@ -219,30 +220,26 @@ final class Expectation
             throw new BadMethodCallException('Expectation value is not iterable.');
         }
 
-        $value = is_array($this->value) ? $this->value : iterator_to_array($this->value);
-        $keys = array_keys($value);
-        $values = array_values($value);
-        $callbacksCount = count($callbacks);
-
-        $index = 0;
-
-        while (count($callbacks) < count($values)) {
-            $callbacks[] = $callbacks[$index];
-            $index = $index < count($values) - 1 ? $index + 1 : 0;
+        if (count($callbacks) == 0) {
+            throw new InvalidArgumentException('No sequence expectations defined.');
         }
 
-        if ($callbacksCount > count($values)) {
-            Assert::assertLessThanOrEqual(count($value), count($callbacks));
-        }
+        $index = $valuesCount = 0;
 
-        foreach ($values as $key => $item) {
-            if ($callbacks[$key] instanceof Closure) {
-                call_user_func($callbacks[$key], new self($item), new self($keys[$key]));
+        foreach ($this->value as $key => $value) {
+            $valuesCount++;
 
-                continue;
+            if ($callbacks[$index] instanceof Closure) {
+                $callbacks[$index](new self($value), new self($key));
+            } else {
+                (new self($value))->toEqual($callbacks[$index]);
             }
 
-            (new self($item))->toEqual($callbacks[$key]);
+            $index = isset($callbacks[$index + 1]) ? $index + 1 : 0;
+        }
+
+        if ($valuesCount < count($callbacks)) {
+            throw new OutOfRangeException('Sequence expectations are more than the iterable items.');
         }
 
         return $this;
@@ -351,9 +348,15 @@ final class Expectation
             return new HigherOrderExpectation($this, call_user_func_array($this->value->$method(...), $parameters));
         }
 
-        ExpectationPipeline::for($this->getExpectationClosure($method))
+        $closure = $this->getExpectationClosure($method);
+        $reflectionClosure = new \ReflectionFunction($closure);
+        $expectation = $reflectionClosure->getClosureThis();
+
+        assert(is_object($expectation));
+
+        ExpectationPipeline::for($closure)
             ->send(...$parameters)
-            ->through($this->pipes($method, $this, Expectation::class))
+            ->through($this->pipes($method, $expectation, Expectation::class))
             ->run();
 
         return $this;
@@ -505,6 +508,19 @@ final class Expectation
     }
 
     /**
+     * Asserts that the given expectation target has a specific method.
+     */
+    public function toHaveMethod(string $method): ArchExpectation
+    {
+        return Targeted::make(
+            $this,
+            fn (ObjectDescription $object): bool => $object->reflectionClass->hasMethod($method),
+            'to have method',
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
+        );
+    }
+
+    /**
      * Asserts that the given expectation target is enum.
      */
     public function toBeEnum(): ArchExpectation
@@ -526,7 +542,7 @@ final class Expectation
     }
 
     /**
-     * Asserts that the given expectation targets is an class.
+     * Asserts that the given expectation target is a class.
      */
     public function toBeClass(): ArchExpectation
     {
@@ -739,5 +755,179 @@ final class Expectation
             'to be invokable',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class'))
         );
+    }
+
+    /**
+     * Asserts that the given expectation is iterable and contains snake_case keys.
+     *
+     * @return self<TValue>
+     */
+    public function toHaveSnakeCaseKeys(string $message = ''): self
+    {
+        if (! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('iterable');
+        }
+
+        foreach ($this->value as $k => $item) {
+            if (is_string($k)) {
+                $this->and($k)->toBeSnakeCase($message);
+            }
+
+            if (is_array($item)) {
+                $this->and($item)->toHaveSnakeCaseKeys($message);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the given expectation is iterable and contains kebab-case keys.
+     *
+     * @return self<TValue>
+     */
+    public function toHaveKebabCaseKeys(string $message = ''): self
+    {
+        if (! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('iterable');
+        }
+
+        foreach ($this->value as $k => $item) {
+            if (is_string($k)) {
+                $this->and($k)->toBeKebabCase($message);
+            }
+
+            if (is_array($item)) {
+                $this->and($item)->toHaveKebabCaseKeys($message);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the given expectation is iterable and contains camelCase keys.
+     *
+     * @return self<TValue>
+     */
+    public function toHaveCamelCaseKeys(string $message = ''): self
+    {
+        if (! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('iterable');
+        }
+
+        foreach ($this->value as $k => $item) {
+            if (is_string($k)) {
+                $this->and($k)->toBeCamelCase($message);
+            }
+
+            if (is_array($item)) {
+                $this->and($item)->toHaveCamelCaseKeys($message);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the given expectation is iterable and contains StudlyCase keys.
+     *
+     * @return self<TValue>
+     */
+    public function toHaveStudlyCaseKeys(string $message = ''): self
+    {
+        if (! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('iterable');
+        }
+
+        foreach ($this->value as $k => $item) {
+            if (is_string($k)) {
+                $this->and($k)->toBeStudlyCase($message);
+            }
+
+            if (is_array($item)) {
+                $this->and($item)->toHaveStudlyCaseKeys($message);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the given expectation target to have the given attribute.
+     *
+     * @param  class-string<Attribute>  $attribute
+     */
+    public function toHaveAttribute(string $attribute): ArchExpectation
+    {
+        return Targeted::make(
+            $this,
+            fn (ObjectDescription $object): bool => $object->reflectionClass->getAttributes($attribute) !== [],
+            "to have attribute '{$attribute}'",
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
+        );
+    }
+
+    /**
+     * Asserts that the given expectation target has a constructor method.
+     */
+    public function toHaveConstructor(): ArchExpectation
+    {
+        return $this->toHaveMethod('__construct');
+    }
+
+    /**
+     * Asserts that the given expectation target has a destructor method.
+     */
+    public function toHaveDestructor(): ArchExpectation
+    {
+        return $this->toHaveMethod('__destruct');
+    }
+
+    /**
+     * Asserts that the given expectation target is a backed enum of given type.
+     */
+    private function toBeBackedEnum(string $backingType): ArchExpectation
+    {
+        return Targeted::make(
+            $this,
+            fn (ObjectDescription $object): bool => $object->reflectionClass->isEnum()
+                && (new ReflectionEnum($object->name))->isBacked() // @phpstan-ignore-line
+                && (string) (new ReflectionEnum($object->name))->getBackingType() === $backingType, // @phpstan-ignore-line
+            'to be '.$backingType.' backed enum',
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, 'class')),
+        );
+    }
+
+    /**
+     * Asserts that the given expectation targets are string backed enums.
+     */
+    public function toBeStringBackedEnums(): ArchExpectation
+    {
+        return $this->toBeStringBackedEnum();
+    }
+
+    /**
+     * Asserts that the given expectation targets are int backed enums.
+     */
+    public function toBeIntBackedEnums(): ArchExpectation
+    {
+        return $this->toBeIntBackedEnum();
+    }
+
+    /**
+     * Asserts that the given expectation target is a string backed enum.
+     */
+    public function toBeStringBackedEnum(): ArchExpectation
+    {
+        return $this->toBeBackedEnum('string');
+    }
+
+    /**
+     * Asserts that the given expectation target is an int backed enum.
+     */
+    public function toBeIntBackedEnum(): ArchExpectation
+    {
+        return $this->toBeBackedEnum('int');
     }
 }

@@ -6,11 +6,11 @@ use App\Models\SpecificationAttachmentFile;
 
 class SpecificationAttachmentController extends Controller
 {
-    public function destroy(string $id)
+    public function destroy(string $id): void
     {
-        $SpecificationAttachmentFile = SpecificationAttachmentFile::find($id);
-        if ($SpecificationAttachmentFile) {
-            $SpecificationAttachmentFile->delete();
+        $specificationAttachmentFile = SpecificationAttachmentFile::find($id);
+        if ($specificationAttachmentFile) {
+            $specificationAttachmentFile->delete();
         }
     }
 }

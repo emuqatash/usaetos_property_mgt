@@ -20,6 +20,16 @@
         >
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
+    <template v-else-if="type === 'textarea'">
+        <textarea
+            :id="id"
+            :value="inputValue" @input="$emit('update:value', $event.target.value)"
+            :required="required"
+            :class="inputClass"
+        ></textarea>
+        <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
+    </template>
+
 </template>
 
 <script>

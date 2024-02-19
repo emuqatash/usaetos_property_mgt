@@ -404,7 +404,7 @@
                               placeholder="Add your comments">
                     </textarea>
                 </div>
-
+                <!--Upload attachments-->
                 <div class="space-y-7">
                     <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
                     <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
@@ -437,7 +437,7 @@
                                         <div
                                             class="mt-4 flex text-sm leading-6 text-gray-600"
                                         >
-                                            <p class="mt-4 text-md" :class="imageClas">Upload a file</p>
+                                            <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
                                             <p class="pl-1 mt-4">or drag and drop</p>
                                         </div>
                                     </file-upload>
@@ -473,9 +473,11 @@ import ToggleButtonGroup from "@/Components/AppComponents/ToggleButtonGroup.vue"
 import {PhotographIcon, XIcon} from "@heroicons/vue/solid";
 
 let props = defineProps({
-    jobId: String,
     specification: Object,
+    jobId: String,
 })
+
+const isLoading = ref(false);
 
 let form = useForm({
     'id': props.specification ? props.specification.id : '',
@@ -527,8 +529,6 @@ let form = useForm({
     'attachmentFiles': props.specification ? props.specification.attachmentFiles : '',
 })
 
-const isLoading = ref(false);
-
 const showJob = () => {
     form.get(route('jobs.show', {job: props.jobId}))
 }
@@ -570,7 +570,6 @@ const inputAttachmentFile = () => {
         }
     }
 }
-
 const removeAttachmentFile = (index, attachmentFileId) => {
     attachmentFileList.value.splice(index, 1)
     attachmentFileModel.value.splice(attachmentFileModel.value.findIndex(file => file.id === attachmentFileId), 1)
@@ -589,7 +588,7 @@ let handleSubmit = () => {
 const labelClass = ref('labelClass');
 const divClass = ref('pb-1 mb-8 md:text-lg font-bold leading-7 text-gray-900 border-b border-gray-200');
 const noteClass = ref(`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset`);
-const imageClas = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
+const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
     'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
     'hover:text-indigo-500')
 

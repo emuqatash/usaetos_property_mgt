@@ -6,6 +6,7 @@ namespace Pest\Mixins;
 
 use BadMethodCallException;
 use Closure;
+use Countable;
 use DateTimeInterface;
 use Error;
 use InvalidArgumentException;
@@ -15,6 +16,7 @@ use Pest\Matchers\Any;
 use Pest\Support\Arr;
 use Pest\Support\Exporter;
 use Pest\Support\NullClosure;
+use Pest\Support\Str;
 use Pest\TestSuite;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
@@ -129,7 +131,7 @@ final class Expectation
      *
      * @return self<TValue>
      */
-    public function toBeGreaterThan(int|float|DateTimeInterface $expected, string $message = ''): self
+    public function toBeGreaterThan(int|float|string|DateTimeInterface $expected, string $message = ''): self
     {
         Assert::assertGreaterThan($expected, $this->value, $message);
 
@@ -141,7 +143,7 @@ final class Expectation
      *
      * @return self<TValue>
      */
-    public function toBeGreaterThanOrEqual(int|float|DateTimeInterface $expected, string $message = ''): self
+    public function toBeGreaterThanOrEqual(int|float|string|DateTimeInterface $expected, string $message = ''): self
     {
         Assert::assertGreaterThanOrEqual($expected, $this->value, $message);
 
@@ -153,7 +155,7 @@ final class Expectation
      *
      * @return self<TValue>
      */
-    public function toBeLessThan(int|float|DateTimeInterface $expected, string $message = ''): self
+    public function toBeLessThan(int|float|string|DateTimeInterface $expected, string $message = ''): self
     {
         Assert::assertLessThan($expected, $this->value, $message);
 
@@ -165,7 +167,7 @@ final class Expectation
      *
      * @return self<TValue>
      */
-    public function toBeLessThanOrEqual(int|float|DateTimeInterface $expected, string $message = ''): self
+    public function toBeLessThanOrEqual(int|float|string|DateTimeInterface $expected, string $message = ''): self
     {
         Assert::assertLessThanOrEqual($expected, $this->value, $message);
 
@@ -189,6 +191,24 @@ final class Expectation
                 }
                 Assert::assertContains($needle, $this->value);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Asserts that $needle equal an element of the value.
+     *
+     * @return self<TValue>
+     */
+    public function toContainEqual(mixed ...$needles): self
+    {
+        if (! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('iterable');
+        }
+
+        foreach ($needles as $needle) {
+            Assert::assertContainsEquals($needle, $this->value);
         }
 
         return $this;
@@ -264,10 +284,27 @@ final class Expectation
     public function toHaveCount(int $count, string $message = ''): self
     {
         if (! is_countable($this->value) && ! is_iterable($this->value)) {
-            InvalidExpectationValue::expected('string');
+            InvalidExpectationValue::expected('countable|iterable');
         }
 
         Assert::assertCount($count, $this->value, $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the size of the value and $expected are the same.
+     *
+     * @param  Countable|iterable<mixed>  $expected
+     * @return self<TValue>
+     */
+    public function toHaveSameSize(Countable|iterable $expected, string $message = ''): self
+    {
+        if (! is_countable($this->value) && ! is_iterable($this->value)) {
+            InvalidExpectationValue::expected('countable|iterable');
+        }
+
+        Assert::assertSameSize($expected, $this->value, $message);
 
         return $this;
     }
@@ -295,13 +332,13 @@ final class Expectation
     /**
      * Asserts that the value contains the provided properties $names.
      *
-     * @param  iterable<array-key, string>  $names
+     * @param  iterable<string, mixed>|iterable<int, string>  $names
      * @return self<TValue>
      */
     public function toHaveProperties(iterable $names, string $message = ''): self
     {
         foreach ($names as $name => $value) {
-            is_int($name) ? $this->toHaveProperty($value, message: $message) : $this->toHaveProperty($name, $value, $message);
+            is_int($name) ? $this->toHaveProperty($value, message: $message) : $this->toHaveProperty($name, $value, $message); // @phpstan-ignore-line
         }
 
         return $this;
@@ -498,6 +535,18 @@ final class Expectation
     public function toBeNumeric(string $message = ''): self
     {
         Assert::assertIsNumeric($this->value, $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value contains only digits.
+     *
+     * @return self<TValue>
+     */
+    public function toBeDigits(string $message = ''): self
+    {
+        Assert::assertTrue(ctype_digit((string) $this->value), $message);
 
         return $this;
     }
@@ -813,6 +862,7 @@ final class Expectation
 
         $string = match (true) {
             is_string($this->value) => $this->value,
+            is_object($this->value) && method_exists($this->value, 'toSnapshot') => $this->value->toSnapshot(),
             is_object($this->value) && method_exists($this->value, '__toString') => $this->value->__toString(),
             is_object($this->value) && method_exists($this->value, 'toString') => $this->value->toString(),
             $this->value instanceof \Illuminate\Testing\TestResponse => $this->value->getContent(), // @phpstan-ignore-line
@@ -888,7 +938,7 @@ final class Expectation
      * @param  (Closure(Throwable): mixed)|string  $exception
      * @return self<TValue>
      */
-    public function toThrow(callable|string|Throwable $exception, string $exceptionMessage = null, string $message = ''): self
+    public function toThrow(callable|string|Throwable $exception, ?string $exceptionMessage = null, string $message = ''): self
     {
         $callback = NullClosure::create();
 
@@ -896,7 +946,7 @@ final class Expectation
             $callback = $exception;
             $parameters = (new ReflectionFunction($exception))->getParameters();
 
-            if (1 !== count($parameters)) {
+            if (count($parameters) !== 1) {
                 throw new InvalidArgumentException('The given closure must have a single parameter type-hinted as the class string.');
             }
 
@@ -920,7 +970,7 @@ final class Expectation
             }
 
             if (! class_exists($exception)) {
-                if ($e instanceof Error && $e->getMessage() === "Class \"$exception\" not found") {
+                if ($e instanceof Error && "Class \"$exception\" not found" === $e->getMessage()) {
                     Assert::assertTrue(true);
 
                     throw $e;
@@ -936,6 +986,7 @@ final class Expectation
             }
 
             Assert::assertInstanceOf($exception, $e, $message);
+
             $callback($e);
 
             return $this;
@@ -1006,6 +1057,123 @@ final class Expectation
     public function toBeAlpha(string $message = ''): self
     {
         Assert::assertTrue(ctype_alpha((string) $this->value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is snake_case.
+     *
+     * @return self<TValue>
+     */
+    public function toBeSnakeCase(string $message = ''): self
+    {
+        $value = (string) $this->value;
+
+        if ($message === '') {
+            $message = "Failed asserting that {$value} is snake_case.";
+        }
+
+        Assert::assertTrue((bool) preg_match('/^[\p{Ll}_]+$/u', $value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is kebab-case.
+     *
+     * @return self<TValue>
+     */
+    public function toBeKebabCase(string $message = ''): self
+    {
+        $value = (string) $this->value;
+
+        if ($message === '') {
+            $message = "Failed asserting that {$value} is kebab-case.";
+        }
+
+        Assert::assertTrue((bool) preg_match('/^[\p{Ll}-]+$/u', $value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is camelCase.
+     *
+     * @return self<TValue>
+     */
+    public function toBeCamelCase(string $message = ''): self
+    {
+        $value = (string) $this->value;
+
+        if ($message === '') {
+            $message = "Failed asserting that {$value} is camelCase.";
+        }
+
+        Assert::assertTrue((bool) preg_match('/^\p{Ll}[\p{Ll}\p{Lu}]+$/u', $value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is StudlyCase.
+     *
+     * @return self<TValue>
+     */
+    public function toBeStudlyCase(string $message = ''): self
+    {
+        $value = (string) $this->value;
+
+        if ($message === '') {
+            $message = "Failed asserting that {$value} is StudlyCase.";
+        }
+
+        Assert::assertTrue((bool) preg_match('/^\p{Lu}+\p{Ll}[\p{Ll}\p{Lu}]+$/u', $value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is UUID.
+     *
+     * @return self<TValue>
+     */
+    public function toBeUuid(string $message = ''): self
+    {
+        if (! is_string($this->value)) {
+            InvalidExpectationValue::expected('string');
+        }
+
+        Assert::assertTrue(Str::isUuid($this->value), $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is between 2 specified values
+     *
+     * @return self<TValue>
+     */
+    public function toBeBetween(int|float|DateTimeInterface $lowestValue, int|float|DateTimeInterface $highestValue, string $message = ''): self
+    {
+        Assert::assertGreaterThanOrEqual($lowestValue, $this->value, $message);
+        Assert::assertLessThanOrEqual($highestValue, $this->value, $message);
+
+        return $this;
+    }
+
+    /**
+     * Asserts that the value is a url
+     *
+     * @return self<TValue>
+     */
+    public function toBeUrl(string $message = ''): self
+    {
+        if ($message === '') {
+            $message = "Failed asserting that {$this->value} is a url.";
+        }
+
+        Assert::assertTrue(Str::isUrl((string) $this->value), $message);
 
         return $this;
     }

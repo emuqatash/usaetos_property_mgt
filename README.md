@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-## Andrus
+## Usaetos Property Management
 
 This is a traditional Laravel + Vite + Inertia App
 
