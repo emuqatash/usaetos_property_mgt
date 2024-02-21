@@ -25,9 +25,11 @@ Route::group(['middleware' => ['api', 'checkPassword'], 'namespace' => 'Api'], f
     Route::post('get-all-tenants', [TenantsController::class, 'getAllTenants']);
     Route::post('get-tenant-byid', [TenantsController::class, 'getTenantById']);
     Route::post('change-tenant-status', [TenantsController::class, 'changeTenantStatus']);
+
+    Route::get('/google-places/autocomplete', [GooglePlacesController::class, 'autocomplete']);
 });
 
-Route::get('google-places/autocomplete', [GooglePlacesController::class, 'autocomplete']);
+
 
 
 //Route::get('/contacts', 'ContactController@index');

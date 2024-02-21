@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Http;
 
 class GooglePlacesController extends Controller
 {
-    // i can use __invoke instead of function name becuase it is only one single function
-    public function autocomplete(Request $request)  //later on replace it with __invoke
+    public function autocomplete(Request $request)
     {
+
+        // I can use __invoke instead of function name because it is only one single function
+        //later on replace it with __invoke
+
         $input = $request->input('input');
-        $apiKey = env('GOOGLE_MAPS_API_KEY');
+//        $apiKey = env('GOOGLE_MAPS_API_KEY');
+        $apiKey = config('services.googleMaps.key');
 
         $response = Http::get("https://maps.googleapis.com/maps/api/place/autocomplete/json", [
             'input' => $input,
