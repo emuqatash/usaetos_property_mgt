@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\contactAttachmentController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\JobAttachmentFileController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobPermitFileController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SpecificationAttachmentController;
 use App\Http\Controllers\SpecificationController;
 use Illuminate\Foundation\Application;
@@ -76,6 +78,10 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/specification-attachment-files/{id}', [specificationAttachmentController::class, 'destroy'])->name('specification-attachment-files.destroy');
     Route::resource('specifications', SpecificationController::class);
+
+    Route::resource('property', PropertyController::class);
+
+    Route::resource('contract', ContractController::class);
 
 
     //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

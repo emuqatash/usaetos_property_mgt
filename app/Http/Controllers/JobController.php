@@ -107,9 +107,9 @@ class JobController extends Controller
         $salesmen = User::whereHas('Role', function ($query) {
             $query->where('name', 'Sales');
         })->select('id', 'name')->get();
-       $contact = Contact::where('id', $job->contact_id)->first();
-       $selectedSalesmen = User::whereIn('id', $job->salesman_ids)->get();
-       return Inertia('Job/Show', compact('job','contact','selectedSalesmen','salesmen'));
+        $contact = Contact::where('id', $job->contact_id)->first();
+        $selectedSalesmen = User::whereIn('id', $job->salesman_ids)->get();
+        return Inertia('Job/Show', compact('job','contact','selectedSalesmen','salesmen'));
     }
 
     public function edit(Job $job)

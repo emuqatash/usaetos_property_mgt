@@ -32,7 +32,7 @@ const props = defineProps({
                                 @click="showInviteUser = true"
                             >
                                 <UserAddIcon
-                                    class="w-5 h-5 inline-block section-button-icon text-blue-800 mr-1"
+                                    class="w-6 h-5 inline-block section-button-icon text-blue-800 mr-1"
                                 />
                                Invite User
                             </SecondaryButton>
@@ -64,7 +64,7 @@ const props = defineProps({
                                     <td class="px-3 py-4 text-sm text-gray-500">{{ user.role.name }}</td>
                                     <td class="hidden px-3 py-4 text-xs text-gray-500">Limited access to personal</td>
                                     <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                        <Link :href="route('settings.team.user', user.id)" type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Edit</link>
+                                        <Link :href="route('settings.team.user', user.id)" type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Edit</Link>
                                     </td>
                                 </tr>
                             </tbody>
