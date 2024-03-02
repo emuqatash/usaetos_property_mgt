@@ -9,8 +9,13 @@ class State extends Model
     protected $fillable = ['name'];
     public $timestamps = false;
 
-    public function states(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function contracts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Contact::class);
+    }
+
+    public function properties(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Property::class);
     }
 }
