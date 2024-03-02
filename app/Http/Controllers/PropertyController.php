@@ -26,8 +26,11 @@ class PropertyController extends Controller
                             $query->where('name', 'like', "%{$search}%");
                         });
                 })
+                ->when($request->input('propertyStatus'), function ($query, $status) {
+                    $query->where('property_status', $status);
+                })
                 ->orderBy('created_at', 'desc')
-                ->paginate(6)
+                ->paginate(10)
                 ->withQueryString()
                 ->through(function ($property) {
                     return [
@@ -36,13 +39,15 @@ class PropertyController extends Controller
                         'property_name' => $property->property_name,
                         'owner' => $property->owner,
                         'state_name' => $property->state->name,
-                        'ownership_rate' => $property->ownership_rate,
-                        'cost' => $property->cost,
+                        'city' => $property->city,
                     ];
                 }),
             'filters' => $request->only(['search', 'propertyStatus']),
+            'counts' => [
+                'vacant' => Property::where('property_status', 'Vacant')->count(),
+                'occupied' => Property::where('property_status', 'Occupied')->count(),
+            ],
         ]);
-        // Respond with JSON.
     }
 
     public function create()
@@ -54,6 +59,7 @@ class PropertyController extends Controller
     public function store(PropertyRequest $request)
     {
         $property = $request->all();
+//        dd( $property );
         if ($request->input('id') > 0) {
             $property_data = $request->all();
             $property = Property::find($request->input('id'));
@@ -76,6 +82,15 @@ class PropertyController extends Controller
     public function destroy(Property $property)
     {
         $property->delete();
+        return redirect()->route('property.index');
+    }
+
+    public function duplicate($id)
+    {
+        $original = Property::find($id);
+        $duplicate = $original->replicate();
+        $duplicate->save();
+
         return redirect()->route('property.index');
     }
 }

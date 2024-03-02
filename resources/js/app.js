@@ -8,7 +8,6 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Multiselect from "@suadelabs/vue3-multiselect";
 import MultiSelectDropdown from './Components/MultiSelectDropdown.vue';
 import VueUploadComponent from 'vue-upload-component'
-import { TailwindPagination } from 'laravel-vue-pagination';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -22,7 +21,6 @@ createInertiaApp({
             .component('Multiselect', Multiselect)
             .component('MultiSelectDropdown', MultiSelectDropdown)
             .component('file-upload', VueUploadComponent)
-            .component('TailwindPagination', TailwindPagination)
             .mount(el);
     },
     progress: {

@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/specification-attachment-files/{id}', [specificationAttachmentController::class, 'destroy'])->name('specification-attachment-files.destroy');
     Route::resource('specifications', SpecificationController::class);
 
+    Route::get('/property/{id}/duplicate',  [PropertyController::class, 'duplicate'])->name('property.duplicate');
     Route::resource('property', PropertyController::class);
 
     Route::resource('contract', ContractController::class);

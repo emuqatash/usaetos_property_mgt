@@ -1,5 +1,5 @@
 <template>
-<AuthenticatedLayout :sub-menu="'PROPERTIES'">
+<AuthenticatedLayout :sub-menu="'PROPERTIES'" class="P-2">
     <div class="flex justify-between items-center mb-8">
         <div class="relative rounded-md shadow-sm mr-8">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -23,7 +23,8 @@
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">No</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">owner</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">State</th>
+                    <th scope="col" class="px-10 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">City</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">State</th>
                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                         <span class="sr-only">Edit</span>
                     </th>
@@ -32,42 +33,21 @@
                 <tbody class="divide-y divide-gray-200">
                 <tr class="border-b border-gray-200"
                     v-for="(eachProperty, index) in property.data" :key="index"
-                    :class="{ 'divide-y divide-gray-10 ': selectedRows.includes(eachProperty.id) }">
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ eachProperty.property_no }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.property_name }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.owner }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.state_name }}</td>
-                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    :class="{'bg-gray-100': selectedRow === eachProperty.id, 'divide-y divide-gray-10 ': selectedRows.includes(eachProperty.id) }"
+                    @click="selectRow(eachProperty.id)">
+                    <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ eachProperty.property_no }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.property_name }}</td>
+                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.owner }}</td>
+                    <td class="flex-wrap px-10 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.city }}</td>
+                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.state_name }}</td>
+                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0" >
                         <DotsVertical :eachRecord="eachProperty.id" @submit-form="viewOrDeleteProperty" />
                     </td>
                 </tr>
                 </tbody>
             </table>
             <!--------------------pagination--------------------------->
-            <TailwindPagination
-                :data="laravelData"
-                @pagination-change-page="getResults"
-            />
-
-
-<!--            <Pagination :pagination="property" />-->
-<!--            <div v-if="property.data.length">-->
-<!--                <nav class="bg-white px-4 py-3 flex items-center justify-between sm:px-6">-->
-<!--                    <div class="hidden sm:block">-->
-<!--                        <p class="text-sm text-gray-700">-->
-<!--                            Showing <span class="font-medium">{{ property.from }}</span> to <span class="font-medium">{{ property.to }}</span> of <span class="font-medium">{{ property.total }}</span> results-->
-<!--                        </p>-->
-<!--                    </div>-->
-<!--                    <div class="flex-1 flex justify-between sm:justify-end">-->
-<!--                        <a href="#" :class="paginationClass" :disabled="!property.prev_page_url" @click.prevent="changePage(property.prev_page_url)">-->
-<!--                            Previous-->
-<!--                        </a>-->
-<!--                        <a href="#" :class="`${paginationClass} ml-3`" :disabled="!property.next_page_url" @click.prevent="changePage(property.next_page_url)">-->
-<!--                            Next-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                </nav>-->
-<!--            </div>-->
+            <Pagination :pagination="property" />
             <!--------------------pagination--------------------------->
         </div>
     </template>
@@ -82,18 +62,15 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {SearchIcon} from "@heroicons/vue/outline";
 import {FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
-import {onMounted, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {debounce} from "lodash";
 import EmptyProperty from "@/Pages/Property/EmptyProperty.vue";
 import DotsVertical from "@/Components/DotsVertical.vue";
-import { TailwindPagination } from 'laravel-vue-pagination';
-
-
+import Pagination from "@/Components/Pagination.vue";
 
 let props = defineProps({
     property: Object,
     filters: Object,
-    laravelData: Object,
 })
 
 const selectedRows = ref([])
@@ -111,10 +88,14 @@ watch(search, debounce(() => {
 const newProperty = () => {
     router.get(route('property.create'))
 }
+/// below manage the dropdown menuw and actions
 const viewOrDeleteProperty = (id, action) => {
     switch(action) {
         case 'viewRecord':
             router.get(route('property.show', id))
+            break;
+        case 'duplicateRecord':
+            router.get(route('property.duplicate', id))
             break;
         case 'deleteRecord':
             if (window.confirm('Are you sure you want to delete this record?')) {
@@ -124,28 +105,11 @@ const viewOrDeleteProperty = (id, action) => {
     }
 }
 
-// pagination
-onMounted(() => {
-    getResults();
-});
-
-const laravelData = ref({});
-// const getResults = async (page = 1) => {
-//     axios.get('/api/propertys?page=' + page)
-//         .then(response => {
-//                 laravelData.value = response.data;
-//             }
-//         )
-//     )
-// }
-const getResults = async (page = 1) => {
-    const response = await fetch(`/property?page=${page}`);
-    laravelData.value = await response.json();
+let selectedRow = ref(null);  // ref to store the ID of the selected row
+function selectRow(id) {
+    selectedRow.value = id;
 }
 
-getResults();
-// const paginationClass="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm leading-5" +
-//     " font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:shadow-outline-blue" +
-//     " focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
-
 </script>
+
+

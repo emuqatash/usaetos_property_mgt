@@ -2,11 +2,15 @@
     <form @submit.prevent="handleSubmit">
         <div class="space-y-8 p-4 lg:pl-60 lg:pr-60">
             <div>
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold leading-7 text-gray-900">Property</h2>
+                    <XIcon class="flex bg-white text-black  h-6 w-6 ml-4 cursor-pointer" @click="backToList()"/>
+                </div>
                 <div class="mt-10 space-y-6 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y">
-                    <h2 class="mt-10 md:text-lg font-bold text-gray-900 pb-2">Enter New Property information</h2>
+                    <h2 class="mt-10 md:text-lg font-bold text-gray-900 pb-2">Enter or Update New Property information</h2>
                     <!--1raw-->
-                    <div class="lg:flex pt-0 lg:pt-6 space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
-                        <div :class="`${divClass} flex-grow`">
+                    <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0"> <!-- Parent flex container -->
+                        <div :class="`${divClass} flex-grow `">
                             <Editable
                                 label="Property No"
                                 :input-value="form.property_no"
@@ -14,13 +18,17 @@
                                 :error="form.errors.property_no"
                                 required/>
                         </div>
-                        <div :class="`${divClass} flex-grow `">
+                        <div :class="`${divClass} lg:w-8/12`">
                             <Editable
                                 label="Property Name"
                                 :input-value="form.property_name"
                                 @update:value="form.property_name = $event"
                                 :error="form.errors.property_name"
                                 required/>
+                        </div>
+                        <div :class="`${divClass} lg:w-1/6`">
+                            <label :class="labelClass">Status</label>
+                            <MultiselectCustom v-model="form.property_status" :options="propertyTypes"/>
                         </div>
                     </div>
 
@@ -47,7 +55,7 @@
 
                     <!--3raw-->
                     <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
-                        <div :class="`${divClass} flex-grow `">
+                        <div :class="`${divClass} lg:w-4/6`">
                             <Editable
                                 label="Address"
                                 :input-value="form.address"
@@ -63,7 +71,7 @@
                                 :error="form.errors.city"
                                 required/>
                         </div>
-                        <div :class="`${divClass} flex-grow`">
+                        <div :class="`${divClass} lg:w-2/6`">
                             <label for="State" class="labelClass">
                                 State
                             </label>
@@ -158,7 +166,7 @@
 
             <div class="flex items-center justify-between md:justify-end gap-x-6">
                 <div>
-                    <SecondaryButton @click="showPropertyList">
+                    <SecondaryButton @click="backToList">
                         Cancel
                     </SecondaryButton>
                 </div>
@@ -171,15 +179,15 @@
             </div>
         </div>
     </form>
-
 </template>
-
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import LoadingButton from "@/Components/LoadingButton.vue";
 import {ref, watch} from "vue";
 import Editable from "@/Components/Editable.vue";
+import MultiselectCustom from "@/Components/MultiselectCustom.vue";
+import {XIcon} from "@heroicons/vue/solid";
 
 let props = defineProps({
     property: Object,
@@ -205,14 +213,15 @@ let form = useForm({
     'cost': props.property ? props.property.cost : '',
     'payments_left': props.property ? props.property.payments_left : '',
     'handover_date': props.property ? props.property.handover_date : '',
-    'property_status': props.states ? props.states.property_status : '',
+    'property_status': props.property && props.property.property_status ? props.property.property_status : 'Vacant',
+
 })
 
 selectedState.value = props.states.find(e => e.id === form.state_id)
 watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;
 });
-const showPropertyList = () => {
+const backToList = () => {
     form.get(route('property.index'))
 }
 
@@ -235,7 +244,7 @@ const divInputClass = ref(`relative flex rounded-md shadow-sm ring-1 ring-inset 
 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md`);
 
 // // List of values
-
+const propertyTypes = ref(['Vacant', 'Occupied'])
 
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
