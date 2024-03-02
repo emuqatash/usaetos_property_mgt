@@ -11,9 +11,9 @@
                 <div class="hidden sm:flex sm:col-span-5 xl:col-span-4 justify-center  overflow-x-auto">
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-6">
-                            <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Contracts</Link>
+                            <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
+                            <Link :href="route('contract.index')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Contracts</Link>
                             <Link :href="route('jobs.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Jobs</Link>
-                            <Link :href="route('estimates.drafts')" :class="[$page.url.startsWith('/estimates') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Estimates</Link>
                             <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>
                             <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>
                             <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Supply</Link>
@@ -50,25 +50,25 @@
             </nav>
             <div v-if="showMobileMenu" class="flex sm:hidden bg-gray-100 px-8" id="mobile-menu">
                 <div class="space-y-1 py-4 w-full">
+                    <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Properties</Link>
                     <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contracts</Link>
+                    <Link :href="route('contacts.index')" :class="[$page.url.startsWith('/contact') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Tenants</Link>
                     <Link :href="route('jobs.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Jobs</Link>
-                    <Link :href="route('estimates.drafts')" :class="[$page.url.startsWith('/estimates') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Estimates</Link>
                     <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Invoices</Link>
                     <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">PO</Link>
                     <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Supply</Link>
-                    <a href="#" class="block text-black hover:bg-gray-100 hover:text-gray-800 rounded-md px-3 py-2 text-base font-medium" @click="showContact()">Tenants</a>
                     <Link :href="route('settings.profile')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Profile</Link>
                 </div>
             </div>
             <div class="bg-white grid grid-cols-8 py-4 px-8 sm:min-h-screen sm:mt-4">
                 <div class="flex flex-col col-span-8 sm:col-span-2 mb-16 sm:mb-4">
+                    <properties-side-menu v-if="props.subMenu === 'PROPERTIES'" />
                     <contracts-side-menu v-if="props.subMenu === 'CONTRACTS'" />
-                    <settings-side-menu v-if="props.subMenu === 'SETTINGS'" />
                     <jobs-side-menu v-if="props.subMenu === 'JOBS'" />
-                    <estimates-side-menu v-if="props.subMenu === 'ESTIMATES'" />
                     <invoices-side-menu v-if="props.subMenu === 'INVOICES'" />
                     <purchase-orders-side-menu v-if="props.subMenu === 'PURCHASE_ORDERS'" />
                     <supply-side-menu v-if="props.subMenu === 'SUPPLY'" />
+                    <settings-side-menu v-if="props.subMenu === 'SETTINGS'" />
                 </div>
                 <div class="flex col-span-8 sm:col-span-4 items-start pb-20">
                     <main class="px-4 sm:px-6 lg:flex-auto lg:px-0">
@@ -90,13 +90,13 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
 import SettingsSideMenu from '@/Components/SideMenus/SettingsSideMenu.vue';
 import JobsSideMenu from '@/Components/SideMenus/JobsSideMenu.vue';
-import EstimatesSideMenu from '@/Components/SideMenus/EstimatesSideMenu.vue';
 import ContractsSideMenu from '@/Components/SideMenus/ContractsSideMenu.vue';
 import InvoicesSideMenu from '@/Components/SideMenus/InvoicesSideMenu.vue';
 import PurchaseOrdersSideMenu from '@/Components/SideMenus/PurchaseOrdersSideMenu.vue';
 import SupplySideMenu from '@/Components/SideMenus/SupplySideMenu.vue';
 import AppButton from "@/Components/AppButton.vue";
 import { UserAddIcon } from "@heroicons/vue/solid/esm";
+import PropertiesSideMenu from "@/Components/SideMenus/PropertiesSideMenu.vue";
 
 const showMobileMenu = ref(false)
 const page = usePage()
