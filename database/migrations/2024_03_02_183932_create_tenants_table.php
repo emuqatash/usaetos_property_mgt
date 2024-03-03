@@ -6,15 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->foreignId('contact_type_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('phone_number1', 32);
-            $table->string('phone_number2', 32)->nullable();
+            $table->foreignId('tenant_type_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('phone_number_1', 32);
+            $table->string('phone_number_2', 32)->nullable();
             $table->string('email')->unique();
             $table->string('address', 128)->nullable();
             $table->string('city', 64)->nullable();
@@ -30,8 +33,11 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('tenants');
     }
 };

@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $contacts = Cache::remember('articles', 60, function () use ($request) {
@@ -71,7 +68,6 @@ class ContactController extends Controller
     public function store(StoreContactRequest $request)
     {
         $contact = $request->all();
-
         if ($request->input('id') > 0) {
             $contact_data = $request->all();
             $contact = Contact::find($request->input('id'));

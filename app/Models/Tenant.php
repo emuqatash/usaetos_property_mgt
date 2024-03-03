@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class Tenant extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'first_name',
         'last_name',
-        'contact_type_id',
+        'tenant_type_id',
         'phone_number_1',
         'phone_number_2',
         'email',
@@ -33,9 +33,9 @@ class Contact extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function contactType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function tenantType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(ContactType::class);
+        return $this->belongsTo(TenantType::class);
     }
 
     public function state(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -48,8 +48,8 @@ class Contact extends Model
         return $this->hasMany(Job::class);
     }
 
-    public function contactAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function tenantAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(ContactAttachmentFile::class);
+        return $this->hasMany(TenantAttachmentFile::class);
     }
 }

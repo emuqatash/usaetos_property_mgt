@@ -214,7 +214,6 @@ let form = useForm({
     'payments_left': props.property ? props.property.payments_left : '',
     'handover_date': props.property ? props.property.handover_date : '',
     'property_status': props.property && props.property.property_status ? props.property.property_status : 'Vacant',
-
 })
 
 selectedState.value = props.states.find(e => e.id === form.state_id)

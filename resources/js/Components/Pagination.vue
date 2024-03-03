@@ -9,7 +9,7 @@
                     }}</span> results
                 </p>
             </div>
-            <div class="flex-1 flex justify-center lg:justify-end gap-2">
+            <div class="flex-1 flex justify-between lg:justify-end gap-2">
                 <template v-for="link in pagination.links" :key="link.label">
                     <template v-if="link.label === 'Previous' || link.label === 'Next'">
                         <Link

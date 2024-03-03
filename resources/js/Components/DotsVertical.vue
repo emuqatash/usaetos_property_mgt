@@ -6,18 +6,30 @@ const emit = defineEmits(['submit-form']);
 
 let props = defineProps({
     eachRecord: Number,
+    allowEdit: {
+        type: Boolean,
+        default: true,
+    },
+    allowDuplicate: {
+        type: Boolean,
+        default: true,
+    },
+    allowDelete: {
+        type: Boolean,
+        default: true,
+    },
 })
 
 const dropdownOpen = ref(false);  // boolean flag for dropdown visibility
-const showRecordAction = ref('viewRecord');
+const EditRecordAction = ref('viewRecord');
 const duplicateRecordAction = ref('duplicateRecord');
 const deleteRecordAction = ref('deleteRecord');
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value; // toggle dropdown visibility
 }
 
-const showRecord = (eachRecord) => {
-    emit('submit-form', eachRecord, showRecordAction.value);
+const EditRecord = (eachRecord) => {
+    emit('submit-form', eachRecord, EditRecordAction.value);
     dropdownOpen.value = false;
 }
 
@@ -58,9 +70,12 @@ onUnmounted(() => {
         <div v-show="dropdownOpen" class="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg z-50">
             <div class="rounded-md bg-white shadow-xs">
                 <div class="py-1">
-                    <a href="#" v-on:click.prevent="showRecord(eachRecord)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">View\Edit</a>
-                    <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Duplicate</a>
-                    <a href="#" v-on:click.prevent="deleteRecord(eachRecord)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-300">Delete</a>
+                    <a href="#" v-on:click.prevent="EditRecord(eachRecord)" v-if="allowEdit"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">View\Edit</a>
+                    <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" v-if="allowDuplicate"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Duplicate</a>
+                    <a href="#" v-on:click.prevent="deleteRecord(eachRecord)" v-if="allowDelete"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-300">Delete</a>
                 </div>
             </div>
         </div>

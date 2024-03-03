@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout :sub-menu="'SETTINGS'">
+    <AuthenticatedLayout :sub-menu="'TENANTS'">
         <!-- Modal -->
         <AppModal :modalActive="modalActive">
             <div class="overflow-y-auto h-screen md:h-auto">
@@ -9,7 +9,7 @@
                     </progress>
                     <div class="lg:flex">
                         <div class="p-7 relative border-b border-gray-100 space-y-4">
-                            <p class=" text-xl font-semibold mb-6">Create Contact</p>
+                            <p class=" text-xl font-semibold mb-6">Create Tenant</p>
 
                             <div class="lg:flex gap-2">
                                 <div>
@@ -83,22 +83,22 @@
                                 </div>
                                 <!------------Radio------------>
                                 <div>
-                                    <p :class="labelClass">Contact Type</p>
+                                    <p :class="labelClass">Tenant Type</p>
                                     <div class="md:flex md:space-x-6 mt-4">
-                                        <div v-for="contactType in contactTypes" :key="contactType.id"
+                                        <div v-for="tenantType in tenantTypes" :key="tenantType.id"
                                              class="flex items-center">
                                             <input
                                                 type="radio"
-                                                :value="contactType.id"
-                                                id="contact_type_id"
-                                                v-model="form.contact_type_id"
+                                                :value="tenantType.id"
+                                                id="tenant_type_id"
+                                                v-model="form.tenant_type_id"
                                                 class="text-blue-600 focus:ring-blue-500"
                                             />
-                                            <label :for="contactType.id"
-                                                   class="ml-2 text-sm text-gray-600">{{ contactType.name }}</label>
+                                            <label :for="tenantType.id"
+                                                   class="ml-2 text-sm text-gray-600">{{ tenantType.name }}</label>
                                         </div>
                                     </div>
-                                    <div v-if="form.errors.contact_type_id" v-text="form.errors.contact_type_id"
+                                    <div v-if="form.errors.tenant_type_id" v-text="form.errors.tenant_type_id"
                                          class="text-red-500 text-xs mt-1"></div>
                                 </div>
                             </div>
@@ -200,9 +200,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
 
                     <!--Buttons-->
                     <div class="p-8 flex justify-around md:justify-start gap-2 bg-gray-50">
@@ -213,7 +211,7 @@
                             </LoadingButton>
                         </div>
                         <div>
-                            <SecondaryButton @click="showContactList">
+                            <SecondaryButton @click="showTenantList">
                                 Cancel
                             </SecondaryButton>
                         </div>
@@ -235,9 +233,9 @@ import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
 
 let props = defineProps({
-    contact: Object,
+    tenant: Object,
     states: Object,
-    contactTypes: Object,
+    tenantTypes: Object,
 })
 
 const modalActive = ref(true)
@@ -245,25 +243,25 @@ const isLoading = ref(false);
 const selectedState = ref([]);
 
 let form = useForm({
-    'id': props.contact ? props.contact.id : '',
-    'first_name': props.contact ? props.contact.first_name : '',
-    'last_name': props.contact ? props.contact.last_name : '',
-    'contact_type_id': props.contact ? props.contact.contact_type_id : '',
-    'phone_number_1': props.contact ? props.contact.phone_number_1 : '',
-    'phone_number_2': props.contact ? props.contact.phone_number_2 : '',
-    'email': props.contact ? props.contact.email : '',
-    'address': props.contact ? props.contact.email : '',
-    'city': props.contact ? props.contact.city : '',
-    'state_id': props.contact ? props.contact.state_id : '',
-    'zip': props.contact ? props.contact.zip : '',
-    'document_id': props.contact ? props.contact.document_id : '',
-    'document2_id': props.contact ? props.contact.document2_id : '',
-    'profile_photo_path': props.contact ? props.contact.profile_photo_path : '',
-    'remarks': props.contact ? props.contact.remarks : '',
-    'image': props.contact ? props.contact.image : '',
-    'attachment_file_name': props.contact ? props.contact.contact_attachment_files : [],
-    'attachment_file': props.contact ? props.contact.attachment_file : '',
-    'attachmentFiles': props.contact ? props.contact.attachmentFiles : '',
+    'id': props.tenant ? props.tenant.id : '',
+    'first_name': props.tenant ? props.tenant.first_name : '',
+    'last_name': props.tenant ? props.tenant.last_name : '',
+    'tenant_type_id': props.tenant ? props.tenant.tenant_type_id : '',
+    'phone_number_1': props.tenant ? props.tenant.phone_number_1 : '',
+    'phone_number_2': props.tenant ? props.tenant.phone_number_2 : '',
+    'email': props.tenant ? props.tenant.email : '',
+    'address': props.tenant ? props.tenant.email : '',
+    'city': props.tenant ? props.tenant.city : '',
+    'state_id': props.tenant ? props.tenant.state_id : '',
+    'zip': props.tenant ? props.tenant.zip : '',
+    'document_id': props.tenant ? props.tenant.document_id : '',
+    'document2_id': props.tenant ? props.tenant.document2_id : '',
+    'profile_photo_path': props.tenant ? props.tenant.profile_photo_path : '',
+    'remarks': props.tenant ? props.tenant.remarks : '',
+    'image': props.tenant ? props.tenant.image : '',
+    'attachment_file_name': props.tenant ? props.tenant.tenant_attachment_files : [],
+    'attachment_file': props.tenant ? props.tenant.attachment_file : '',
+    'attachmentFiles': props.tenant ? props.tenant.attachmentFiles : '',
 })
 
 // handle upload attachment files
@@ -307,13 +305,13 @@ const removeAttachmentFile = (index, attachmentFileId) => {
     attachmentFileList.value.splice(index, 1)
     attachmentFileModel.value.splice(attachmentFileModel.value.findIndex(file => file.id === attachmentFileId), 1)
     form.attachmentFiles = attachmentFileModel.value.map(file => file.file)
-    form.delete(route('contact-attachment-files.destroy', attachmentFileId), {
+    form.delete(route('tenant-attachment-files.destroy', attachmentFileId), {
         preserveScroll: true,
     })
 }
 
 let submit = () => {
-    form.post(route('contacts.store'), {
+    form.post(route('tenant.store'), {
         onStart: () => {
             isLoading.value = true
         },
@@ -326,8 +324,8 @@ let submit = () => {
     })
 }
 
-const showContactList = () => {
-    router.get(route('contacts.index'))
+const showTenantList = () => {
+    router.get(route('tenant.index'))
 }
 
 selectedState.value = props.states.find(e => e.id === form.state_id)

@@ -10,6 +10,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SpecificationAttachmentController;
 use App\Http\Controllers\SpecificationController;
+use App\Http\Controllers\TenantAttachmentController;
+use App\Http\Controllers\TenantController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -81,6 +83,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/property/{id}/duplicate',  [PropertyController::class, 'duplicate'])->name('property.duplicate');
     Route::resource('property', PropertyController::class);
+
+    Route::delete('/tenant-attachment-files/{id}', [TenantAttachmentController::class, 'destroy'])->name('tenant-attachment-files.destroy');
+    Route::get('/tenant/{id}/duplicate',  [TenantController::class, 'duplicate'])->name('tenant.duplicate');
+    Route::resource('tenant', TenantController::class);
 
     Route::resource('contract', ContractController::class);
 

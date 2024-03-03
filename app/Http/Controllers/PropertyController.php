@@ -72,7 +72,7 @@ class PropertyController extends Controller
         return redirect()->route('property.index', $property);
     }
 
-    public function show(Property $property)
+    public function edit(Property $property)
     {
         $states = State::all();
         $property->load('state');
