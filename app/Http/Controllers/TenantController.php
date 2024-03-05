@@ -24,7 +24,7 @@ class TenantController extends Controller
                         ->orWhere('last_name', 'like', "%{$search}%");
                 })
                 ->orderBy('first_name')
-                ->paginate(0)
+                ->paginate(10)
                 ->withQueryString()
                 ->through(fn($tenant) => [
                     'id' => $tenant->id,
@@ -56,7 +56,7 @@ class TenantController extends Controller
         ]);
     }
 
-    // Returns all 500 without Caching
+    //Returns all 500 without Caching
 //    public function allWithoutCache()
 //    {
 //        return Tenant::all();
@@ -80,9 +80,12 @@ class TenantController extends Controller
         }
 
         if ($request->hasfile('attachmentFiles')) {
+            $userId = Auth::user()->id;
+            $tenantId = $tenant->id;
+            $companyId = Auth::user()->company_id;
             foreach ($request->file('attachmentFiles') as $file) {
                 $attachmentFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.' . $file->getClientOriginalExtension();
-                $attachmentFilePath = $file->storeAs('public/tenant_attachment_files', $attachmentFileName);
+                $attachmentFilePath = $file->storeAs('public/tenant_attachment_files/'.$companyId .'/'. $userId . '/' . $tenantId, $attachmentFileName);
                 $tenant->tenantAttachmentFiles()->create([
                     'company_id' => Auth::user()->company_id,
                     'attachment_file_name' => $attachmentFileName,

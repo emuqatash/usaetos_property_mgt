@@ -43,9 +43,9 @@ class Contact extends Model
         return $this->belongsTo(State::class);
     }
 
-    public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function jobWorks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(JobWork::class);
     }
 
     public function contactAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany

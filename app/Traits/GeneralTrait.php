@@ -19,7 +19,6 @@ trait GeneralTrait
         ]);
     }
 
-
     public function returnSuccessMessage($msg = "", $errNum = "S000")
     {
         return [
@@ -38,7 +37,6 @@ trait GeneralTrait
             $key => $value
         ]);
     }
-
 
     //////////////////
     public function returnValidationError($code = "E001", $validator)

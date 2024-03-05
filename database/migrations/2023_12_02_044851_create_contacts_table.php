@@ -13,8 +13,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->foreignId('contact_type_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('phone_number1', 32);
-            $table->string('phone_number2', 32)->nullable();
+            $table->string('phone_number_1', 32);
+            $table->string('phone_number_2', 32)->nullable();
             $table->string('email')->unique();
             $table->string('address', 128)->nullable();
             $table->string('city', 64)->nullable();

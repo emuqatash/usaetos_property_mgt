@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('job_permit_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('job_work_id');
+            $table->foreign('job_work_id')->references('id')->on
+                ('job_works')->onDelete('cascade');
             $table->string('permit_file_name');
             $table->string('permit_file');
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
@@ -21,9 +23,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('job_permit_files');

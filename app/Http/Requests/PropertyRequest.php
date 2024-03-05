@@ -15,7 +15,7 @@ class PropertyRequest extends FormRequest
     {
         return [
             'property_no' => 'required',
-            'property_name' => 'required',
+            'name' => 'required',
             'owner' => 'required',
             'city' => 'required',
             'state_id' => 'required',

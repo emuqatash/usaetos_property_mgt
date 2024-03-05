@@ -250,7 +250,7 @@ let form = useForm({
     'phone_number_1': props.tenant ? props.tenant.phone_number_1 : '',
     'phone_number_2': props.tenant ? props.tenant.phone_number_2 : '',
     'email': props.tenant ? props.tenant.email : '',
-    'address': props.tenant ? props.tenant.email : '',
+    'address': props.tenant ? props.tenant.address : '',
     'city': props.tenant ? props.tenant.city : '',
     'state_id': props.tenant ? props.tenant.state_id : '',
     'zip': props.tenant ? props.tenant.zip : '',

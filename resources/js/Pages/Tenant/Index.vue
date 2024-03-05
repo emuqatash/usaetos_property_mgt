@@ -21,12 +21,9 @@
                 <thead>
                 <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Email</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Phone</th>
-                    <th scope="col" class="px-10 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Tenant Type</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Edit</span>
-                    </th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Tenant Type</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -37,11 +34,12 @@
                     <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                         {{ eachTenant.first_name }}
                         {{ eachTenant.last_name }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachTenant.phone_number_1 }}</td>
-                    <td class="flex-wrap px-10 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.tenant_type_name }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap py-3 text-sm text-gray-500">{{ eachTenant.email }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.email }}</td>
+                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 ">{{ eachTenant.phone_number_1 }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.tenant_type_name }}</td>
                     <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0" >
-                        <DotsVertical :eachRecord="eachTenant.id" @submit-form="tenantAction" :allowDuplicate="false"/>
+                        <DotsVertical :eachRecord="eachTenant.id" @submit-form="recordAction" :allowDuplicate="false"
+                                      :tenancyContract="true"/>
                     </td>
                 </tr>
                 </tbody>
@@ -52,10 +50,10 @@
 
             <!--------------------Popup Confirmation Delete--------------------------->
             <ConfirmationModal
-                @onConfirm="deleteRecordConfirmed(deleteRecordId)"
+                @onConfirm="deleteRecordConfirmed(recordId)"
                 @onCancel="closeModel"
                 :show="modalActive"
-                message="Are you sure you want to delete this record?"
+                :message="'Are you sure you want to delete this record ' + recordId + '?'"
                 confirmLabel="Yes, delete it!"
                 cancelLabel="Cancel"
             />
@@ -89,7 +87,7 @@ let props = defineProps({
 const selectedRows = ref([])
 const search = ref(props.filters.search)
 const modalActive = ref(false)
-const deleteRecordId = ref(null);
+const recordId = ref(null);
 
 watch(search, debounce(() => {
         router.get('/tenant', {search: search.value},
@@ -104,8 +102,12 @@ const newTenant = () => {
     router.get(route('tenant.create'))
 }
 /// below manage the dropdown menuw and actions
-const tenantAction = (id, action) => {
+const recordAction = (id, action) => {
+    recordId.value = id;
     switch(action) {
+        case 'viewTenantContract':
+            router.get(route('tenant-contract.show', id))
+            break;
         case 'viewRecord':
             router.get(route('tenant.edit', id))
             break;
@@ -113,7 +115,6 @@ const tenantAction = (id, action) => {
             router.get(route('tenant.duplicate', id))
             break;
         case 'deleteRecord':
-            deleteRecordId.value = id;
             modalActive.value = true;
             break;
     }

@@ -1,5 +1,5 @@
 <script setup>
-import {ref,onMounted, onUnmounted} from 'vue';
+import {ref,onMounted, onUnmounted, defineEmits} from 'vue';
 import {DotsVerticalIcon} from "@heroicons/vue/outline";
 
 const emit = defineEmits(['submit-form']);
@@ -12,7 +12,11 @@ let props = defineProps({
     },
     allowDuplicate: {
         type: Boolean,
-        default: true,
+        default: false,
+    },
+    tenancyContract: {
+        type: Boolean,
+        default: false,
     },
     allowDelete: {
         type: Boolean,
@@ -24,8 +28,15 @@ const dropdownOpen = ref(false);  // boolean flag for dropdown visibility
 const EditRecordAction = ref('viewRecord');
 const duplicateRecordAction = ref('duplicateRecord');
 const deleteRecordAction = ref('deleteRecord');
+const tenantContractAction = ref('viewTenantContract');
+
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value; // toggle dropdown visibility
+}
+
+const tenantContract = (eachRecord) => {
+    emit('submit-form', eachRecord, tenantContractAction.value);
+    dropdownOpen.value = false;
 }
 
 const EditRecord = (eachRecord) => {
@@ -67,9 +78,11 @@ onUnmounted(() => {
         </div>
 
         <!-- Dropdown content -->
-        <div v-show="dropdownOpen" class="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg z-50">
+        <div v-show="dropdownOpen" class="origin-top-right absolute right-0 mt-2 min-w-36 rounded-md shadow-lg z-50">
             <div class="rounded-md bg-white shadow-xs">
                 <div class="py-1">
+                    <a href="#" v-on:click.prevent="tenantContract(eachRecord)" v-if="tenancyContract"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Tenancy Contract</a>
                     <a href="#" v-on:click.prevent="EditRecord(eachRecord)" v-if="allowEdit"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">View\Edit</a>
                     <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" v-if="allowDuplicate"

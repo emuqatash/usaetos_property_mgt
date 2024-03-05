@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('job_attachment_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('job_work_id');
+            $table->foreign('job_work_id')->references('id')->on
+                ('job_works')->onDelete('cascade');
             $table->string('attachment_file_name')->nullable();
             $table->string('attachment_file')->nullable();
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');

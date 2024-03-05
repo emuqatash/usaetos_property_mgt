@@ -18,7 +18,7 @@ class PropertyController extends Controller
                 ->with('state')
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('property_no', 'like', "%{$search}%")
-                        ->orWhere('property_name', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
                         ->orWhere('owner', 'like', "%{$search}%")
                         ->orWhere('address', 'like', "%{$search}%")
                         // Add this line to search in the related state's name.
@@ -36,7 +36,7 @@ class PropertyController extends Controller
                     return [
                         'id' => $property->id,
                         'property_no' => $property->property_no,
-                        'property_name' => $property->property_name,
+                        'name' => $property->name,
                         'owner' => $property->owner,
                         'state_name' => $property->state->name,
                         'city' => $property->city,
@@ -46,6 +46,8 @@ class PropertyController extends Controller
             'counts' => [
                 'vacant' => Property::where('property_status', 'Vacant')->count(),
                 'occupied' => Property::where('property_status', 'Occupied')->count(),
+                'rented' => Property::where('property_status', 'Rented')->count(),
+                'under_maintenance' => Property::where('property_status', 'Under Maintenance')->count(),
             ],
         ]);
     }

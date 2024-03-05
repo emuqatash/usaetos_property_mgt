@@ -106,6 +106,7 @@ class InsuranceAgentSeeder extends Seeder
                 'city' => $item[3],
                 'state' => $item[4],
                 'zip' => $item[5],
+                'company_id' => 1,
             ]);
         }
     }

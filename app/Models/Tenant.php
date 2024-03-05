@@ -43,13 +43,13 @@ class Tenant extends Model
         return $this->belongsTo(State::class);
     }
 
-    public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Job::class);
-    }
-
     public function tenantAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TenantAttachmentFile::class);
+    }
+
+    public function tenantContracts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TenantContract::class);
     }
 }

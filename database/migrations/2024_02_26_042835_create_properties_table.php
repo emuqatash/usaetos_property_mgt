@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->string('property_no');
-            $table->string('property_name');
+            $table->string('name');
             $table->string('address', 128)->nullable();
             $table->string('city', 64)->nullable();
             $table->foreignId('state_id')->nullable()->constrained()->onDelete('set null');
@@ -26,8 +26,8 @@ return new class extends Migration
             $table->date('date_of_purchase')->nullable();
             $table->string('area_size')->nullable();
             $table->integer('number_of_bedrooms')->nullable();
-            $table->decimal('cost', 8, 2)->nullable();
-            $table->decimal('payments_left', 8, 2)->nullable();
+            $table->decimal('cost', 20, 2)->nullable();
+            $table->integer('payments_left')->nullable();
             $table->date('handover_date')->nullable();
             $table->string('property_status', 20)->default('Vacant')->nullable();
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Contract extends Model
+class TenantContract extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,11 @@ class Contract extends Model
         'contract_no',
         'residential_tenancy_agreement',
         'description',
-        'contact_id',
         'document_id',
         'start_date',
         'end_date',
         'total_period',
         'annual_rent',
-        'monthly_rent',
         'term_of_payment',
         'security_deposit',
         'bills_paid_by',
@@ -42,8 +40,13 @@ class Contract extends Model
         return $this->belongsTo(Property::class);
     }
 
-    public function contact(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function tenantContractAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TenantContractAttachmentFile::class);
     }
 }

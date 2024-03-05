@@ -23,12 +23,27 @@
                             Vacant ({{$page.props.counts.vacant}})
                         </Link>
                     </li>
-
+                    <li>
+                        <Link :href="route('property.index', { propertyStatus: 'Rented' })"
+                              :class="[$page.props.filters.propertyStatus === 'Rented' ? 'text-blue-600 bg-gray-100' : 'text-black hover:text-blue-500 hover:bg-gray-100',
+                              'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                            <OfficeBuildingIcon class="w-6 section-button-icon mr-2 text-gray-600 bg-gray-400 hidden md:inline-block"/>
+                            Rented ({{$page.props.counts.rented}})
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('property.index', { propertyStatus: 'Under Maintenance' })"
+                              :class="[$page.props.filters.propertyStatus === 'Under Maintenance' ? 'text-blue-600 bg-gray-100' : 'text-black hover:text-blue-500 hover:bg-gray-100',
+                              'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                            <ExclamationCircleIcon  class="w-6 section-button-icon mr-2 hidden md:inline-block"/>
+                            UM ({{$page.props.counts.under_maintenance}})
+                        </Link>
+                    </li>
                     <li>
                         <Link :href="route('property.index', { propertyStatus: 'Occupied' })"
                               :class="[$page.props.filters.propertyStatus === 'Occupied' ? 'text-blue-600 bg-gray-100' : 'text-black hover:text-blue-500 hover:bg-gray-100',
                               'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
-                            <OfficeBuildingIcon class="w-6 section-button-icon mr-2 text-gray-600 bg-gray-400 hidden md:inline-block"/>
+                            <KeyIcon class="w-6 section-button-icon mr-2 hidden md:inline-block"/>
                             Occupied ({{$page.props.counts.occupied}})
                         </Link>
                     </li>
@@ -39,6 +54,6 @@
 </template>
 <script setup>
 import {Link} from '@inertiajs/vue3'
-import {OfficeBuildingIcon,MenuIcon } from "@heroicons/vue/outline"
+import {OfficeBuildingIcon,MenuIcon, KeyIcon,ExclamationCircleIcon   } from "@heroicons/vue/outline"
 
 </script>

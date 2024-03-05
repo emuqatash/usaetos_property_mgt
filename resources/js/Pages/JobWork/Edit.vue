@@ -3,9 +3,8 @@
         <div class="sm:space-y-16 p-10 lg:pl-72 lg:pr-72">
             <div>
                 <div class="flex items-center justify-between">
-                    <h2 class="md:text-2xl font-bold leading-7 text-gray-900">Job</h2>
-                    <!-- Assuming XIcon is a component like from Heroicons -->
-                    <XIcon class="flex bg-white text-black  h-6 w-6 ml-4 cursor-pointer" @click="showJobList()"/>
+                    <h2 class="md:text-2xl font-bold leading-7 text-gray-900">Update Job</h2>
+                    <XIcon class="flex bg-white text-black  h-6 w-6 ml-4 cursor-pointer" @click="showJob()"/>
                 </div>
                 <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Get started by filling in the information
                     below to create your job.</p>
@@ -175,20 +174,19 @@
             </div>
             <div class="mt-6 flex items-center justify-between md:justify-end gap-x-6">
                 <div>
-                    <SecondaryButton @click="showJobList">
+                    <SecondaryButton @click="showJob">
                         Cancel
                     </SecondaryButton>
                 </div>
                 <div>
                     <LoadingButton type="submit" :isLoading="isLoading" :disabled="form.processing"
                                    class="px-8 py-2.5">
-                        Save
+                        Update
                     </LoadingButton>
                 </div>
             </div>
         </div>
     </form>
-
     <AppContacts v-if="appContactsActive" :filters="form" :contact="contactList" @cancel="handleCloseModel"
                  @selectedContact="handleSelectedContact"/>
 
@@ -203,31 +201,26 @@ import LoadingButton from "@/Components/LoadingButton.vue";
 import AppContacts from "@/Components/AppComponents/AppContacts.vue";
 import {debounce} from "lodash";
 
+
 let props = defineProps({
+    job: Object,
     salesmen: Object,
     contactList: Object,
     insuranceAgentList: Array,
+    selectedSalesmen: Object,
 })
+
+let form = useForm(props.job)
 
 const appContactsActive = ref(false)
 const search = ref([])
 const contactList = ref(props.contactList)
 const selectUser = ref([])
-const selectInsuranceAgent = ref([])
-const selectedContactName = ref('')
+const selectInsuranceAgent = ref(props.job.insurance_agent)
+const selectedContactName = ref('');
 
-let form = useForm({
-    'contact_id': '',
-    'user_id': '',
-    'salesman_ids': [],
-    'job_number': '',
-    'job_location': '',
-    'job_type': '',
-    'roof_type': '',
-    'insurance_agents_id': '',
-    'insurance_claim_number': '',
-    'notes': '',
-})
+selectedContactName.value = form.contact.first_name + ' ' + form.contact.last_name
+selectUser.value = props?.selectedSalesmen
 
 watch([selectInsuranceAgent, selectUser], ([newInsuranceAgent, newUsers]) => {
     form.insurance_agents_id = newInsuranceAgent ? newInsuranceAgent.id : null;
@@ -235,8 +228,8 @@ watch([selectInsuranceAgent, selectUser], ([newInsuranceAgent, newUsers]) => {
 })
 
 const isLoading = ref(false);
-const showJobList = () => {
-    router.get(route('jobs.index'))
+const showJob = () => {
+    router.get(route('jobworks.show', props.job.id))
 }
 
 const showAppContacts = () => {
@@ -253,7 +246,7 @@ const handleSelectedContact = (selectedContact) => {
 }
 
 let handleSubmit = () => {
-    form.post(route('jobs.store'), {
+    form.put(route('jobworks.update', form.id) ,{
         onStart: () => {
             isLoading.value = true
         },
@@ -263,7 +256,7 @@ let handleSubmit = () => {
     })
 }
 
-// Google maps Rest API Autocomplete address
+// Google maps API Autocomplete address
 const addresses = ref([]);
 const fetchAddressSuggestions = debounce(async () => {
     if (form.job_location.length > 2) {
@@ -294,6 +287,7 @@ const divClass = ref('sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6');
 const divInputClass = ref(`relative flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2
 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md`);
 const noteClass = ref(`block w-full max-w-2xl rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset`);
+
 // List of values
 const jobTypes = ref(['Roof Replacement', 'Roof Repair', 'Other'])
 const roofTypes = ref(['Wood', 'Composite', 'Flat', 'Metal', 'Other'])

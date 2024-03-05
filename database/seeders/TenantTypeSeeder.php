@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\ContactType;
+use App\Models\TenantType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-class ContactTypeSeeder extends Seeder
+class TenantTypeSeeder extends Seeder
 {
     public function run(): void
     {
@@ -17,7 +16,7 @@ class ContactTypeSeeder extends Seeder
         ];
 
         foreach ($contactTypes as $type) {
-            ContactType::create([
+            TenantType::create([
                 'name' => $type,
                 'company_id' => 1,
             ]);

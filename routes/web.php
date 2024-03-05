@@ -4,13 +4,15 @@ use App\Http\Controllers\contactAttachmentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\JobAttachmentFileController;
-use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobWorkController;
 use App\Http\Controllers\JobPermitFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SpecificationAttachmentController;
 use App\Http\Controllers\SpecificationController;
 use App\Http\Controllers\TenantAttachmentController;
+use App\Http\Controllers\TenantContractAttachmentController;
+use App\Http\Controllers\TenantContractController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -74,9 +76,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/contact-attachment-files/{id}', [ContactAttachmentController::class, 'destroy'])->name('contact-attachment-files.destroy');
     Route::resource('contacts', ContactController::class);
 
-    Route::delete('/job-permit-files/{id}', [JobPermitFileController::class, 'destroy'])->name('job-permit-files.destroy');
-    Route::delete('/job-attachment-files/{id}', [JobAttachmentFileController::class, 'destroy'])->name('job-attachment-files.destroy');
-    Route::resource('jobs', JobController::class);
+    Route::delete('/jobwork-permit-files/{id}', [JobPermitFileController::class, 'destroy'])->name('jobwork-permit-files.destroy');
+    Route::delete('/jobwork-attachment-files/{id}', [JobAttachmentFileController::class, 'destroy'])->name('jobwork-attachment-files.destroy');
+    Route::resource('jobworks', JobWorkController::class);
 
     Route::delete('/specification-attachment-files/{id}', [specificationAttachmentController::class, 'destroy'])->name('specification-attachment-files.destroy');
     Route::resource('specifications', SpecificationController::class);
@@ -88,7 +90,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/tenant/{id}/duplicate',  [TenantController::class, 'duplicate'])->name('tenant.duplicate');
     Route::resource('tenant', TenantController::class);
 
-    Route::resource('contract', ContractController::class);
+    Route::delete('/tenant-contract-attachment-files/{id}', [TenantContractAttachmentController::class, 'destroy'])->name('tenant-contract-attachment-files.destroy');
+    Route::get('/tenant-contract/{id}/duplicate',  [TenantContractController::class, 'duplicate'])->name('tenant-contract.duplicate');
+    Route::resource('tenant-contract', TenantContractController::class);
 
 
     //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
