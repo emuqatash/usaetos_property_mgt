@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('specification_attachment_files', function (Blueprint $table) {
+        Schema::create('tenant_contract_attachment_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('specification_id')->constrained()->onDelete('cascade');
-            $table->string('attachment_file_name')->nullable();
-            $table->string('attachment_file')->nullable();
+            $table->foreignId('tenant_contract_id')->constrained()->onDelete('cascade');
+            $table->string('attachment_file_name');
+            $table->string('attachment_file');
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('specification_attachment_files');
+        Schema::dropIfExists('tenant_contract_attachment_files');
     }
 };

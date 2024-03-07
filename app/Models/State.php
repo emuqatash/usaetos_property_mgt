@@ -18,4 +18,9 @@ class State extends Model
     {
         return $this->hasMany(Property::class);
     }
+
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

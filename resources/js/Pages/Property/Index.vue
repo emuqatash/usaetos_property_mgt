@@ -21,13 +21,9 @@
                 <thead>
                 <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">No</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">owner</th>
-                    <th scope="col" class="px-10 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">City</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">State</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Edit</span>
-                    </th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Name</th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Owner</th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">City & State</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -36,12 +32,11 @@
                     :class="{'bg-gray-100': selectedRow === eachProperty.id, 'divide-y divide-gray-10 ': selectedRows.includes(eachProperty.id) }"
                     @click="selectRow(eachProperty.id)">
                     <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ eachProperty.property_no }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.property_name }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.name }}</td>
                     <td class="flex-wrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.owner }}</td>
-                    <td class="flex-wrap px-10 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.city }}</td>
-                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.state_name }}</td>
-                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0" >
-                        <DotsVertical :eachRecord="eachProperty.id" @submit-form="viewOrDeleteProperty" />
+                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.city }} \ {{ eachProperty.state_name }}</td>
+                    <td class="relative whitespace-nowrap py-4 pr-3 text-right text-sm font-medium sm:pr-0">
+                        <DotsVertical :eachRecord="eachProperty.id" @submit-form="recordAction" :allowDuplicate="true"/>
                     </td>
                 </tr>
                 </tbody>
@@ -49,6 +44,16 @@
             <!--------------------pagination--------------------------->
             <Pagination :pagination="property" />
             <!--------------------pagination--------------------------->
+            <!--------------------Popup Confirmation Delete--------------------------->
+            <ConfirmationModal
+                @onConfirm="deleteRecordConfirmed(deleteRecordId)"
+                @onCancel="closeModel"
+                :show="modalActive"
+                :message="'Are you sure you want to delete this record ' + deleteRecordId + '?'"
+                confirmLabel="Yes, delete it!"
+                cancelLabel="Cancel"
+            />
+            <!--------------------Popup Confirmation Delete--------------------------->
         </div>
     </template>
     <template v-else>
@@ -67,6 +72,9 @@ import {debounce} from "lodash";
 import EmptyProperty from "@/Pages/Property/EmptyProperty.vue";
 import DotsVertical from "@/Components/DotsVertical.vue";
 import Pagination from "@/Components/Pagination.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Modal from "@/Components/Modal.vue";
+import ConfirmationModal from "@/Composables/ConfirmationModal.vue";
 
 let props = defineProps({
     property: Object,
@@ -75,6 +83,8 @@ let props = defineProps({
 
 const selectedRows = ref([])
 const search = ref(props.filters.search)
+const modalActive = ref(false)
+const deleteRecordId = ref(null);
 
 watch(search, debounce(() => {
         router.get('/property', {search: search.value},
@@ -89,19 +99,18 @@ const newProperty = () => {
     router.get(route('property.create'))
 }
 /// below manage the dropdown menuw and actions
-const viewOrDeleteProperty = (id, action) => {
+const recordAction = (id, action) => {
     switch(action) {
         case 'viewRecord':
-            router.get(route('property.show', id))
+            router.get(route('property.edit', id))
             break;
         case 'duplicateRecord':
             router.get(route('property.duplicate', id))
             break;
         case 'deleteRecord':
-            if (window.confirm('Are you sure you want to delete this record?')) {
-            router.delete(route('property.destroy', id))
+            deleteRecordId.value = id;
+            modalActive.value = true;
             break;
-            }
     }
 }
 
@@ -110,6 +119,13 @@ function selectRow(id) {
     selectedRow.value = id;
 }
 
+const closeModel = () => {
+    modalActive.value = false;
+}
+const deleteRecordConfirmed = (id) => {
+    router.delete(route('property.destroy', id))
+    modalActive.value = false;
+}
 </script>
 
 

@@ -17,8 +17,8 @@ class InsuranceAgent extends Model
 
      public $timestamps = false;
 
-    public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function jobWorks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(JobWork::class);
     }
 }

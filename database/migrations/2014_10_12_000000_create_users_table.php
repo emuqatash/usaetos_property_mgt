@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('company_id');
-            $table->integer('role_id');
+            $table->unsignedBigInteger('company_id')->nullable()->references('id')->on('companies');
+            $table->bigInteger('role_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

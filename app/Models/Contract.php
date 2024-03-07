@@ -11,6 +11,7 @@ class Contract extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'property_id',
         'contract_no',
         'residential_tenancy_agreement',
@@ -21,9 +22,10 @@ class Contract extends Model
         'end_date',
         'total_period',
         'annual_rent',
+        'monthly_rent',
         'term_of_payment',
         'security_deposit',
-        'addc_bills_paid_by',
+        'bills_paid_by',
         'note',
         'company_id',
     ];

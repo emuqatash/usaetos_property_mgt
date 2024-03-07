@@ -62,7 +62,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function jobs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Job::class, 'job_user', 'user_id', 'job_id');
+        return $this->belongsToMany(JobWork::class, 'job_user', 'user_id', 'job_id');
     }
 
     public function isAdmin(): bool

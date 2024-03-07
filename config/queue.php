@@ -75,7 +75,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Job Batching
+    | JobWork Batching
     |--------------------------------------------------------------------------
     |
     | The following options configure the database and table that store job

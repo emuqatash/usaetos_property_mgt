@@ -22,8 +22,18 @@ class Company extends Model
         return $this->hasMany(Contact::class);
     }
 
-    public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function tenants(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(Tenant::class);
+    }
+
+    public function propertys(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Property::class);
+    }
+
+    public function jobWorks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JobWork::class);
     }
 }

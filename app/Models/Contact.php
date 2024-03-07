@@ -21,6 +21,7 @@ class Contact extends Model
         'state_id',
         'zip',
         'document_id',
+        'document2_id',
         'profile_photo_path',
         'remarks',
         'company_id',
@@ -42,9 +43,9 @@ class Contact extends Model
         return $this->belongsTo(State::class);
     }
 
-    public function jobs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function jobWorks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(JobWork::class);
     }
 
     public function contactAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany

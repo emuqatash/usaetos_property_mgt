@@ -1,5 +1,4 @@
 <template>
-    <!--    <Head title="Jobs | New"/>-->
     <AuthenticatedLayout :sub-menu="'JOBS'">
         <div class="flex justify-between items-center mb-8">
             <div class="relative rounded-md shadow-sm mr-8">
@@ -80,7 +79,7 @@ import {FolderIcon, FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import EmptyStateJobs from "@/Pages/Job/EmptyStateJobs.vue";
+import EmptyStateJobs from "@/Pages/JobWork/EmptyStateJobs.vue";
 
 let props = defineProps({
     job: Object,
@@ -91,7 +90,7 @@ const selectedRows = ref([])
 const search = ref(props.filters.search)
 
 watch(search, debounce(() => {
-        router.get('/jobs', {search: search.value},
+        router.get('/jobworks', {search: search.value},
             {
                 preserveState: true,
                 replace: true
@@ -100,9 +99,9 @@ watch(search, debounce(() => {
 )
 
 const newJob = () => {
-    router.get(route('jobs.create'))
+    router.get(route('jobworks.create'))
 }
 const showJob = (job) => {
-    router.get(route('jobs.show', job.id))
+    router.get(route('jobworks.show', job.id))
 }
 </script>
