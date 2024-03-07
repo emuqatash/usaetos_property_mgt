@@ -21,7 +21,7 @@ class TenantContractAttachmentFile extends Model
 
     public function tenantContract(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(TenantContract::class);
     }
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo

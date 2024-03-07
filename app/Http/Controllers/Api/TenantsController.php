@@ -23,7 +23,6 @@ class TenantsController extends Controller
         if(!$Tenant){
            return $this->returnError('001', 'Tenant is not in database');
         }
-
         return  $this->returnSuccessMessage( 'Tenant retrieved successfully',  $Tenant);
     }
 

@@ -51,6 +51,7 @@
             </nav>
             <div v-if="showMobileMenu" class="flex sm:hidden bg-gray-100 px-8" id="mobile-menu">
                 <div class="space-y-1 py-4 w-full">
+                    <Link :href="route('contacts.index')" :class="[$page.url.startsWith('/contacts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contacts</Link>
                     <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Properties</Link>
                     <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Tenants</Link>
                     <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contracts</Link>
@@ -65,7 +66,7 @@
                 <div class="flex flex-col col-span-8 sm:col-span-2 mb-16 sm:mb-4">
                     <properties-side-menu v-if="props.subMenu === 'PROPERTIES'" />
                     <Tenants-side-menu v-if="props.subMenu === 'TENANTS'" />
-                    <contracts-side-menu v-if="props.subMenu === 'CONTRACTS'" />
+                    <contracts-side-menu v-if="props.subMenu === 'TENANTCONTRACTS'" />
                     <jobs-side-menu v-if="props.subMenu === 'JOBS'" />
                     <invoices-side-menu v-if="props.subMenu === 'INVOICES'" />
                     <purchase-orders-side-menu v-if="props.subMenu === 'PURCHASE_ORDERS'" />

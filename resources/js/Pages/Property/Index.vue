@@ -36,7 +36,8 @@
                     <td class="flex-wrap px-3 py-4 text-sm text-gray-500">{{ eachProperty.owner }}</td>
                     <td class="flex-wrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachProperty.city }} \ {{ eachProperty.state_name }}</td>
                     <td class="relative whitespace-nowrap py-4 pr-3 text-right text-sm font-medium sm:pr-0">
-                        <DotsVertical :eachRecord="eachProperty.id" @submit-form="recordAction" :allowDuplicate="true"/>
+                        <DotsVertical :eachRecord="eachProperty.id" @submit-form="recordAction"
+                                      :allowDuplicate="true" :allowPropertyExpenses="true"/>
                     </td>
                 </tr>
                 </tbody>
@@ -49,7 +50,7 @@
                 @onConfirm="deleteRecordConfirmed(deleteRecordId)"
                 @onCancel="closeModel"
                 :show="modalActive"
-                :message="'Are you sure you want to delete this record ' + deleteRecordId + '?'"
+                :message="'Are you sure you want to delete this record ?'"
                 confirmLabel="Yes, delete it!"
                 cancelLabel="Cancel"
             />
@@ -98,7 +99,7 @@ watch(search, debounce(() => {
 const newProperty = () => {
     router.get(route('property.create'))
 }
-/// below manage the dropdown menuw and actions
+/// below manage the dropdown menu and actions
 const recordAction = (id, action) => {
     switch(action) {
         case 'viewRecord':

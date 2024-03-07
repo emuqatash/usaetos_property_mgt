@@ -53,9 +53,9 @@
                                     </div>
                                 </div>
                                 <div class="lg:block flex justify-center mb-4">
-                                    <SecondaryButton class="text-xs xl:text-sm font-bold" @click="showJob(eachJob)">
-                                        <span class="md:inline-block">View Job</span>
-                                    </SecondaryButton>
+<!--                                    <SecondaryButton class="text-xs xl:text-sm font-bold" @click="showJob(eachJob)">-->
+<!--                                        <span class="md:inline-block">View Job</span>-->
+<!--                                    </SecondaryButton>-->
                                     <DotsVerticalIcon class="hidden md:inline-block ml-2 w-5 h-5 section-button-icon"/>
                                 </div>
                             </div>

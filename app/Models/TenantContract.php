@@ -12,8 +12,8 @@ class TenantContract extends Model
 
     protected $fillable = [
         'tenant_id',
-        'property_id',
         'contract_no',
+        'property_id',
         'residential_tenancy_agreement',
         'description',
         'document_id',
@@ -21,6 +21,7 @@ class TenantContract extends Model
         'end_date',
         'total_period',
         'annual_rent',
+        'monthly_rent',
         'term_of_payment',
         'security_deposit',
         'bills_paid_by',
