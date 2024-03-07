@@ -10,6 +10,10 @@ let props = defineProps({
         type: Boolean,
         default: true,
     },
+    allowPropertyExpenses: {
+        type: Boolean,
+        default: false,
+    },
     allowDuplicate: {
         type: Boolean,
         default: false,
@@ -29,6 +33,7 @@ const EditRecordAction = ref('viewRecord');
 const duplicateRecordAction = ref('duplicateRecord');
 const deleteRecordAction = ref('deleteRecord');
 const tenantContractAction = ref('viewTenantContract');
+const propertyExpensesAction = ref('viewPropertyExpenses');
 
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value; // toggle dropdown visibility
@@ -53,6 +58,12 @@ const deleteRecord = (eachRecord) => {
     emit('submit-form', eachRecord, deleteRecordAction.value);
     dropdownOpen.value = false;
 }
+
+const propertyExpenses = (eachRecord) => {
+    emit('submit-form', eachRecord, propertyExpensesAction.value);
+    dropdownOpen.value = false;
+}
+
 
 // Handle Click out of component with the use of <div ref="elementRef" class="relative inline-block text-left">
 const elementRef = ref(null)
@@ -83,10 +94,16 @@ onUnmounted(() => {
                 <div class="py-1">
                     <a href="#" v-on:click.prevent="tenantContract(eachRecord)" v-if="tenancyContract"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Tenancy Contract</a>
+
+                    <a href="#" v-on:click.prevent="propertyExpenses(eachRecord)" v-if="allowPropertyExpenses"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Expenses</a>
+
                     <a href="#" v-on:click.prevent="EditRecord(eachRecord)" v-if="allowEdit"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">View\Edit</a>
+
                     <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" v-if="allowDuplicate"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Duplicate</a>
+
                     <a href="#" v-on:click.prevent="deleteRecord(eachRecord)" v-if="allowDelete"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-300">Delete</a>
                 </div>

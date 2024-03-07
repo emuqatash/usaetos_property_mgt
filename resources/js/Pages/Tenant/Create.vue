@@ -162,7 +162,7 @@
                             <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
                             <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
                                 <div
-                                    class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-20 py-10">
+                                    class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-10">
                                     <div class="text-center ">
                                         <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
                                         <div id="app" class="z-10">
@@ -258,7 +258,7 @@ let form = useForm({
     'document2_id': props.tenant ? props.tenant.document2_id : '',
     'profile_photo_path': props.tenant ? props.tenant.profile_photo_path : '',
     'remarks': props.tenant ? props.tenant.remarks : '',
-    'image': props.tenant ? props.tenant.image : '',
+    // 'image': props.tenant ? props.tenant.image : '',
     'attachment_file_name': props.tenant ? props.tenant.tenant_attachment_files : [],
     'attachment_file': props.tenant ? props.tenant.attachment_file : '',
     'attachmentFiles': props.tenant ? props.tenant.attachmentFiles : '',

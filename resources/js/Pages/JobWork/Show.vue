@@ -315,7 +315,7 @@ const showJobList = () => {
     router.get(route('jobworks.index', {jobStatus: form.job_status}))
 }
 
-const contactName = computed(() => `${props.contact.first_name} ${props.contact.last_name}`)
+const contactName = computed(() => `${props.contact?.first_name} ${props.contact?.last_name}`)
 
 const handleStatusChange = (status) => {
     form.job_status = status;

@@ -1,7 +1,7 @@
 <template>
 <AuthenticatedLayout :sub-menu="'TENANTCONTRACTS'" class="P-2">
 <AppModal :modalActive="modalActive">
-<div class="overflow-y-auto h-screen md:h-auto">
+    <div class="w-full h-full p-4 flex justify-between border-b border-gray-100 overflow-auto max-h-screen">
     <form @submit.prevent="submit">
         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
             {{ form.progress.percentage }}%
@@ -127,12 +127,9 @@
                             @update:value="form.security_deposit = $event"
                             :error="form.errors.security_deposit" />
                     </div>
-                    <div class="flex-grow">
-                        <Editable
-                            label="Bills Paid By"
-                            :input-value="form.bills_paid_by"
-                            @update:value="form.bills_paid_by = $event"
-                            :error="form.errors.bills_paid_by" />
+                    <div :class="`${divClass} flex-grow`">
+                        <label :class="labelClass">Bills Paid By</label>
+                        <MultiselectCustom v-model="form.bills_paid_by" :options="billsPaidBy" />
                     </div>
                 </div>
                 <!--6row-->
@@ -147,46 +144,49 @@
             </div>
 
             <!--Upload attachments-->
-            <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6 space-y-4">
-                <h2 class="text-sm font-bold">File Attachments</h2>
-                <div
-                    class="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-20 py-4">
-                    <div class="text-center ">
-                        <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
-                        <div id="app" class="z-10">
-                            <ul>
-                                <li v-for="(file,index) in attachmentFileList" :key="file.id">
-                                    <a
-                                        :href="getFileURL(file.attachment_file)" target="_blank">
-                                        {{ file.attachment_file_name }}
-                                    </a>
-                                    <button @click="removeAttachmentFile(index, file.id)"
-                                            class="text-red-500">- remove
-                                    </button>
-                                </li>
-                            </ul>
-                            <file-upload
-                                input-id="attachment-file"
-                                :multiple="true"
-                                @input-file="inputAttachmentFile"
-                                @input-filter="inputFilter"
-                                ref="uploadAttachment"
-                                v-model="attachmentFileModel"
-                                drop
-                                :drop-directory="true"
-                            >
-                                <div
-                                    class="mt-4 flex text-sm leading-6 text-gray-600"
+            <div class="space-y-2">
+                <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
+                <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
+                    <div
+                        class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-4">
+                        <div class="text-center ">
+                            <PhotographIcon class="mx-auto h-10 w-10 text-gray-300"/>
+                            <div id="app" class="z-10">
+                                <ul>
+                                    <li v-for="(file,index) in attachmentFileList" :key="file.id">
+                                        <a
+                                            :href="getFileURL(file.attachment_file)" target="_blank">
+                                            {{ file.attachment_file_name }}
+                                        </a>
+                                        <button @click="removeAttachmentFile(index, file.id)"
+                                                class="text-red-500">- remove
+                                        </button>
+                                    </li>
+                                </ul>
+                                <file-upload
+                                    input-id="attachment-file"
+                                    :multiple="true"
+                                    @input-file="inputAttachmentFile"
+                                    @input-filter="inputFilter"
+                                    ref="uploadAttachment"
+                                    v-model="attachmentFileModel"
+                                    drop
+                                    :drop-directory="true"
                                 >
-                                    <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
-                                    <p class="pl-1 mt-4">or drag and drop</p>
-                                </div>
-                            </file-upload>
-                            <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                    <div
+                                        class="mt-4 flex text-sm leading-6 text-gray-600"
+                                    >
+                                        <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                        <p class="pl-1 mt-4">or drag and drop</p>
+                                    </div>
+                                </file-upload>
+                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!--Buttons-->
@@ -197,7 +197,7 @@
                     Save
                 </LoadingButton>
             </div>
-            <!--                {{ properties}}-->
+            <!--{{ properties}}-->
             <div>
                 <SecondaryButton @click="cancel">
                     Cancel
@@ -213,12 +213,13 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import Editable from "@/Components/Editable.vue";
-import {useForm, router} from "@inertiajs/vue3";
-import {ref, defineEmits, watch, toRef} from "vue";
+import {useForm} from "@inertiajs/vue3";
+import {ref, watch} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import AppModal from "@/Components/AppModal.vue";
+import MultiselectCustom from "@/Components/MultiselectCustom.vue";
 
 let props = defineProps({
     tenantContracts: Object,
@@ -251,7 +252,7 @@ let form = useForm({
     'bills_paid_by': props.tenantContracts ? props.tenantContracts.bills_paid_by : '',
     'note': props.tenantContracts ? props.tenantContracts.note : '',
 
-    'attachment_file_name': props.tenantContracts ? props.tenantContracts.tenantContract_attachment_files : [],
+    'attachment_file_name': props.tenantContracts ? props.tenantContracts.tenant_contract_attachment_files : [],
     'attachment_file': props.tenantContracts ? props.tenantContracts.attachment_file : '',
     'attachmentFiles': props.tenantContracts ? props.tenantContracts.attachmentFiles : '',
 })
@@ -273,7 +274,7 @@ const inputFilter = (newFile, oldFile, prevent) => {
 }
 
 const attachmentFileList = ref([])
-attachmentFileList.value = form?.attachment_file_name
+attachmentFileList.value = form?.attachment_file_name || []
 const attachmentFileModel = ref([])
 
 const getFileURL = (url) => {
@@ -297,11 +298,10 @@ const removeAttachmentFile = (index, attachmentFileId) => {
     attachmentFileList.value.splice(index, 1)
     attachmentFileModel.value.splice(attachmentFileModel.value.findIndex(file => file.id === attachmentFileId), 1)
     form.attachmentFiles = attachmentFileModel.value.map(file => file.file)
-    form.delete(route('tenant-attachment-files.destroy', attachmentFileId), {
+    form.delete(route('tenant-contract-attachment-files.destroy', attachmentFileId), {
         preserveScroll: true,
     })
 }
-
 let submit = () => {
     form.post(route('tenant-contract.store'), {
         onStart: () => {
@@ -322,7 +322,6 @@ const cancel = () => {
             props.tenantContracts.tenant_id :  props.tenant_id))
 }
 
-
 selectedProperty.value = props.properties.find(e => e.id === form.property_id)
 watch(selectedProperty, (newState) => {
     form.property_id = newState ? newState.id : null;
@@ -332,11 +331,15 @@ const propertyCustomLabel = (property) => {
     return `${property.property_no} - ${property.name} - ${property.address}`;
 };
 
+// // List of values
+const billsPaidBy = ref(['Tenant ', 'Owner'])
 const residential_tenancy_agreements = ref(['Initial', 'Renewal'])
 
 const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
 const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
     'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
     'hover:text-indigo-500')
+const divClass = ref('sm:grid sm:grid-cols-1 sm:items-start');
+
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

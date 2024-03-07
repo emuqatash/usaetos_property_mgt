@@ -8,16 +8,20 @@
                     <input v-model="search" type="text" placeholder="Search Tenants..."
                            class="border-0 text-base text-lg p-0"/>
                 </div>
-                <div class="flex items-center">
-                    <SecondaryButton
-                        class="text-xs xl:text-sm font-bold xl:px-3"
-                        @click="newContact()"
-                    >
-                        <UserAddIcon class="w-5 h-5 inline-block section-button-icon xl:mr-2 text-blue-800"/>
-                        <span class="hidden md:inline-block">New Tenant</span>
-                    </SecondaryButton>
-                    <XIcon class="flex bg-white text-black items-center h-6 w-6 ml-4 cursor-pointer"
-                           @click="modalActive = false"/>
+                <div class="flex justify-center items-center">
+                    <div>
+                        <SecondaryButton
+                            class="text-xs xl:text-sm font-bold xl:px-3"
+                            @click="newContact()"
+                        >
+                            <UserAddIcon class="w-5 h-5 inline-block section-button-icon xl:mr-2 text-blue-800"/>
+                            <span class="hidden md:inline-block">New Tenant</span>
+                        </SecondaryButton>
+                    </div>
+                    <div>
+                        <XIcon class="flex bg-white text-black items-center h-6 w-6 lg:ml-4 cursor-pointer"
+                               @click="modalActive = false"/>
+                    </div>
                 </div>
             </div>
             <div class="flex px-6">
