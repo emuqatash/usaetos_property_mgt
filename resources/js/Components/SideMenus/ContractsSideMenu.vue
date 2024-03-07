@@ -1,5 +1,5 @@
 <template>
-    <div class="text-lg sm:text-2xl font-bold">Contracts</div>
+    <div class="text-lg sm:text-2xl font-bold">Tenancy Contracts</div>
     <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-1 flex-col gap-y-7 mt-4 sm:mt-8 w-full sm:w-3/4 overflow-x-scroll sm:overflow-x-hidden px-2">
             <li>

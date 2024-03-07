@@ -38,8 +38,7 @@
                     <td class="flex-wrap px-3 py-4 text-sm text-gray-500 ">{{ eachTenant.phone_number_1 }}</td>
                     <td class="flex-wrap lg:whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.tenant_type_name }}</td>
                     <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0" >
-                        <DotsVertical :eachRecord="eachTenant.id" @submit-form="recordAction" :allowDuplicate="false"
-                                      :tenancyContract="true"/>
+                        <DotsVertical :eachRecord="eachTenant.id" @submit-form="recordAction" :tenancyContract="true"/>
                     </td>
                 </tr>
                 </tbody>
@@ -101,7 +100,7 @@ watch(search, debounce(() => {
 const newTenant = () => {
     router.get(route('tenant.create'))
 }
-/// below manage the dropdown menuw and actions
+/// below manage the dropdown menu and actions
 const recordAction = (id, action) => {
     recordId.value = id;
     switch(action) {

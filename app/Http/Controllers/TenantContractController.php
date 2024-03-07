@@ -2,75 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTenantRequest;
+use App\Http\Requests\StoreTenantContractRequest;
 use App\Models\Property;
-use App\Models\State;
 use App\Models\Tenant;
 use App\Models\TenantContract;
-use App\Models\TenantType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class TenantContractController extends Controller
 {
-    public function index(Request $request)
+    public function show(Request $request, $tenantId)
     {
-        $tenantContracts = Cache::remember('articles', 60, function () use ($request) {
-            return TenantContract::query()
-                ->with('tenant')
-                ->with('property')
-                ->with('company')
-                ->when($request->input('search'), function ($query, $search) {
-                    $query->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                })
-                ->orderBy('first_name')
-                ->paginate(10)
-                ->withQueryString()
-                ->through(fn($tenantContract) => [
-                    'id' => $tenantContract->id,
-                    'first_name' => $tenantContract->first_name,
-                    'last_name' => $tenantContract->last_name,
-                    'property_id' => $tenantContract->tenantType->propertyname,
-                    'start_date' => $tenantContract->phone_number_1,
-                    'end_date' => $tenantContract->phone_number_2,
-                ]);
-//            'counts' => [
-//                'vacant' => Tenant::where('tenant_type_name', 'Vacant')->count(),
-//                'occupied' => Tenant::where('tenant_type_name', 'Occupied')->count(),
-//            ],
-        });
+        $tenantContracts = TenantContract::query()
+            ->with('property')
+            ->where('tenant_id', $tenantId)
+            ->when($request->input('search'), function ($query, $search) {
+                $query
+                    ->where('contract_no', 'like', "%{$search}%")
+                    ->orWhere('residential_tenancy_agreement', 'like', "%{$search}%");
+            })
+            ->orderBy('contract_no')
+            ->paginate(5)
+            ->withQueryString()
+            ->through(fn($tenantContract) => [
+                'id' => $tenantContract->id,
+                'contract_no' => $tenantContract->contract_no,
+                'residential_tenancy_agreement' => $tenantContract->residential_tenancy_agreement,
+                'start_date' => $tenantContract->start_date,
+                'end_date' => $tenantContract->end_date,
+                'property_no' => $tenantContract->property->property_no,
+            ]);
 
-        return Inertia('TenantContract/Index', [
-            'tenantContracts' => $tenantContracts,
-            'filters' => $request->only(['search']),
-            'selectedTenantId' => (int)$request->input('selectedTenantId'),
-        ]);
-    }
-    public function show($tenantId)
-    {
-        $tenantContracts = Tenant::find($tenantId);
-        $tenantContracts->load('tenantContracts');
-//        $properties = Property::select('id','name')->get()->toArray();
+        $tenant = Tenant::find($tenantId);
         $properties = Property::all()->toArray();
-        return Inertia('TenantContract/Show', compact('tenantContracts', 'properties'));
+        return Inertia('TenantContract/Show', compact('tenant', 'tenantContracts', 'properties'));
     }
 
-//    public function create()
-//    {
-//        return Inertia('TenantContract/Create');
-//    }
-    public function store(StoreTenantRequest $request)
+    public function store(StoreTenantContractRequest $request)
     {
         $tenantContract = $request->all();
         if ($request->input('id') > 0) {
             $tenantContract_data = $request->all();
-            $tenantContract = Tenant::find($request->input('id'));
+            $tenantContract = TenantContract::find($request->input('id'));
             $tenantContract->update($tenantContract_data);
         } else {
             $tenantContract['company_id'] = Auth::user()->company_id;
-            $tenantContract = Tenant::create($tenantContract);
+            $tenantContract = TenantContract::create($tenantContract);
         }
 
         if ($request->hasfile('attachmentFiles')) {
@@ -87,29 +64,29 @@ class TenantContractController extends Controller
                 ]);
             }
         }
-        return redirect()->route('tenant-contract.index', ['selectedTenantId' => $tenantContract->id]);
+
+        return redirect()->route('tenant-contract.show', $tenantContract->tenant_id);
     }
 
-    public function edit($id)
+    public function createContract($tenant_id)
     {
-        dd('hi');
-//        $tenantContract = Tenant::where('id', $tenantContract->id)
-//        $job->load('property','tenant');
-//        $tenantContract = TenantContract::where('id', $tenantContract->id)
-//            ->with('tenantContractAttachmentFiles')
-//            ->with('state')
-//            ->first();
-//        $states = State::all();
-//        return Inertia('TenantContract/Create', [
-//            'tenantContract' => $tenantContract,
-//            'states' => $states,
-//        ]);
+        $properties = Property::all()->toArray();
+        return Inertia('TenantContract/Edit',
+            ['properties' => $properties,'tenant_id' => $tenant_id,]);
+    }
+    public function edit($tenantContract_id)
+    {
+        $tenantContracts = TenantContract::find($tenantContract_id);
+        $tenantContracts->load('tenantContractAttachmentFiles');
+        $properties = Property::all()->toArray();
+        return Inertia('TenantContract/Edit',
+            ['properties' => $properties,'tenantContracts' => $tenantContracts]);
     }
 
     public function destroy(TenantContract $tenantContract)
     {
         $tenantContract->delete();
-        return redirect()->route('tenant-contract.index');
+        return redirect()->route('tenant-contract.show', $tenantContract->tenant_id);
     }
 
     public function duplicate($id)
@@ -117,6 +94,6 @@ class TenantContractController extends Controller
         $original = TenantContract::find($id);
         $duplicate = $original->replicate();
         $duplicate->save();
-        return redirect()->route('tenant-contract.index');
+        return redirect()->route('tenant-contract.show', $original->tenant_id);
     }
 }

@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/tenant-contract-attachment-files/{id}', [TenantContractAttachmentController::class, 'destroy'])->name('tenant-contract-attachment-files.destroy');
     Route::get('/tenant-contract/{id}/duplicate',  [TenantContractController::class, 'duplicate'])->name('tenant-contract.duplicate');
+    Route::get('/tenant-contract/{id}/createContract',  [TenantContractController::class, 'createContract'])->name('tenant-contract.createContract');
     Route::resource('tenant-contract', TenantContractController::class);
 
 

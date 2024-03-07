@@ -32,18 +32,18 @@ class JobWorkController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(10)
                 ->withQueryString()
-                ->through(function ($job) {
+                ->through(function ($jobWork) {
                     // Retrieve salesmen names based on the salesman_ids JSON field
-                    $salesmenNames = User::whereIn('id', $job->salesman_ids ?: [])
+                    $salesmenNames = User::whereIn('id', $jobWork->salesman_ids ?: [])
                         ->pluck('name')
                         ->toArray();
                     return [
-                        'id' => $job->id,
-                        'customer' => $job->contact->first_name.' '.$job->contact->last_name,
-                        'user' => optional($job->user)->name, // Use optional() in case user relation is not loaded
+                        'id' => $jobWork->id,
+                        'customer' => $jobWork->contact->first_name.' '.$jobWork->contact->last_name,
+                        'user' => optional($jobWork->user)->name, // Use optional() in case user relation is not loaded
                         'salesmen' => implode(', ', $salesmenNames),
-                        'job_number' => $job->job_number,
-                        'job_location' => Str::beforeLast(Str::after($job->job_location, ' '), ', USA'),
+                        'job_number' => $jobWork->job_number,
+                        'job_location' => Str::beforeLast(Str::after($jobWork->job_location, ' '), ', USA'),
                     ];
                 }),
             'filters' => $request->only(['search', 'jobStatus']),
@@ -108,7 +108,7 @@ class JobWorkController extends Controller
             $query->where('name', 'Sales');
         })->select('id', 'name')->get();
         $contact = Contact::where('id', $job->contact_id)->first();
-        $selectedSalesmen = User::whereIn('id', $job->salesman_ids)->get();
+        $selectedSalesmen = User::whereIn('id', collect($job->salesman_ids))->get();
         return Inertia('JobWork/Show', compact('job','contact','selectedSalesmen','salesmen'));
     }
 
