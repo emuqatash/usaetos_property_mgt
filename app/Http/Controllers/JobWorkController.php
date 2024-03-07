@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobStoreRequest;
 use App\Models\Contact;
-use App\Models\Job;
+use App\Models\JobWork;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class JobController extends Controller
+class JobWorkController extends Controller
 {
     public function index(Request $request)
     {
-        return Inertia('Job/Index', [
-            'job' => Job::query()
+        return Inertia('JobWork/Index', [
+            'job' => JobWork::query()
                 ->with('contact')
                 ->with('company')
                 ->when($request->input('search'), function ($query, $search) {
@@ -57,7 +57,7 @@ class JobController extends Controller
         })->select('id', 'name')->get();
         $contactList = Contact::all();
         $insuranceAgentList = \DB::table('insurance_agents')->select('id', 'agent_name')->get();
-        return Inertia('Job/Create', compact('salesmen', 'contactList', 'insuranceAgentList'));
+        return Inertia('JobWork/Create', compact('salesmen', 'contactList', 'insuranceAgentList'));
     }
 
     public function store(JobStoreRequest $request)
@@ -65,14 +65,14 @@ class JobController extends Controller
         $job = $request->all();
 
         if ($request->input('id') > 0) {
-            $job = Job::find($request->input('id'));
+            $job = JobWork::find($request->input('id'));
         }else{
             $job['user_id'] = Auth::user()->id;
             $job['salesman_ids'] = $request->input('salesman_ids', []);
             $job['job_status'] = 'New';
             $job['company_id'] = Auth::user()->company_id;
-            $job = Job::create($job);
-            return redirect()->route('jobs.index', $job);
+            $job = JobWork::create($job);
+            return redirect()->route('jobworks.index', $job);
         }
 
         if ($request->hasfile('permitFiles')) {
@@ -98,10 +98,10 @@ class JobController extends Controller
                 ]);
             }
         }
-        return redirect()->route('jobs.show', $job);
+        return redirect()->route('jobworks.show', $job);
     }
 
-    public function show(Job $job)
+    public function show(JobWork $job)
     {
         $job->load('insuranceAgent','jobPermitFiles', 'jobAttachmentFiles', 'specification');
         $salesmen = User::whereHas('Role', function ($query) {
@@ -109,10 +109,10 @@ class JobController extends Controller
         })->select('id', 'name')->get();
         $contact = Contact::where('id', $job->contact_id)->first();
         $selectedSalesmen = User::whereIn('id', $job->salesman_ids)->get();
-        return Inertia('Job/Show', compact('job','contact','selectedSalesmen','salesmen'));
+        return Inertia('JobWork/Show', compact('job','contact','selectedSalesmen','salesmen'));
     }
 
-    public function edit(Job $job)
+    public function edit(JobWork $job)
     {
         $job->load('contact','insuranceAgent');
         $salesmen = User::whereHas('Role', function ($query) {
@@ -121,19 +121,19 @@ class JobController extends Controller
         $contactList = Contact::all();
         $insuranceAgentList = \DB::table('insurance_agents')->select('id', 'agent_name')->get();
         $selectedSalesmen = User::whereIn('id', $job->salesman_ids)->get();
-        return Inertia('Job/Edit', compact('job','salesmen', 'contactList', 'insuranceAgentList','selectedSalesmen'));
+        return Inertia('JobWork/Edit', compact('job','salesmen', 'contactList', 'insuranceAgentList','selectedSalesmen'));
     }
 
-    public function update(Request $request, Job $job)
+    public function update(Request $request, JobWork $job)
     {
         $input = $request->except('_token', 'id', '_method');
         $job->update($input);
-        return redirect()->route('jobs.show', $job);
+        return redirect()->route('jobworks.show', $job);
     }
 
-    public function destroy(Job $job)
+    public function destroy(JobWork $job)
     {
         $job->delete();
-        return redirect()->route('jobs.index');
+        return redirect()->route('jobworks.index');
     }
 }

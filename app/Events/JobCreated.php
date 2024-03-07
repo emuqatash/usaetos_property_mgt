@@ -9,14 +9,14 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Job;
+use App\Models\JobWork;
 class JobCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $job;
 
-    public function __construct(Job $job)
+    public function __construct(JobWork $job)
     {
         $this->job = $job;
     }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('city', 64)->nullable();
             $table->string('state', 64)->nullable();
             $table->string('zip', 16)->nullable();
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 

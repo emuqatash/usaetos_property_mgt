@@ -19,9 +19,9 @@ class JobPermitFile extends Model
         'permit_file' => 'array',
     ];
 
-    public function job(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function jobWork(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(JobWork::class);
     }
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo

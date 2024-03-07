@@ -21,9 +21,9 @@
                         <div :class="`${divClass} lg:w-8/12`">
                             <Editable
                                 label="Property Name"
-                                :input-value="form.property_name"
-                                @update:value="form.property_name = $event"
-                                :error="form.errors.property_name"
+                                :input-value="form.name"
+                                @update:value="form.name = $event"
+                                :error="form.errors.name"
                                 required/>
                         </div>
                         <div :class="`${divClass} lg:w-1/6`">
@@ -33,27 +33,6 @@
                     </div>
 
                     <!--2raw-->
-                    <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
-                        <div :class="`${divClass} flex-grow`">
-                            <Editable
-                                label="Owner"
-                                :input-value="form.owner"
-                                @update:value="form.owner = $event"
-                                :error="form.errors.owner"
-                                required/>
-                        </div>
-                        <div :class="divClass">
-                            <Editable
-                                type="number"
-                                label="Ownership Rate %"
-                                :input-value="form.ownership_rate"
-                                @update:value="form.ownership_rate = $event"
-                                :error="form.errors.ownership_rate"
-                                required/>
-                        </div>
-                    </div>
-
-                    <!--3raw-->
                     <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
                         <div :class="`${divClass} lg:w-4/6`">
                             <Editable
@@ -90,6 +69,27 @@
                             </div>
                             <div v-if="form.errors.state_id" v-text="form.errors.state_id"
                                  class="text-red-500 text-xs mt-1"></div>
+                        </div>
+                    </div>
+
+                    <!--3raw-->
+                    <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
+                        <div :class="`${divClass} flex-grow`">
+                            <Editable
+                                label="Owner"
+                                :input-value="form.owner"
+                                @update:value="form.owner = $event"
+                                :error="form.errors.owner"
+                                required/>
+                        </div>
+                        <div :class="divClass">
+                            <Editable
+                                type="number"
+                                label="Ownership Rate %"
+                                :input-value="form.ownership_rate"
+                                @update:value="form.ownership_rate = $event"
+                                :error="form.errors.ownership_rate"
+                                required/>
                         </div>
                     </div>
 
@@ -200,7 +200,7 @@ const selectedState = ref([]);
 let form = useForm({
     'id': props.property ? props.property.id : '',
     'property_no': props.property ? props.property.property_no : '',
-    'property_name': props.property ? props.property.property_name : '',
+    'name': props.property ? props.property.name : '',
     'owner': props.property ? props.property.owner : '',
     'ownership_rate': props.property ? props.property.ownership_rate : '',
     'address': props.property ? props.property.address : '',
@@ -214,7 +214,6 @@ let form = useForm({
     'payments_left': props.property ? props.property.payments_left : '',
     'handover_date': props.property ? props.property.handover_date : '',
     'property_status': props.property && props.property.property_status ? props.property.property_status : 'Vacant',
-
 })
 
 selectedState.value = props.states.find(e => e.id === form.state_id)
@@ -232,19 +231,9 @@ let handleSubmit = () => {
 // // For style and design
 const labelClass = ref('labelClass');
 const divClass = ref('sm:grid sm:grid-cols-1 sm:items-start sm:py-6');
-const noteClass = ref(`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset`);
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
-
-const inputClass = ref(`relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left
-focus:outline-none focus:ring-2 focus:ring-indigo-600
-sm:text-sm sm:leading-6`);
-const divInputClass = ref(`relative flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2
-focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md`);
 
 // // List of values
-const propertyTypes = ref(['Vacant', 'Occupied'])
+const propertyTypes = ref(['Vacant', 'Occupied', 'Rented', 'Under Maintenance'])
 
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

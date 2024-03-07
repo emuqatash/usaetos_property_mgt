@@ -312,21 +312,21 @@ onMounted(() => {
     selected.value = props.selectedSalesmen.map(salesman => salesman.id);
 });
 const showJobList = () => {
-    router.get(route('jobs.index', {jobStatus: form.job_status}))
+    router.get(route('jobworks.index', {jobStatus: form.job_status}))
 }
 
 const contactName = computed(() => `${props.contact.first_name} ${props.contact.last_name}`)
 
 const handleStatusChange = (status) => {
     form.job_status = status;
-    form.put(route('jobs.update', form.id))
+    form.put(route('jobworks.update', form.id))
 }
 const handleSelection = (ids) => {
     form.salesman_ids = ids;
-    form.put(route('jobs.update', form.id))
+    form.put(route('jobworks.update', form.id))
 }
 const handleJobEdit = () => {
-    form.get(route('jobs.edit', form.id))
+    form.get(route('jobworks.edit', form.id))
 }
 
 const handleCreateSpecification = () => {
@@ -364,7 +364,7 @@ watch(() => props.job, (newState) => {
 const permitFileModel = ref([])
 const inputPermitFile = () => {
     form.permitFiles = permitFileModel.value.map(file => file.file)
-    form.post(route('jobs.store'), {
+    form.post(route('jobworks.store'), {
         preserveScroll: true,
     })
 }
@@ -385,7 +385,7 @@ watch(() => props.job, (newState) => {
 const attachmentFileModel = ref([])
 const inputAttachmentFile = () => {
     form.attachmentFiles = attachmentFileModel.value.map(file => file.file)
-    form.post(route('jobs.store'), {
+    form.post(route('jobworks.store'), {
         preserveScroll: true,
     })
 }

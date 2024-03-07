@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Job extends Model
+class JobWork extends Model
 {
     protected $fillable = [
         'contact_id',

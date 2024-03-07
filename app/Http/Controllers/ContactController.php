@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $contacts = Cache::remember('articles', 60, function () use ($request) {
@@ -27,7 +24,7 @@ class ContactController extends Controller
                         ->orWhere('last_name', 'like', "%{$search}%");
                 })
                 ->orderBy('first_name')
-                ->paginate(0)
+                ->paginate(10)
                 ->withQueryString()
                 ->through(fn($contact) => [
                     'id' => $contact->id,
@@ -71,7 +68,6 @@ class ContactController extends Controller
     public function store(StoreContactRequest $request)
     {
         $contact = $request->all();
-
         if ($request->input('id') > 0) {
             $contact_data = $request->all();
             $contact = Contact::find($request->input('id'));
@@ -82,9 +78,12 @@ class ContactController extends Controller
         }
 
         if ($request->hasfile('attachmentFiles')) {
+            $userId = Auth::user()->id;
+            $contactId = $contact->id;
+            $companyId = Auth::user()->company_id;
             foreach ($request->file('attachmentFiles') as $file) {
                 $attachmentFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.' . $file->getClientOriginalExtension();
-                $attachmentFilePath = $file->storeAs('public/contact_attachment_files', $attachmentFileName);
+                $attachmentFilePath = $file->storeAs('public/contact_attachment_files/'.$companyId .'/'. $userId . '/' . $contactId, $attachmentFileName);
                 $contact->contactAttachmentFiles()->create([
                     'company_id' => Auth::user()->company_id,
                     'attachment_file_name' => $attachmentFileName,
