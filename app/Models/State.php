@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class State extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'company_id'];
     public $timestamps = false;
 
     public function contracts(): \Illuminate\Database\Eloquent\Relations\HasMany

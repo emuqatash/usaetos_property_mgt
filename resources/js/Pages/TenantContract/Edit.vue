@@ -8,15 +8,15 @@
         </progress>
         <div>
             <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6">Create Tenancy Contract</p>
+                <p class="text-xl font-semibold mb-6">Create or Edit Tenancy Contract</p>
                 <!--1row-->
                 <div class="lg:flex gap-10">
                     <div class="w-8/12">
                         <Editable type="text"
-                                  label="Contract No"
-                                  :input-value="form.contract_no"
-                                  @update:value="form.contract_no = $event"
-                                  :error="form.errors.contract_no" />
+                              label="Contract No"
+                              :input-value="form.contract_no"
+                              @update:value="form.contract_no = $event"
+                              :error="form.errors.contract_no" />
                     </div>
                     <div>
                         <!--Radio-->
@@ -127,7 +127,7 @@
                             @update:value="form.security_deposit = $event"
                             :error="form.errors.security_deposit" />
                     </div>
-                    <div :class="`${divClass} flex-grow`">
+                    <div :class="`${divClass} md:w-3/12`">
                         <label :class="labelClass">Bills Paid By</label>
                         <MultiselectCustom v-model="form.bills_paid_by" :options="billsPaidBy" />
                     </div>
@@ -149,7 +149,7 @@
                 <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
                     <div
                         class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-4">
-                        <div class="text-center ">
+                        <div class="text-center">
                             <PhotographIcon class="mx-auto h-10 w-10 text-gray-300"/>
                             <div id="app" class="z-10">
                                 <ul>

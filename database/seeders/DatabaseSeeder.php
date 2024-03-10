@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ContactSeeder::class,
             TenantSeeder::class,
             PropertySeeder::class,
+            PropertyExpenseCategoriesSeeder::class,
             UsersSeeder::class,
 
             // ... other seeders

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('tenant_contracts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            $table->foreignId('property_id')->constrained()->onDelete('cascade');
+            $table->foreignId('property_id')->constrained()->onDelete('set null');
             $table->string('contract_no');
             $table->string('residential_tenancy_agreement');
             $table->string('description')->nullable();

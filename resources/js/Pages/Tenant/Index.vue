@@ -1,16 +1,23 @@
 <template>
 <AuthenticatedLayout :sub-menu="'TENANTS'" class="P-2">
     <div class="flex justify-between items-center mb-8">
-        <div class="relative rounded-md shadow-sm mr-8">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>
+        <div class="flex items-center">
+            <div class="relative rounded-md shadow-sm mr-2">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>
+                </div>
+                <input type="text" name="search" id="search" v-model="search"
+                       class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300
+            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                       placeholder="Search...">
             </div>
-            <input type="text" name="search" id="search" v-model="search"
-                   class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300
-               placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                   placeholder="Search...">
+            <button class="rounded-md border-0 p-2 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    @click="$inertia.get(route('tenant.index'))">
+                <RefreshIcon class="w-5 h-5 text-gray-500"/>
+            </button>
         </div>
-        <SecondaryButton class="xl:text-sm font-bold" @click="newTenant">
+
+        <SecondaryButton class="xl:text-sm font-bold ml-8 md:ml-0" @click="newTenant">
             <FolderAddIcon class="w-10 h-5 inline-block section-button-icon text-blue-800"/>
             <span class="hidden md:inline-block">New Tenant</span>
         </SecondaryButton>
@@ -67,7 +74,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {SearchIcon} from "@heroicons/vue/outline";
+import {SearchIcon,RefreshIcon} from "@heroicons/vue/outline";
 import {FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";

@@ -8,6 +8,8 @@ use App\Http\Controllers\JobWorkController;
 use App\Http\Controllers\JobPermitFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PropertyExpenseAttachmentController;
+use App\Http\Controllers\PropertyExpenseController;
 use App\Http\Controllers\SpecificationAttachmentController;
 use App\Http\Controllers\SpecificationController;
 use App\Http\Controllers\TenantAttachmentController;
@@ -92,9 +94,14 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/tenant-contract-attachment-files/{id}', [TenantContractAttachmentController::class, 'destroy'])->name('tenant-contract-attachment-files.destroy');
     Route::get('/tenant-contract/{id}/duplicate',  [TenantContractController::class, 'duplicate'])->name('tenant-contract.duplicate');
-    Route::get('/tenant-contract/{id}/createContract',  [TenantContractController::class, 'createContract'])->name('tenant-contract.createContract');
+    Route::get('/tenant-contract/{id}/createTenantContract',  [TenantContractController::class, 'createTenantContract'])->name('tenant-contract.createTenantContract');
     Route::resource('tenant-contract', TenantContractController::class);
 
+//    PropertyExpense
+    Route::delete('/property-expense-attachment-files/{id}', [PropertyExpenseAttachmentController::class, 'destroy'])->name('property-expense-attachment-files.destroy');
+    Route::get('/property-expense/{id}/duplicate',  [PropertyExpenseController::class, 'duplicate'])->name('property-expense.duplicate');
+    Route::get('/property-expense/{id}/createPropertyExpense',  [PropertyExpenseController::class, 'createPropertyExpense'])->name('property-expense.createPropertyExpense');
+    Route::resource('property-expense', PropertyExpenseController::class);
 
     //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
