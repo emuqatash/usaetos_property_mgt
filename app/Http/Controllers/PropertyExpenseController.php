@@ -24,19 +24,25 @@ class PropertyExpenseController extends Controller
             ->orderBy('payment_date')
             ->paginate(5)
             ->withQueryString()
-            ->through(fn($PropertyExpense) => [
-                'id' => $PropertyExpense->id,
-                'description' => $PropertyExpense->description,
-                'category' => $PropertyExpense->propertyExpenseCategory->name,
-                'payment_date' => $PropertyExpense->payment_date,
-                'payment_amount' => $PropertyExpense->payment_amount,
-                'receipt_id' => $PropertyExpense->receipt_id,
-                'supplier' => $PropertyExpense->property->supplier,
+            ->through(fn($propertyExpense) => [
+                'id' => $propertyExpense->id,
+                'description' => $propertyExpense->description,
+                'category' => $propertyExpense->propertyExpenseCategory->name,
+                'payment_date' => $propertyExpense->payment_date,
+                'payment_amount' => $propertyExpense->payment_amount,
+                'receipt_id' => $propertyExpense->receipt_id,
+                'supplier' => $propertyExpense->property->supplier,
             ]);
 
         $property = Property::find($propertyId);
-        $properties = Property::all()->toArray();
-        return Inertia('PropertyExpense/Show', compact('property', 'propertyExpenses', 'properties'));
+        return Inertia('PropertyExpense/Show', compact('property', 'propertyExpenses'));
+    }
+
+    public function createPropertyExpense ($property_id)
+    {
+        $propertyExpenseCategories = PropertyExpenseCategory::all()->toArray();
+        return Inertia('PropertyExpense/Edit',
+            ['propertyExpenseCategories' => $propertyExpenseCategories,'property_id' => $property_id,]);
     }
 
     public function store(StorePropertyExpenseRequest $request)
@@ -66,13 +72,6 @@ class PropertyExpenseController extends Controller
             }
         }
         return redirect()->route('property-expense.show', $propertyExpense->property_id);
-    }
-
-    public function createPropertyExpense ($property_id)
-    {
-        $propertyExpenseCategories = PropertyExpenseCategory::all()->toArray();
-        return Inertia('PropertyExpense/Edit',
-            ['propertyExpenseCategories' => $propertyExpenseCategories,'property_id' => $property_id,]);
     }
 
     public function edit($propertyExpense_id)

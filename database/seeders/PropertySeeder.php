@@ -21,11 +21,11 @@ class PropertySeeder extends Seeder
                 'state_id' => $faker->numberBetween(1, 50), // assuming you have 50 states
                 'zip' => $faker->postcode,
                 'owner' => $faker->name,
-                'ownership_rate' => $faker->randomFloat(2, 0, 100),
+                'ownership_rate' => $faker->numberBetween(2, 0, 100),
                 'date_of_purchase' => $faker->date(),
                 'area_size' => $faker->randomNumber(3),
                 'number_of_bedrooms' => $faker->numberBetween(1, 5),
-                'cost' => $faker->randomFloat(2, 100, 2000),
+                'cost' => $faker->randomFloat(2, 100, 100000000),
                 'payments_left' => $faker->numberBetween(1, 5),
                 'handover_date' => $faker->dateTimeBetween('-1 years', 'now')->format('Y-m-d'),
                 'property_status' => $faker->randomElement(['Vacant', 'Occupied', 'Rented', 'Under Maintenance']),

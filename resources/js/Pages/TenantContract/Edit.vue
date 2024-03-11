@@ -45,7 +45,7 @@
                 <!--2row-->
                 <div>
                     <label class="labelClass">
-                        Property No
+                        Property No {{form.property_id}}
                     </label>
                     <Multiselect
                         v-model="selectedProperty"
@@ -214,7 +214,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import Editable from "@/Components/Editable.vue";
 import {useForm} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
@@ -226,7 +226,7 @@ let props = defineProps({
     properties: Object,
     tenant_id: {
         type: [Number, String]
-    }
+    },
 })
 
 const modalActive = ref(true)
@@ -236,8 +236,8 @@ const selectedProperty = ref([])
 let form = useForm({
     'id': props.tenantContracts ? props.tenantContracts.id : '',
     'tenant_id': props.tenantContracts ? props.tenantContracts.tenant_id : props.tenant_id,
-
     'property_id': props.tenantContracts ? props.tenantContracts.property_id : '',
+
     'contract_no': props.tenantContracts ? props.tenantContracts.contract_no : '',
     'residential_tenancy_agreement': props.tenantContracts ? props.tenantContracts.residential_tenancy_agreement : '',
     'description': props.tenantContracts ? props.tenantContracts.description : '',
@@ -322,7 +322,7 @@ const cancel = () => {
             props.tenantContracts.tenant_id :  props.tenant_id))
 }
 
-selectedProperty.value = props.properties.find(e => e.id === form.property_id)
+selectedProperty.value = props.properties.find(e => e.property_id === form.property_id)
 watch(selectedProperty, (newState) => {
     form.property_id = newState ? newState.id : null;
 });

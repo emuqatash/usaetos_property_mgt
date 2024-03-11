@@ -24,7 +24,8 @@
                                   label="First Name"
                                   :input-value="form.first_name"
                                   @update:value="form.first_name = $event"
-                                  :error="form.errors.first_name"/>
+                                  :error="form.errors.first_name"
+                                  :disabled="true"/>
                     </div>
                     <div class="flex-grow">
                         <Editable
@@ -32,7 +33,8 @@
                             label="Last Name"
                             :input-value="form.last_name"
                             @update:value="form.last_name = $event"
-                            :error="form.errors.last_name"/>
+                            :error="form.errors.last_name"
+                            :disabled="true"/>
                     </div>
                     <div class="flex-grow">
                         <Editable
@@ -40,7 +42,8 @@
                             label="Phone Number 1"
                             :input-value="form.phone_number_1"
                             @update:value="form.phone_number_1 = $event"
-                            :error="form.errors.phone_number_1"/>
+                            :error="form.errors.phone_number_1"
+                            :disabled="true"/>
                     </div>
                     <div class="flex-grow">
                         <Editable
@@ -49,7 +52,7 @@
                             :input-value="form.email"
                             @update:value="form.email = $event"
                             :error="form.errors.email"
-                        />
+                            :disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -103,7 +106,7 @@
         </div>
     </template>
     <template v-else>
-        <EmptyTenantContract @page-Create-Active="createNewRecord"/>
+        <EmptyState @page-Create-Active="createNewRecord" :title="'Tenancy Contract'"/>
     </template>
 </div>
 </AuthenticatedLayout>
@@ -117,9 +120,9 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {FolderAddIcon, ArrowLeftIcon} from '@heroicons/vue/solid';
 import DotsVertical from "@/Components/DotsVertical.vue";
 import Pagination from "@/Components/Pagination.vue";
-import EmptyTenantContract from "@/Pages/TenantContract/EmptyTenantContract.vue";
 import ConfirmationModal from "@/Composables/ConfirmationModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import EmptyState from "@/Components/AppComponents/EmptyState.vue";
 
 let props = defineProps({
     tenantContracts: Object,

@@ -38,7 +38,7 @@ const duplicateRecordAction = ref('duplicateRecord');
 const deleteRecordAction = ref('deleteRecord');
 const tenantContractAction = ref('viewTenantContract');
 const propertyExpensesAction = ref('viewPropertyExpenses');
-const propertyMonthlyRentAction = ref('viewpropertyMonthlyRent');
+const propertyMonthlyRentAction = ref('viewPropertyMonthlyRent');
 
 
 const toggleDropdown = () => {
@@ -106,7 +106,7 @@ onUnmounted(() => {
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Tenancy Contract</a>
 
                     <a href="#" v-on:click.prevent="propertyMonthlyRent(eachRecord)" v-if="allowPropertyMonthlyRent"
-                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Rent</a>
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Rent Payment</a>
 
                     <a href="#" v-on:click.prevent="propertyExpenses(eachRecord)" v-if="allowPropertyExpenses"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Expenses</a>

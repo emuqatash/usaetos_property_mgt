@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-
+{{form.property_expense_category_id}}
         <!--Buttons-->
         <div class="p-6 flex justify-around md:justify-start gap-2 bg-gray-50">
             <div>
@@ -229,7 +229,6 @@ const removeAttachmentFile = (index, attachmentFileId) => {
     })
 }
 let submit = () => {
-    console.log('hello');
     form.post(route('property-expense.store'), {
         onStart: () => {
             isLoading.value = true
@@ -258,15 +257,10 @@ const categoryCustomLabel = (property) => {
     return `${property.name}`;
 };
 
-// // List of values
-
-// const residential_tenancy_agreements = ref(['Initial', 'Renewal'])
-
 const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
 const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
     'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
     'hover:text-indigo-500')
-const divClass = ref('sm:grid sm:grid-cols-1 sm:items-start');
 
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

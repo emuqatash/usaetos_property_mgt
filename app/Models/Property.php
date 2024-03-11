@@ -40,9 +40,18 @@ class Property extends Model
         return $this->belongsTo(State::class);
     }
 
-    public function contracts(): HasMany
+    public function tenantContracts(): HasMany
     {
-        return $this->hasMany(Contract::class);
+        return $this->hasMany(TenantContract::class);
+    }
+
+    public function propertyExpenses(): HasMany
+    {
+        return $this->hasMany(PropertyExpense::class);
+    }
+    public function propertyRents(): HasMany
+    {
+        return $this->hasMany(PropertyRent::class);
     }
 
 }

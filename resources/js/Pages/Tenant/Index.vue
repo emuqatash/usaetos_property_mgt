@@ -59,7 +59,7 @@
                 @onConfirm="deleteRecordConfirmed(recordId)"
                 @onCancel="closeModel"
                 :show="modalActive"
-                :message="'Are you sure you want to delete this record ' + recordId + '?'"
+                :message="'Are you sure you want to delete this Tenant record along with related Tenancy Contracts ?'"
                 confirmLabel="Yes, delete it!"
                 cancelLabel="Cancel"
             />
@@ -67,7 +67,7 @@
         </div>
     </template>
     <template v-else>
-        <EmptyTenant/>
+        <EmptyState @page-Create-Active="createNewRecord" :title="'Tenant'"/>
     </template>
 </AuthenticatedLayout>
 </template>
@@ -79,10 +79,10 @@ import {FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import EmptyTenant from "@/Pages/Tenant/EmptyTenant.vue";
 import DotsVertical from "@/Components/DotsVertical.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ConfirmationModal from "@/Composables/ConfirmationModal.vue";
+import EmptyState from "@/Components/AppComponents/EmptyState.vue";
 
 
 let props = defineProps({
@@ -124,6 +124,10 @@ const recordAction = (id, action) => {
             modalActive.value = true;
             break;
     }
+}
+
+const createNewRecord = () => {
+    router.get(route('property.create', props.id ))
 }
 
 let selectedRow = ref(null);  // ref to store the ID of the selected row

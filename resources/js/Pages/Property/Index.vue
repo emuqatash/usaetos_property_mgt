@@ -57,7 +57,7 @@
                 @onConfirm="deleteRecordConfirmed(deleteRecordId)"
                 @onCancel="closeModel"
                 :show="modalActive"
-                :message="'Are you sure you want to delete this record ?'"
+                :message="'Are you sure you want to delete this Property record along with Expenses and Rent records ?'"
                 confirmLabel="Yes, delete it!"
                 cancelLabel="Cancel"
             />
@@ -65,7 +65,7 @@
         </div>
     </template>
     <template v-else>
-        <EmptyProperty/>
+        <EmptyState @page-Create-Active="createNewRecord" :title="'Property'"/>
     </template>
 </AuthenticatedLayout>
 </template>
@@ -77,12 +77,10 @@ import {FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import EmptyProperty from "@/Pages/Property/EmptyProperty.vue";
 import DotsVertical from "@/Components/DotsVertical.vue";
 import Pagination from "@/Components/Pagination.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import Modal from "@/Components/Modal.vue";
 import ConfirmationModal from "@/Composables/ConfirmationModal.vue";
+import EmptyState from "@/Components/AppComponents/EmptyState.vue";
 
 let props = defineProps({
     property: Object,
@@ -109,6 +107,9 @@ const newProperty = () => {
 /// below manage the dropdown menu and actions
 const recordAction = (id, action) => {
     switch(action) {
+        case 'viewPropertyMonthlyRent':
+            router.get(route('property-rent.show', id))
+            break;
         case 'viewPropertyExpenses':
             router.get(route('property-expense.show', id))
             break;
@@ -123,6 +124,10 @@ const recordAction = (id, action) => {
             modalActive.value = true;
             break;
     }
+}
+
+const createNewRecord = () => {
+    router.get(route('property.create', props.id ))
 }
 
 let selectedRow = ref(null);  // ref to store the ID of the selected row

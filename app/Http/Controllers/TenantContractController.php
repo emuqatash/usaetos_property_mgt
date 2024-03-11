@@ -76,6 +76,7 @@ class TenantContractController extends Controller
     public function edit($tenantContract_id)
     {
         $tenantContracts = TenantContract::find($tenantContract_id);
+//        dd($tenantContracts);
         $tenantContracts->load('tenantContractAttachmentFiles');
         $properties = Property::all()->toArray();
         return Inertia('TenantContract/Edit',
