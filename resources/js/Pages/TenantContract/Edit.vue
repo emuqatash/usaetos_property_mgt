@@ -8,15 +8,15 @@
         </progress>
         <div>
             <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6">Create Tenancy Contract</p>
+                <p class="text-xl font-semibold mb-6">Create or Edit Tenancy Contract</p>
                 <!--1row-->
                 <div class="lg:flex gap-10">
                     <div class="w-8/12">
                         <Editable type="text"
-                                  label="Contract No"
-                                  :input-value="form.contract_no"
-                                  @update:value="form.contract_no = $event"
-                                  :error="form.errors.contract_no" />
+                              label="Contract No"
+                              :input-value="form.contract_no"
+                              @update:value="form.contract_no = $event"
+                              :error="form.errors.contract_no" />
                     </div>
                     <div>
                         <!--Radio-->
@@ -45,7 +45,7 @@
                 <!--2row-->
                 <div>
                     <label class="labelClass">
-                        Property No
+                        Property No {{form.property_id}}
                     </label>
                     <Multiselect
                         v-model="selectedProperty"
@@ -127,7 +127,7 @@
                             @update:value="form.security_deposit = $event"
                             :error="form.errors.security_deposit" />
                     </div>
-                    <div :class="`${divClass} flex-grow`">
+                    <div :class="`${divClass} md:w-3/12`">
                         <label :class="labelClass">Bills Paid By</label>
                         <MultiselectCustom v-model="form.bills_paid_by" :options="billsPaidBy" />
                     </div>
@@ -149,7 +149,7 @@
                 <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
                     <div
                         class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-4">
-                        <div class="text-center ">
+                        <div class="text-center">
                             <PhotographIcon class="mx-auto h-10 w-10 text-gray-300"/>
                             <div id="app" class="z-10">
                                 <ul>
@@ -214,7 +214,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import Editable from "@/Components/Editable.vue";
 import {useForm} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
@@ -226,7 +226,7 @@ let props = defineProps({
     properties: Object,
     tenant_id: {
         type: [Number, String]
-    }
+    },
 })
 
 const modalActive = ref(true)
@@ -236,8 +236,8 @@ const selectedProperty = ref([])
 let form = useForm({
     'id': props.tenantContracts ? props.tenantContracts.id : '',
     'tenant_id': props.tenantContracts ? props.tenantContracts.tenant_id : props.tenant_id,
-
     'property_id': props.tenantContracts ? props.tenantContracts.property_id : '',
+
     'contract_no': props.tenantContracts ? props.tenantContracts.contract_no : '',
     'residential_tenancy_agreement': props.tenantContracts ? props.tenantContracts.residential_tenancy_agreement : '',
     'description': props.tenantContracts ? props.tenantContracts.description : '',
@@ -322,7 +322,7 @@ const cancel = () => {
             props.tenantContracts.tenant_id :  props.tenant_id))
 }
 
-selectedProperty.value = props.properties.find(e => e.id === form.property_id)
+selectedProperty.value = props.properties.find(e => e.property_id === form.property_id)
 watch(selectedProperty, (newState) => {
     form.property_id = newState ? newState.id : null;
 });

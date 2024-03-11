@@ -11,8 +11,8 @@ class TenantTypeSeeder extends Seeder
     public function run(): void
     {
         $contactTypes = [
-            'Salesman',
-            'Agent',
+            'Stuff',
+            'Non Stuff',
         ];
 
         foreach ($contactTypes as $type) {

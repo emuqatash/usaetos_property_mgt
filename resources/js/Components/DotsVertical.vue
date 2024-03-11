@@ -14,6 +14,10 @@ let props = defineProps({
         type: Boolean,
         default: false,
     },
+    allowPropertyMonthlyRent: {
+        type: Boolean,
+        default: false,
+    },
     allowDuplicate: {
         type: Boolean,
         default: false,
@@ -34,6 +38,8 @@ const duplicateRecordAction = ref('duplicateRecord');
 const deleteRecordAction = ref('deleteRecord');
 const tenantContractAction = ref('viewTenantContract');
 const propertyExpensesAction = ref('viewPropertyExpenses');
+const propertyMonthlyRentAction = ref('viewPropertyMonthlyRent');
+
 
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value; // toggle dropdown visibility
@@ -64,6 +70,10 @@ const propertyExpenses = (eachRecord) => {
     dropdownOpen.value = false;
 }
 
+const propertyMonthlyRent = (eachRecord) => {
+    emit('submit-form', eachRecord, propertyMonthlyRentAction.value);
+    dropdownOpen.value = false;
+}
 
 // Handle Click out of component with the use of <div ref="elementRef" class="relative inline-block text-left">
 const elementRef = ref(null)
@@ -94,6 +104,9 @@ onUnmounted(() => {
                 <div class="py-1">
                     <a href="#" v-on:click.prevent="tenantContract(eachRecord)" v-if="tenancyContract"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Tenancy Contract</a>
+
+                    <a href="#" v-on:click.prevent="propertyMonthlyRent(eachRecord)" v-if="allowPropertyMonthlyRent"
+                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Rent Payment</a>
 
                     <a href="#" v-on:click.prevent="propertyExpenses(eachRecord)" v-if="allowPropertyExpenses"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Add Expenses</a>

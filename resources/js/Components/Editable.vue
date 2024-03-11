@@ -7,6 +7,7 @@
             :value="inputValue" @input="$emit('update:value', $event.target.value)"
             :required="required"
             :class="inputClass"
+            :disabled="disabled"
         >
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
@@ -17,6 +18,7 @@
             :value="inputValue" @input="$emit('update:value', $event.target.value)"
             :required="required"
             :class="inputClass"
+            :disabled="disabled"
         >
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
@@ -27,6 +29,7 @@
             :value="inputValue" @input="$emit('update:value', $event.target.value)"
             :required="required"
             :class="inputClass"
+            :disabled="disabled"
         >
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
@@ -36,6 +39,7 @@
             :value="inputValue" @input="$emit('update:value', $event.target.value)"
             :required="required"
             :class="inputClass"
+            :disabled="disabled"
         ></textarea>
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
@@ -82,6 +86,10 @@ export default defineComponent({
             type: String,
             required: false,
             default: '',
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
         },
     },
 

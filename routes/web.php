@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\contactAttachmentController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ContractController;
 use App\Http\Controllers\JobAttachmentFileController;
 use App\Http\Controllers\JobWorkController;
 use App\Http\Controllers\JobPermitFileController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PropertyExpenseAttachmentController;
+use App\Http\Controllers\PropertyExpenseController;
+use App\Http\Controllers\PropertyRentController;
 use App\Http\Controllers\SpecificationAttachmentController;
 use App\Http\Controllers\SpecificationController;
 use App\Http\Controllers\TenantAttachmentController;
@@ -62,16 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/estimates/drafts',
         \App\Http\Controllers\Estimates\DraftEstimatesController::class)->name('estimates.drafts');
 
-    Route::get('/contracts/pending',
-        \App\Http\Controllers\Contracts\PendingContractsController::class)->name('contracts.pending');
-
     Route::get('/invoices/drafts',
         \App\Http\Controllers\Invoices\DraftInvoicesController::class)->name('invoices.drafts');
 
     Route::get('/purchase-orders/drafts',
         \App\Http\Controllers\PurchaseOrders\DraftPurchaseOrdersController::class)->name('purchase-orders.drafts');
-
-    Route::get('/supply/items', \App\Http\Controllers\Supply\SupplyItemController::class)->name('supply.items');
 
     Route::delete('/contact-attachment-files/{id}', [ContactAttachmentController::class, 'destroy'])->name('contact-attachment-files.destroy');
     Route::resource('contacts', ContactController::class);
@@ -84,17 +80,26 @@ Route::middleware('auth')->group(function () {
     Route::resource('specifications', SpecificationController::class);
 
     Route::get('/property/{id}/duplicate',  [PropertyController::class, 'duplicate'])->name('property.duplicate');
-    Route::resource('property', PropertyController::class);
+    Route::resource('property', PropertyController::class)->only(['index','create', 'edit', 'store', 'destroy']);
 
     Route::delete('/tenant-attachment-files/{id}', [TenantAttachmentController::class, 'destroy'])->name('tenant-attachment-files.destroy');
     Route::get('/tenant/{id}/duplicate',  [TenantController::class, 'duplicate'])->name('tenant.duplicate');
-    Route::resource('tenant', TenantController::class);
+    Route::resource('tenant', TenantController::class)->only(['index','create', 'edit', 'store', 'destroy']);
 
     Route::delete('/tenant-contract-attachment-files/{id}', [TenantContractAttachmentController::class, 'destroy'])->name('tenant-contract-attachment-files.destroy');
     Route::get('/tenant-contract/{id}/duplicate',  [TenantContractController::class, 'duplicate'])->name('tenant-contract.duplicate');
-    Route::get('/tenant-contract/{id}/createContract',  [TenantContractController::class, 'createContract'])->name('tenant-contract.createContract');
-    Route::resource('tenant-contract', TenantContractController::class);
+    Route::get('/tenant-contract/{id}/createTenantContract',  [TenantContractController::class, 'createTenantContract'])->name('tenant-contract.createTenantContract');
+    Route::resource('tenant-contract', TenantContractController::class)->only(['show', 'edit', 'store', 'destroy']);
 
+//    PropertyExpense
+    Route::delete('/property-expense-attachment-files/{id}', [PropertyExpenseAttachmentController::class, 'destroy'])->name('property-expense-attachment-files.destroy');
+    Route::get('/property-expense/{id}/duplicate',  [PropertyExpenseController::class, 'duplicate'])->name('property-expense.duplicate');
+    Route::get('/property-expense/{id}/createPropertyExpense',  [PropertyExpenseController::class, 'createPropertyExpense'])->name('property-expense.createPropertyExpense');
+    Route::resource('property-expense', PropertyExpenseController::class)->only(['show', 'edit', 'store', 'destroy']);
+
+    Route::get('/property-rent/{id}/duplicate',  [PropertyRentController::class, 'duplicate'])->name('property-rent.duplicate');
+    Route::get('/property-rent/{id}/createPropertyRent',  [PropertyRentController::class, 'createPropertyRent'])->name('property-rent.createPropertyRent');
+    Route::resource('property-rent', PropertyRentController::class)->only(['show', 'edit', 'store', 'destroy']);
 
     //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

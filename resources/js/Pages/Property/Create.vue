@@ -135,7 +135,7 @@
                     <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0">
                         <div :class="`${divClass} flex-grow`">
                             <Editable
-                                type="number"
+                                type="text"
                                 label="Cost"
                                 :input-value="form.cost"
                                 @update:value="form.cost = $event"
