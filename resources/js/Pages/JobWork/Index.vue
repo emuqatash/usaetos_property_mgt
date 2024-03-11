@@ -67,7 +67,7 @@
             </div>
         </template>
         <template v-else>
-            <EmptyStateJobs/>
+            <EmptyState @page-Create-Active="createNewRecord" :title="'Job'"/>
         </template>
     </AuthenticatedLayout>
 </template>
@@ -79,7 +79,7 @@ import {FolderIcon, FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import EmptyStateJobs from "@/Pages/JobWork/EmptyStateJobs.vue";
+import EmptyState from "@/Components/AppComponents/EmptyState.vue";
 
 let props = defineProps({
     job: Object,
@@ -90,7 +90,7 @@ const selectedRows = ref([])
 const search = ref(props.filters.search)
 
 watch(search, debounce(() => {
-        router.get('/jobworks', {search: search.value},
+        router.get('/jobWorks', {search: search.value},
             {
                 preserveState: true,
                 replace: true
@@ -98,10 +98,13 @@ watch(search, debounce(() => {
     }, 500)
 )
 
+const createNewRecord = () => {
+    router.get(route('jobWorks.create', props.id ))
+}
 const newJob = () => {
-    router.get(route('jobworks.create'))
+    router.get(route('jobWorks.create'))
 }
 const showJob = (job) => {
-    router.get(route('jobworks.show', job.id))
+    router.get(route('jobWorks.show', job.id))
 }
 </script>

@@ -50,4 +50,5 @@ class TenantContract extends Model
     {
         return $this->hasMany(TenantContractAttachmentFile::class);
     }
+
 }

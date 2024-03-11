@@ -13,8 +13,8 @@
                         <div class="flex space-x-6">
                             <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
                             <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tenants</Link>
-                            <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Jobs</Link>
-                            <Link :href="route('jobworks.index')" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tasks</Link>
+<!--                            <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Jobs</Link>-->
+<!--                            <Link :href="route('jobworks.index')" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tasks</Link>-->
 <!--                            <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>-->
 <!--                            <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>-->
 <!--                            <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Supply</Link>-->
@@ -54,8 +54,7 @@
                     <Link :href="route('contacts.index')" :class="[$page.url.startsWith('/contacts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contacts</Link>
                     <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Properties</Link>
                     <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Tenants</Link>
-                    <Link :href="route('contracts.pending')" :class="[$page.url.startsWith('/contracts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contracts</Link>
-                    <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Jobs</Link>
+<!--                    <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Jobs</Link>-->
 <!--                    <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Invoices</Link>-->
 <!--                    <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">PO</Link>-->
 <!--                    <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Supply</Link>-->
@@ -66,7 +65,9 @@
                 <div class="flex flex-col col-span-8 sm:col-span-2 mb-16 sm:mb-4">
                     <properties-side-menu v-if="props.subMenu === 'PROPERTIES'" />
                     <Tenants-side-menu v-if="props.subMenu === 'TENANTS'" />
-                    <contracts-side-menu v-if="props.subMenu === 'TENANTCONTRACTS'" />
+                    <tenant-contracts-side-menu v-if="props.subMenu === 'TENANTCONTRACTS'" />
+                    <expenses-Side-Menu v-if="props.subMenu === 'PROPERTYEXPENSES'" />
+                    <property-rent-Side-Menu v-if="props.subMenu === 'PROPERTYRENTS'" />
                     <jobs-side-menu v-if="props.subMenu === 'JOBS'" />
                     <invoices-side-menu v-if="props.subMenu === 'INVOICES'" />
                     <purchase-orders-side-menu v-if="props.subMenu === 'PURCHASE_ORDERS'" />
@@ -93,7 +94,6 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
 import SettingsSideMenu from '@/Components/SideMenus/SettingsSideMenu.vue';
 import JobsSideMenu from '@/Components/SideMenus/JobsSideMenu.vue';
-import ContractsSideMenu from '@/Components/SideMenus/ContractsSideMenu.vue';
 import InvoicesSideMenu from '@/Components/SideMenus/InvoicesSideMenu.vue';
 import PurchaseOrdersSideMenu from '@/Components/SideMenus/PurchaseOrdersSideMenu.vue';
 import SupplySideMenu from '@/Components/SideMenus/SupplySideMenu.vue';
@@ -101,6 +101,9 @@ import AppButton from "@/Components/AppButton.vue";
 import { UserAddIcon } from "@heroicons/vue/solid/esm";
 import PropertiesSideMenu from "@/Components/SideMenus/PropertiesSideMenu.vue";
 import TenantsSideMenu from "@/Components/SideMenus/TenantsSideMenu.vue";
+import ExpensesSideMenu from "@/Components/SideMenus/ExpensesSideMenu.vue";
+import PropertyRentSideMenu from "@/Components/SideMenus/PropertyRentSideMenu.vue";
+import TenantContractsSideMenu from "@/Components/SideMenus/TenantContractsSideMenu.vue";
 
 const showMobileMenu = ref(false)
 const page = usePage()

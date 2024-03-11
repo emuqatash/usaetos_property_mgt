@@ -1,16 +1,23 @@
 <template>
 <AuthenticatedLayout :sub-menu="'TENANTS'" class="P-2">
     <div class="flex justify-between items-center mb-8">
-        <div class="relative rounded-md shadow-sm mr-8">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>
+        <div class="flex items-center">
+            <div class="relative rounded-md shadow-sm mr-2">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>
+                </div>
+                <input type="text" name="search" id="search" v-model="search"
+                       class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300
+            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                       placeholder="Search...">
             </div>
-            <input type="text" name="search" id="search" v-model="search"
-                   class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300
-               placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                   placeholder="Search...">
+            <button class="rounded-md border-0 p-2 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    @click="$inertia.get(route('tenant.index'))">
+                <RefreshIcon class="w-5 h-5 text-gray-500"/>
+            </button>
         </div>
-        <SecondaryButton class="xl:text-sm font-bold" @click="newTenant">
+
+        <SecondaryButton class="xl:text-sm font-bold ml-8 md:ml-0" @click="newTenant">
             <FolderAddIcon class="w-10 h-5 inline-block section-button-icon text-blue-800"/>
             <span class="hidden md:inline-block">New Tenant</span>
         </SecondaryButton>
@@ -52,7 +59,7 @@
                 @onConfirm="deleteRecordConfirmed(recordId)"
                 @onCancel="closeModel"
                 :show="modalActive"
-                :message="'Are you sure you want to delete this record ' + recordId + '?'"
+                :message="'Are you sure you want to delete this Tenant record along with related Tenancy Contracts ?'"
                 confirmLabel="Yes, delete it!"
                 cancelLabel="Cancel"
             />
@@ -60,22 +67,22 @@
         </div>
     </template>
     <template v-else>
-        <EmptyTenant/>
+        <EmptyState @page-Create-Active="createNewRecord" :title="'Tenant'"/>
     </template>
 </AuthenticatedLayout>
 </template>
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {SearchIcon} from "@heroicons/vue/outline";
+import {SearchIcon,RefreshIcon} from "@heroicons/vue/outline";
 import {FolderAddIcon} from '@heroicons/vue/solid';
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import EmptyTenant from "@/Pages/Tenant/EmptyTenant.vue";
 import DotsVertical from "@/Components/DotsVertical.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ConfirmationModal from "@/Composables/ConfirmationModal.vue";
+import EmptyState from "@/Components/AppComponents/EmptyState.vue";
 
 
 let props = defineProps({
@@ -117,6 +124,10 @@ const recordAction = (id, action) => {
             modalActive.value = true;
             break;
     }
+}
+
+const createNewRecord = () => {
+    router.get(route('property.create', props.id ))
 }
 
 let selectedRow = ref(null);  // ref to store the ID of the selected row

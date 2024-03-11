@@ -23,6 +23,9 @@ class TenantController extends Controller
                     $query->where('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%");
                 })
+                ->when($request->input('selectedTenantId'), function ($query, $selectedTenantId) {
+                    $query->where('id', $selectedTenantId);
+                })
                 ->orderBy('first_name')
                 ->paginate(10)
                 ->withQueryString()
@@ -93,6 +96,7 @@ class TenantController extends Controller
                 ]);
             }
         }
+
         return redirect()->route('tenant.index', ['selectedTenantId' => $tenant->id]);
     }
     public function edit(Tenant $tenant)

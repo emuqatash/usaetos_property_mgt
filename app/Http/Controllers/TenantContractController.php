@@ -64,11 +64,10 @@ class TenantContractController extends Controller
                 ]);
             }
         }
-
         return redirect()->route('tenant-contract.show', $tenantContract->tenant_id);
     }
 
-    public function createContract($tenant_id)
+    public function createTenantContract($tenant_id)
     {
         $properties = Property::all()->toArray();
         return Inertia('TenantContract/Edit',
@@ -77,6 +76,7 @@ class TenantContractController extends Controller
     public function edit($tenantContract_id)
     {
         $tenantContracts = TenantContract::find($tenantContract_id);
+//        dd($tenantContracts);
         $tenantContracts->load('tenantContractAttachmentFiles');
         $properties = Property::all()->toArray();
         return Inertia('TenantContract/Edit',

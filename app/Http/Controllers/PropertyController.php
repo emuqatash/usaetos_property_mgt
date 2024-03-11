@@ -23,8 +23,13 @@ class PropertyController extends Controller
                         ->orWhere('address', 'like', "%{$search}%")
                         // Add this line to search in the related state's name.
                         ->orWhereHas('state', function ($query) use ($search) {
-                            $query->where('name', 'like', "%{$search}%");
+                            $query->where('property_no', 'like', "%{$search}%")
+                                ->orWhere('name', 'like', "%{$search}%")
+                                ->orWhere('owner', 'like', "%{$search}%");
                         });
+                })
+                ->when($request->input('propertyId'), function ($query, $propertyId) {
+                    $query->where('id', $propertyId);
                 })
                 ->when($request->input('propertyStatus'), function ($query, $status) {
                     $query->where('property_status', $status);
@@ -42,7 +47,7 @@ class PropertyController extends Controller
                         'city' => $property->city,
                     ];
                 }),
-            'filters' => $request->only(['search', 'propertyStatus']),
+            'filters' => $request->only(['search', 'propertyStatus','selectedTenantId']),
             'counts' => [
                 'vacant' => Property::where('property_status', 'Vacant')->count(),
                 'occupied' => Property::where('property_status', 'Occupied')->count(),
@@ -61,7 +66,6 @@ class PropertyController extends Controller
     public function store(PropertyRequest $request)
     {
         $property = $request->all();
-//        dd( $property );
         if ($request->input('id') > 0) {
             $property_data = $request->all();
             $property = Property::find($request->input('id'));
@@ -70,8 +74,7 @@ class PropertyController extends Controller
             $property['company_id'] = Auth::user()->company_id;
             $property = Property::create($property);
         }
-
-        return redirect()->route('property.index', $property);
+        return redirect()->route('property.index', ['propertyId' => $property->id]);
     }
 
     public function edit(Property $property)
