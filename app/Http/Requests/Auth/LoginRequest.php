@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -48,6 +49,13 @@ class LoginRequest extends FormRequest
                 'email' => trans('auth.failed'),
             ]);
         }
+
+        // Authentication successful. Store company_id in session
+        $companyId = Auth::user()->company_id;
+        session()->put('company_id', $companyId);
+
+        // Log session company_id
+//        Log::info("Stored company_id in session: " . session('company_id'));
 
         RateLimiter::clear($this->throttleKey());
     }

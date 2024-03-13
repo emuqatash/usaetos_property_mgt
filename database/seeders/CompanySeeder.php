@@ -20,5 +20,14 @@ All material is guaranteed to be as specified. All work is to be completed in a 
             'address' => '210 County Rd 7200, Lubbock, TX 79404',
             'contract_details' => $contract,
         ]);
+
+        $secondCompanyContract = "Another Contract Details to be added by amjad...";  // Replace with actual contract
+
+        Company::updateOrCreate([
+            'name' => 'NewBytic',   // Replace with actual name
+            'address' => 'NewYor, Yonkers Zipcode : 458654',  // Replace with actual address
+            'contract_details' => $secondCompanyContract,
+        ]);
+
     }
 }

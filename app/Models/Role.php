@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
@@ -14,4 +15,5 @@ class Role extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
 }

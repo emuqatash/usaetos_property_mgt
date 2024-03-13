@@ -23,6 +23,7 @@
         "@suadelabs/vue3-multiselect": "^1.0.2",
         "@vue-hero-icons/solid": "^1.7.2",
         "lodash": "^4.17.21",
+        "moment": "^2.30.1",
         "vue-multiselect": "^2.1.8",
         "vue-upload-component": "^3.1.8"
     }

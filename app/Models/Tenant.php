@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -51,5 +52,10 @@ class Tenant extends Model
     public function tenantContracts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TenantContract::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
     }
 }

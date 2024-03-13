@@ -36,7 +36,7 @@ class ContactController extends Controller
                     'email' => $contact->email,
                     'address' => $contact->address,
                     'city' => $contact->city,
-                    'state_name' => $contact->state->name,
+                    'state_name' => optional($contact->state)->name,
                     'zip' => $contact->zip,
                     'document_id' => $contact->document_id,
                     'company_name' => $contact->company->name,

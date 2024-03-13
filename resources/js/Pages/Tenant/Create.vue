@@ -1,6 +1,5 @@
 <template>
     <AuthenticatedLayout :sub-menu="'TENANTS'">
-        <!-- Modal -->
         <AppModal :modalActive="modalActive">
             <div class="w-full h-full p-4 justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">

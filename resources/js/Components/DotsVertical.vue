@@ -116,7 +116,7 @@ onUnmounted(() => {
 
                     <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" v-if="allowDuplicate"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Duplicate</a>
-
+<!--                    v-if="allowDelete && userHasRole('Admin', 'Superuser')"-->
                     <a href="#" v-on:click.prevent="deleteRecord(eachRecord)" v-if="allowDelete"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-300">Delete</a>
                 </div>

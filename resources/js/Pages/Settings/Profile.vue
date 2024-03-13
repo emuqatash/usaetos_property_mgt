@@ -98,7 +98,8 @@ const logout = () => router.post(route('logout'));
                             </div>
                         </dd>
                     </div>
-                    <div class="pt-6 sm:flex">
+<!--                    v-if="props.user = 1"-->
+                    <div class="pt-6 sm:flex" v-if="userHasRole('Admin')">
                         <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Role</dt>
                         <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                             <div class="">
@@ -114,6 +115,7 @@ const logout = () => router.post(route('logout'));
                             </div>
                         </dd>
                     </div>
+
                 </dl>
             </div>
             <div>

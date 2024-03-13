@@ -43,7 +43,7 @@ class PropertyController extends Controller
                         'property_no' => $property->property_no,
                         'name' => $property->name,
                         'owner' => $property->owner,
-                        'state_name' => $property->state->name,
+                        'state_name' => optional($property->state)->name,
                         'city' => $property->city,
                     ];
                 }),

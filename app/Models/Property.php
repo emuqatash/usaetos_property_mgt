@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
+
 class Property extends Model
 {
     use HasFactory;
@@ -52,6 +55,11 @@ class Property extends Model
     public function propertyRents(): HasMany
     {
         return $this->hasMany(PropertyRent::class);
+    }
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
+//        Log::info('Global scope CompanyScope added to Property model');
     }
 
 }
