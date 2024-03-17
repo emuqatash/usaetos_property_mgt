@@ -3,8 +3,12 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import {Head, router} from '@inertiajs/vue3'
 import {ref} from 'vue'
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import {usePermission} from "@/Composables/permissions.js";
+
 
 const editSection = ref(null)
+const {hasRole} = usePermission()
+
 const editingSection = (section) => editSection.value === section
 const edit = (section) => editSection.value = section
 const save = () => {
@@ -98,12 +102,13 @@ const logout = () => router.post(route('logout'));
                             </div>
                         </dd>
                     </div>
-<!--                    v-if="props.user = 1"-->
-                    <div class="pt-6 sm:flex" v-if="userHasRole('Admin')">
+<!--                    v-if="props.user = 1"   v-if="userHasRole('Admin')"-->
+                    <div v-if="hasRole('admin')" class="pt-6 sm:flex">
                         <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Role</dt>
                         <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                             <div class="">
-                                <div v-if="!editingSection('ROLE_ID')" class="text-gray-900">{{ props.user.role.name }}</div>
+<!--                                v-if="!editingSection('ROLE_ID')"-->
+                                <div class="text-gray-900">{{ props.user.role.name }}</div>
                                 <select v-if="editingSection('ROLE_ID')" v-model="props.user.role_id" name="role" class=" block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <option v-for="role in props.roles" :value="role.id">{{ role.name }}</option>
                                 </select>

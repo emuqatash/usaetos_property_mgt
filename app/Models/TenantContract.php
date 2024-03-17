@@ -17,6 +17,7 @@ class TenantContract extends Model
         'property_id',
         'residential_tenancy_agreement',
         'description',
+        'late_fee',
         'document_id',
         'start_date',
         'end_date',
@@ -27,6 +28,7 @@ class TenantContract extends Model
         'security_deposit',
         'bills_paid_by',
         'note',
+        'active',
         'company_id',
     ];
 

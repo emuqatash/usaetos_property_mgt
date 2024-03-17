@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Scopes\CompanyScope;
+use App\Models\Scopes\StateScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +21,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'role_id',
-        'company_id'
+        'company_id',
+        'country_id',
     ];
 
     protected $hidden = [
@@ -47,6 +49,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Company::class);
     }
 
+    public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
     public function jobs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(JobWork::class, 'job_user', 'user_id', 'job_id');
@@ -71,6 +78,7 @@ class User extends Authenticatable implements JWTSubject
     protected static function booted(): void
     {
         static::addGlobalScope(new CompanyScope());
+        static::addGlobalScope(new StateScope());
 
         static::creating(function ($model) {
             if (session('company_id')) {

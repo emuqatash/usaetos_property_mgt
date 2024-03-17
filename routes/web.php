@@ -42,7 +42,7 @@ Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth',)->group(function () {
     Route::get('/settings/profile', \App\Http\Controllers\Settings\ProfileController::class)->name('settings.profile');
     Route::post('/settings/profile',
         \App\Http\Controllers\Settings\UpdateProfileController::class)->name('settings.profile.update');

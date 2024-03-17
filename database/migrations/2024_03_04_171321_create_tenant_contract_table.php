@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('contract_no');
             $table->string('residential_tenancy_agreement');
             $table->string('description')->nullable();
+            $table->decimal('late_fee')->default(0)->nullable();
             $table->string('document_id')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->decimal('security_deposit', 20, 2)->nullable();
             $table->string('bills_paid_by')->nullable();
             $table->text('note')->nullable();
+            $table->boolean('active')->default(true);
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });

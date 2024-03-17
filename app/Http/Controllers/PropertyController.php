@@ -6,13 +6,16 @@ use App\Http\Requests\PropertyRequest;
 use App\Models\Property;
 use App\Models\State;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
     public function index(Request $request)
     {
+        if(!$request->has('active')) {
+            $request->request->add(['active' => '1']);
+        }
+
         return Inertia('Property/Index', [
             'property' => Property::query()
                 ->with('state')
@@ -32,7 +35,10 @@ class PropertyController extends Controller
                     $query->where('id', $propertyId);
                 })
                 ->when($request->input('propertyStatus'), function ($query, $status) {
-                    $query->where('property_status', $status);
+                    $query->where('property_status', $status)->where('active', 1);
+                })
+                ->when($request->input('active'), function ($query, $active) {
+                    $query->where('active', '=', $active);
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate(10)
@@ -47,12 +53,14 @@ class PropertyController extends Controller
                         'city' => $property->city,
                     ];
                 }),
-            'filters' => $request->only(['search', 'propertyStatus','selectedTenantId']),
+            'filters' => $request->only(['search', 'propertyStatus','selectedTenantId','active']),
             'counts' => [
-                'vacant' => Property::where('property_status', 'Vacant')->count(),
-                'occupied' => Property::where('property_status', 'Occupied')->count(),
-                'rented' => Property::where('property_status', 'Rented')->count(),
-                'under_maintenance' => Property::where('property_status', 'Under Maintenance')->count(),
+                'vacant' => Property::where('property_status', 'Vacant')->where('active', 1)->count(),
+                'occupied' => Property::where('property_status', 'Occupied')->where('active', 1)->count(),
+                'rented' => Property::where('property_status', 'Rented')->where('active', 1)->count(),
+                'under_maintenance' => Property::where('property_status', 'Under Maintenance')->where('active', 1)->count(),
+                'inactive' => Property::where('active', 0)->count(),
+                'active' => Property::where('active', 1)->count(),
             ],
         ]);
     }
@@ -72,6 +80,7 @@ class PropertyController extends Controller
             $property->update($property_data);
         } else {
             $property['company_id'] = Auth::user()->company_id;
+            $property['country_id'] = Auth::user()->country_id;
             $property = Property::create($property);
         }
         return redirect()->route('property.index', ['propertyId' => $property->id]);

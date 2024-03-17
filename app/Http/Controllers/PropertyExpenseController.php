@@ -6,6 +6,7 @@ use App\Http\Requests\StorePropertyExpenseRequest;
 use App\Models\Property;
 use App\Models\PropertyExpense;
 use App\Models\PropertyExpenseCategory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,7 @@ class PropertyExpenseController extends Controller
                 'id' => $propertyExpense->id,
                 'description' => $propertyExpense->description,
                 'category' => $propertyExpense->propertyExpenseCategory->name,
-                'payment_date' => $propertyExpense->payment_date,
+                'payment_date' => Carbon::parse($propertyExpense->payment_date)->format('d-M-Y'),
                 'payment_amount' => $propertyExpense->payment_amount,
                 'receipt_id' => $propertyExpense->receipt_id,
                 'supplier' => $propertyExpense->property->supplier,

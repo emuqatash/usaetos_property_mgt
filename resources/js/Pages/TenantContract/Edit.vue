@@ -8,7 +8,8 @@
         </progress>
         <div>
             <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6">Create or Edit Tenancy Contract</p>
+                <p class="text-xl font-semibold mb-6" v-if="!form.id">Create Tenancy Contract</p>
+                <p class="text-xl font-semibold mb-6" v-if="form.id">Update Tenancy Contract</p>
                 <!--1row-->
                 <div class="lg:flex gap-10">
                     <div class="w-8/12">
@@ -61,15 +62,25 @@
                          class="text-red-500 text-xs mt-1"></div>
                 </div>
                 <!--3row-->
-                <div class="flex-grow">
-                    <Editable
-                        type="text"
-                        label="Description"
-                        :input-value="form.description"
-                        @update:value="form.description = $event"
-                        :error="form.errors.description"/>
+                <div class="lg:flex gap-2">
+                    <div class="flex-grow">
+                        <Editable
+                            type="text"
+                            label="Description"
+                            :input-value="form.description"
+                            @update:value="form.description = $event"
+                            :error="form.errors.description"/>
+                    </div>
+                    <div>
+                        <Editable
+                            type="text"
+                            label="Late fee"
+                            :input-value="form.late_fee"
+                            @update:value="form.late_fee = $event"
+                            :error="form.errors.late_fee"/>
+                    </div>
                 </div>
-                <!--4row-->
+                <!--4row -->
                 <div class="lg:flex gap-2">
                     <div class="flex-grow">
                         <Editable
@@ -231,7 +242,6 @@ let props = defineProps({
 
 const modalActive = ref(true)
 const isLoading = ref(false)
-const selectedProperty = ref([])
 
 let form = useForm({
     'id': props.tenantContracts ? props.tenantContracts.id : '',
@@ -241,6 +251,7 @@ let form = useForm({
     'contract_no': props.tenantContracts ? props.tenantContracts.contract_no : '',
     'residential_tenancy_agreement': props.tenantContracts ? props.tenantContracts.residential_tenancy_agreement : '',
     'description': props.tenantContracts ? props.tenantContracts.description : '',
+    'late_fee': props.tenantContracts ? props.tenantContracts.late_fee : '',
     'document_id': props.tenantContracts ? props.tenantContracts.document_id : '',
     'start_date': props.tenantContracts ? props.tenantContracts.start_date : '',
     'end_date': props.tenantContracts ? props.tenantContracts.end_date : '',
@@ -322,7 +333,8 @@ const cancel = () => {
             props.tenantContracts.tenant_id :  props.tenant_id))
 }
 
-selectedProperty.value = props.properties.find(e => e.property_id === form.property_id)
+const selectedProperty = ref([])
+selectedProperty.value = props.properties.find(e => e.id === form.property_id)
 watch(selectedProperty, (newState) => {
     form.property_id = newState ? newState.id : null;
 });

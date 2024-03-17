@@ -1,13 +1,18 @@
 <template>
     <form @submit.prevent="handleSubmit">
-        <div class="space-y-8 p-4 lg:pl-60 lg:pr-60">
+        <div class="space-y-8 p-4 lg:w-4/5 mx-auto">
             <div>
                 <div class="flex items-center justify-between">
                     <h2 class="text-2xl font-bold leading-7 text-gray-900">Property</h2>
                     <XIcon class="flex bg-white text-black  h-6 w-6 ml-4 cursor-pointer" @click="backToList()"/>
                 </div>
                 <div class="mt-10 space-y-6 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y">
-                    <h2 class="mt-10 md:text-lg font-bold text-gray-900 pb-2">Enter or Update New Property information</h2>
+                    <div class="lg:flex lg:gap-20 lg:pb-4">
+                        <h2 class="mt-10 md:text-lg font-bold text-gray-900 pb-2" v-if="!form.id">Create Property information</h2>
+                        <h2 class="mt-10 md:text-lg font-bold text-gray-900 pb-2" v-if="form.id">Update Property information</h2>
+                        <Toggle v-model="form.active"  class="mt-10"/>
+                    </div>
+
                     <!--1raw-->
                     <div class="lg:flex space-x-0 lg:space-x-6 space-y-2 lg:space-y-0"> <!-- Parent flex container -->
                         <div :class="`${divClass} flex-grow `">
@@ -188,18 +193,17 @@ import {ref, watch} from "vue";
 import Editable from "@/Components/Editable.vue";
 import MultiselectCustom from "@/Components/MultiselectCustom.vue";
 import {XIcon} from "@heroicons/vue/solid";
+import Toggle from "@/Components/Toggle.vue";
 
 let props = defineProps({
     property: Object,
     states: Object,
 })
 
-const isLoading = ref(false);
-const selectedState = ref([]);
-
 let form = useForm({
     'id': props.property ? props.property.id : '',
     'property_no': props.property ? props.property.property_no : '',
+
     'name': props.property ? props.property.name : '',
     'owner': props.property ? props.property.owner : '',
     'ownership_rate': props.property ? props.property.ownership_rate : '',
@@ -213,9 +217,13 @@ let form = useForm({
     'cost': props.property ? props.property.cost : '',
     'payments_left': props.property ? props.property.payments_left : '',
     'handover_date': props.property ? props.property.handover_date : '',
+    'active': props.property ? !!props.property.active : true,
     'property_status': props.property && props.property.property_status ? props.property.property_status : 'Vacant',
 })
 
+const isLoading = ref(false);
+
+const selectedState = ref([]);
 selectedState.value = props.states.find(e => e.id === form.state_id)
 watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;

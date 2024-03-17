@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout :sub-menu="'SETTINGS'">
+    <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <AppModal :modalActive="modalActive">
             <div class="w-full h-full justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">
@@ -7,8 +7,9 @@
                         {{ form.progress.percentage }}%
                     </progress>
                     <div class="lg:flex">
-                        <div class="p-4 space-y-6 md:space-y-4 relative border-b border-gray-100 ">
-                            <p class="text-xl font-semibold mb-6">Create Contact</p>
+                        <div class="p-8 md:p-4 space-y-6 md:space-y-4 relative border-b border-gray-100 ">
+                            <p class="text-xl font-semibold mb-6" v-if="!form.id">Create Contact</p>
+                            <p class="text-xl font-semibold mb-6" v-if="form.id">Update Contact</p>
 
                             <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                                 <div>
@@ -48,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="lg:flex gap-2">
-                                <div>
+                                <div class="flex-grow">
                                     <Editable
                                         type="text"
                                         label="Email Address"
@@ -77,11 +78,11 @@
                                 </div>
                             </div>
 
-                            <div class="lg:flex gap-10 space-y-4">
+                            <div class="lg:flex gap-10 space-y-6">
                                 <!------------Radio------------>
-                                <div>
+                                <div class="lg:pt-6">
                                     <p :class="labelClass">Contact Type</p>
-                                    <div class="md:flex md:space-x-6 mt-4">
+                                    <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
                                         <div v-for="contactType in contactTypes" :key="contactType.id"
                                              class="flex items-center">
                                             <input
@@ -159,13 +160,13 @@
                     </div>
 
                     <!--Upload attachments-->
-                    <div class="space-y-2 ">
+                    <div class="md:pt-2 space-y-2">
                         <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
                         <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
                             <div
-                                class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-10">
+                                class="flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-10">
                                 <div class="text-center ">
-                                    <PhotographIcon class="mx-auto h-8 w-8 text-gray-300"/>
+                                    <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
                                     <div id="app" class="z-10">
                                         <ul>
                                             <li v-for="(file,index) in attachmentFileList" :key="file.id">
@@ -202,7 +203,7 @@
                         </div>
                     </div>
                     <!--Buttons-->
-                    <div class="p-8 flex justify-around md:justify-start gap-2 bg-gray-50">
+                    <div class="p-4 flex justify-around md:justify-start gap-2 bg-gray-50">
                         <div>
                             <LoadingButton type="submit" :isLoading="isLoading" :disabled="form.processing"
                                            class="px-8 py-2.5">

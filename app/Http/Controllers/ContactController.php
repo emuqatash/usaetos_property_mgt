@@ -94,17 +94,6 @@ class ContactController extends Controller
         return redirect()->route('contacts.index', ['selectedContactId' => $contact->id]);
     }
 
-    public function show(Contact $contact)
-    {
-        $stateName = State::where('id', $contact->state_id)->value('name');
-        $contactType = ContactType::where('id', $contact->contact_type_id)->value('name');
-        return Inertia('Contact/Show', [
-            'contact' => $contact,
-            'stateName' => $stateName,
-            'contactType' => $contactType,
-        ]);
-    }
-
     public function edit(Contact $contact)
     {
         $contact = Contact::where('id', $contact->id)
@@ -117,6 +106,16 @@ class ContactController extends Controller
             'contact' => $contact,
             'states' => $states,
             'contactTypes' => $contactTypes
+        ]);
+    }
+    public function show(Contact $contact)
+    {
+        $stateName = State::where('id', $contact->state_id)->value('name');
+        $contactType = ContactType::where('id', $contact->contact_type_id)->value('name');
+        return Inertia('Contact/Show', [
+            'contact' => $contact,
+            'stateName' => $stateName,
+            'contactType' => $contactType,
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout :sub-menu="'SETTINGS'">
+    <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <!-- Modal -->
         <AppModal :modalActive="modalActive">
             <div class="w-full h-full p-4 flex justify-between border-b border-gray-100">

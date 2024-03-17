@@ -13,7 +13,7 @@
                         <div class="flex space-x-6">
                             <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
                             <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tenants</Link>
-<!--                            <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Jobs</Link>-->
+                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*Maintenance*</Link>
 <!--                            <Link :href="route('jobworks.index')" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tasks</Link>-->
 <!--                            <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>-->
 <!--                            <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>-->
@@ -51,9 +51,9 @@
             </nav>
             <div v-if="showMobileMenu" class="flex sm:hidden bg-gray-100 px-8" id="mobile-menu">
                 <div class="space-y-1 py-4 w-full">
-                    <Link :href="route('contacts.index')" :class="[$page.url.startsWith('/contacts') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Contacts</Link>
                     <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Properties</Link>
                     <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Tenants</Link>
+                    <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Maintenance</Link>
 <!--                    <Link :href="route('jobworks.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Jobs</Link>-->
 <!--                    <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Invoices</Link>-->
 <!--                    <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">PO</Link>-->
@@ -73,6 +73,7 @@
                     <purchase-orders-side-menu v-if="props.subMenu === 'PURCHASE_ORDERS'" />
                     <supply-side-menu v-if="props.subMenu === 'SUPPLY'" />
                     <settings-side-menu v-if="props.subMenu === 'SETTINGS'" />
+                    <dashboard-side-menu v-if="props.subMenu === 'DASHBOARD'" />
                 </div>
                 <div class="flex col-span-8 sm:col-span-4 items-start pb-20">
                     <main class="px-4 sm:px-6 lg:flex-auto lg:px-0">
@@ -104,6 +105,7 @@ import TenantsSideMenu from "@/Components/SideMenus/TenantsSideMenu.vue";
 import ExpensesSideMenu from "@/Components/SideMenus/ExpensesSideMenu.vue";
 import PropertyRentSideMenu from "@/Components/SideMenus/PropertyRentSideMenu.vue";
 import TenantContractsSideMenu from "@/Components/SideMenus/TenantContractsSideMenu.vue";
+import DashboardSideMenu from "@/Components/SideMenus/DashboardSideMenu.vue";
 
 const showMobileMenu = ref(false)
 const page = usePage()
@@ -118,8 +120,8 @@ const props = defineProps({
 })
 
 let userInitials = computed(() => {
-    if (page.props.user && page.props.user.name) {
-        let nameParts = page.props.user.name.split(' ')
+    if (page.props.auth.user && page.props.auth.user.name) {
+        let nameParts = page.props.auth.user.name.split(' ')
         let initials = nameParts[0].slice(0, 1)
         if (nameParts.length > 1) {
             initials += nameParts[nameParts.length - 1].slice(0, 1)

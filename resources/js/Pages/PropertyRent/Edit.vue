@@ -8,7 +8,8 @@
         </progress>
 <!--        <div class="lg:flex">-->
             <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6">Create or Edit Rent Payment</p>
+                <p class="text-xl font-semibold mb-6" v-if="!form.id">Add Rent Payment</p>
+                <p class="text-xl font-semibold mb-6" v-if="form.id">Update Rent Payment</p>
                 <!--1row-->
                 <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                     <div class="flex-grow">

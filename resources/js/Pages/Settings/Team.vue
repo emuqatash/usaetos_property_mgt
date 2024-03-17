@@ -5,8 +5,10 @@ import InviteUser from '@/Pages/Settings/Team/InviteUser.vue'
 import {ref} from 'vue'
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { UserAddIcon } from '@heroicons/vue/outline';
+import Register from "@/Pages/Auth/Register.vue";
 
 const showInviteUser = ref(false)
+// @click="showInviteUser = true"
 
 const props = defineProps({
     users: Array,
@@ -18,7 +20,8 @@ const props = defineProps({
     <Head title="Settings | Team" />
 
     <AuthenticatedLayout :sub-menu="'SETTINGS'">
-        <invite-user v-model:show="showInviteUser" v-model:errors="props.errors" />
+<!--        <invite-user v-model:show="showInviteUser" v-model:errors="props.errors" />-->
+        <Register v-model:show="showInviteUser" v-model:errors="props.errors" />
         <div class="space-y-16 sm:space-y-20">
                 <div class="px-4 sm:px-6 lg:px-8">
                     <div class="sm:flex sm:items-center">
@@ -34,7 +37,7 @@ const props = defineProps({
                                 <UserAddIcon
                                     class="w-6 h-5 inline-block section-button-icon text-blue-800 mr-1"
                                 />
-                               Invite User
+                               Create User
                             </SecondaryButton>
                         </div>
                     </div>

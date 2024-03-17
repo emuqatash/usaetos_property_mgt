@@ -6,7 +6,7 @@ import { Head } from '@inertiajs/vue3';
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <div>
             <div class="text-gray-900">You're logged in!</div>
         </div>

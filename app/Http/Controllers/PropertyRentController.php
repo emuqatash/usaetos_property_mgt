@@ -6,6 +6,7 @@ use App\Http\Requests\StorePropertyRentRequest;
 use App\Models\Property;
 use App\Models\PropertyRent;
 use App\Models\TenantContract;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +28,7 @@ class PropertyRentController extends Controller
             ->through(fn($propertyRent) => [
                 'id' => $propertyRent->id,
                 'payment_amount' => $propertyRent->payment_amount,
-                'payment_date' => $propertyRent->payment_date,
+                'payment_date' => Carbon::parse($propertyRent->payment_date)->format('d-M-Y'),
             ]);
 
         $property = Property::find($propertyId);

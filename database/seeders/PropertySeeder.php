@@ -29,6 +29,8 @@ class PropertySeeder extends Seeder
                 'payments_left' => $faker->numberBetween(1, 5),
                 'handover_date' => $faker->dateTimeBetween('-1 years', 'now')->format('Y-m-d'),
                 'property_status' => $faker->randomElement(['Vacant', 'Occupied', 'Rented', 'Under Maintenance']),
+                'active' => 1,
+                'country_id' => 1,
                 'company_id' => $faker->numberBetween(1, 2),
                 // timestamps will be added automatically by Eloquent
             ]);

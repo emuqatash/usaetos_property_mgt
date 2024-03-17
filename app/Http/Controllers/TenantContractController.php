@@ -8,6 +8,7 @@ use App\Models\Tenant;
 use App\Models\TenantContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class TenantContractController extends Controller
 {
@@ -21,15 +22,15 @@ class TenantContractController extends Controller
                     ->where('contract_no', 'like', "%{$search}%")
                     ->orWhere('residential_tenancy_agreement', 'like', "%{$search}%");
             })
-            ->orderBy('contract_no')
+            ->orderBy('end_date', 'desc')
             ->paginate(5)
             ->withQueryString()
             ->through(fn($tenantContract) => [
                 'id' => $tenantContract->id,
                 'contract_no' => $tenantContract->contract_no,
                 'residential_tenancy_agreement' => $tenantContract->residential_tenancy_agreement,
-                'start_date' => $tenantContract->start_date,
-                'end_date' => $tenantContract->end_date,
+                'start_date' => Carbon::parse($tenantContract->start_date)->format('d-M-Y'),
+                'end_date' => Carbon::parse($tenantContract->end_date)->format('d-M-Y'),
                 'property_no' => $tenantContract->property->property_no,
             ]);
 
@@ -47,6 +48,7 @@ class TenantContractController extends Controller
             $tenantContract->update($tenantContract_data);
         } else {
             $tenantContract['company_id'] = Auth::user()->company_id;
+            $tenantContract['country_id'] = Auth::user()->country_id;
             $tenantContract = TenantContract::create($tenantContract);
         }
 
