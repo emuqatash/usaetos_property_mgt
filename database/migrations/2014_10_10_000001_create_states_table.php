@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('states', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('country_id')->nullable()->references('id')->on('countries');
         });
     }
 

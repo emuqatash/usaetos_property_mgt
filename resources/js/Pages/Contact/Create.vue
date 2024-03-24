@@ -1,17 +1,17 @@
 <template>
-    <AuthenticatedLayout :sub-menu="'SETTINGS'">
-        <!-- Modal -->
+    <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <AppModal :modalActive="modalActive">
-            <div class="overflow-y-auto h-screen md:h-auto">
+            <div class="w-full h-full justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">
                     <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                         {{ form.progress.percentage }}%
                     </progress>
                     <div class="lg:flex">
-                        <div class="p-7 relative border-b border-gray-100 space-y-4">
-                            <p class=" text-xl font-semibold mb-6">Create Contact</p>
+                        <div class="p-8 md:p-4 space-y-6 md:space-y-4 relative border-b border-gray-100 ">
+                            <p class="text-xl font-semibold mb-6" v-if="!form.id">Create Contact</p>
+                            <p class="text-xl font-semibold mb-6" v-if="form.id">Update Contact</p>
 
-                            <div class="lg:flex gap-2">
+                            <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                                 <div>
                                     <Editable type="text"
                                               label="First Name"
@@ -29,9 +29,6 @@
                                         :error="form.errors.last_name"
                                         required/>
                                 </div>
-                            </div>
-
-                            <div class="lg:flex gap-2">
                                 <div>
                                     <Editable
                                         type="text"
@@ -52,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="lg:flex gap-2">
-                                <div>
+                                <div class="flex-grow">
                                     <Editable
                                         type="text"
                                         label="Email Address"
@@ -70,8 +67,6 @@
                                         :error="form.errors.document_id"
                                         required/>
                                 </div>
-                            </div>
-                            <div class="lg:flex gap-10">
                                 <div>
                                     <Editable
                                         type="text"
@@ -81,37 +76,43 @@
                                         :error="form.errors.document2_id"
                                         required/>
                                 </div>
+                            </div>
+
+                            <div class="lg:flex gap-10 space-y-6">
                                 <!------------Radio------------>
-                                <div>
-                                    <p :class="labelClass">Contact Type</p>
-                                    <div class="md:flex md:space-x-6 mt-4">
-                                        <div v-for="contactType in contactTypes" :key="contactType.id"
-                                             class="flex items-center">
-                                            <input
-                                                type="radio"
-                                                :value="contactType.id"
-                                                id="contact_type_id"
-                                                v-model="form.contact_type_id"
-                                                class="text-blue-600 focus:ring-blue-500"
-                                            />
-                                            <label :for="contactType.id"
-                                                   class="ml-2 text-sm text-gray-600">{{ contactType.name }}</label>
+                                <div class="lg:pt-6">
+                                    <div class="border rounded-md p-2">
+                                        <p class="labelClass">Contact Type</p>
+                                        <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
+                                            <div v-for="contactType in contactTypes" :key="contactType.id"
+                                                 class="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    :value="contactType.id"
+                                                    id="contact_type_id"
+                                                    v-model="form.contact_type_id"
+                                                    class="text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <label :for="contactType.id"
+                                                       class="ml-2 text-sm text-gray-600">{{ contactType.name }}</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div v-if="form.errors.contact_type_id" v-text="form.errors.contact_type_id"
                                          class="text-red-500 text-xs mt-1"></div>
                                 </div>
+                                <div class="flex-grow">
+                                    <Editable
+                                        type="text"
+                                        label="Address"
+                                        :input-value="form.address"
+                                        @update:value="form.address = $event"
+                                        :error="form.errors.address"
+                                        required/>
+                                </div>
                             </div>
-                            <div>
-                                <Editable
-                                    type="text"
-                                    label="Address"
-                                    :input-value="form.address"
-                                    @update:value="form.address = $event"
-                                    :error="form.errors.address"
-                                    required/>
-                            </div>
-                            <div class="flex gap-2">
+
+                            <div class="lg:flex gap-2">
                                 <div>
                                     <Editable
                                         type="text"
@@ -130,22 +131,24 @@
                                         :error="form.errors.zip"
                                         required/>
                                 </div>
+                                <div class="md:w-8/12">
+                                    <label for="State" class="labelClass">
+                                        State
+                                    </label>
+                                    <Multiselect
+                                        v-model="selectedState"
+                                        :options="states"
+                                        :searchable="true"
+                                        placeholder="Select State..."
+                                        label="name"
+                                        track-by="id"
+                                        id="state_id"
+                                        :multiple="false"
+                                    />
+                                    <div v-if="form.errors.state_id" v-text="form.errors.state_id"
+                                         class="text-red-500 text-xs mt-1"></div>
+                                </div>
                             </div>
-                            <label for="State" class="labelClass">
-                                State
-                            </label>
-                            <Multiselect
-                                v-model="selectedState"
-                                :options="states"
-                                :searchable="true"
-                                placeholder="Select State..."
-                                label="name"
-                                track-by="id"
-                                id="state_id"
-                                :multiple="false"
-                            />
-                            <div v-if="form.errors.state_id" v-text="form.errors.state_id"
-                                 class="text-red-500 text-xs mt-1"></div>
                             <div class="w-full">
                                 <Editable
                                     type="textarea"
@@ -156,56 +159,53 @@
                                 />
                             </div>
                         </div>
+                    </div>
 
-                        <!--Upload attachments-->
-                        <div class="space-y-2 lg:pt-20">
-                            <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
-                            <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
-                                <div
-                                    class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-20 py-10">
-                                    <div class="text-center ">
-                                        <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
-                                        <div id="app" class="z-10">
-                                            <ul>
-                                                <li v-for="(file,index) in attachmentFileList" :key="file.id">
-                                                    <a
-                                                        :href="getFileURL(file.attachment_file)" target="_blank">
-                                                        {{ file.attachment_file_name }}
-                                                    </a>
-                                                    <button @click="removeAttachmentFile(index, file.id)"
-                                                            class="text-red-500">- remove
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                            <file-upload
-                                                input-id="attachment-file"
-                                                :multiple="true"
-                                                @input-file="inputAttachmentFile"
-                                                @input-filter="inputFilter"
-                                                ref="uploadAttachment"
-                                                v-model="attachmentFileModel"
-                                                drop
-                                                :drop-directory="true"
+                    <!--Upload attachments-->
+                    <div class="md:pt-2 space-y-2">
+                        <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
+                        <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
+                            <div
+                                class="flex justify-center rounded-lg border border-dashed border-gray-900/25 lg:px-10">
+                                <div class="text-center ">
+                                    <PhotographIcon class="mx-auto h-14 w-14 text-gray-300"/>
+                                    <div id="app" class="z-10">
+                                        <ul>
+                                            <li v-for="(file,index) in attachmentFileList" :key="file.id">
+                                                <a
+                                                    :href="getFileURL(file.attachment_file)" target="_blank">
+                                                    {{ file.attachment_file_name }}
+                                                </a>
+                                                <button @click="removeAttachmentFile(index, file.id)"
+                                                        class="text-red-500">- remove
+                                                </button>
+                                            </li>
+                                        </ul>
+                                        <file-upload
+                                            input-id="attachment-file"
+                                            :multiple="true"
+                                            @input-file="inputAttachmentFile"
+                                            @input-filter="inputFilter"
+                                            ref="uploadAttachment"
+                                            v-model="attachmentFileModel"
+                                            drop
+                                            :drop-directory="true"
+                                        >
+                                            <div
+                                                class="mt-4 flex text-sm leading-6 text-gray-600"
                                             >
-                                                <div
-                                                    class="mt-4 flex text-sm leading-6 text-gray-600"
-                                                >
-                                                    <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
-                                                    <p class="pl-1 mt-4">or drag and drop</p>
-                                                </div>
-                                            </file-upload>
-                                            <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                                        </div>
+                                                <p class="mt-4 text-md imageClass">Upload a file</p>
+                                                <p class="pl-1 mt-4">or drag and drop</p>
+                                            </div>
+                                        </file-upload>
+                                        <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
                     <!--Buttons-->
-                    <div class="p-8 flex justify-around md:justify-start gap-2 bg-gray-50">
+                    <div class="p-4 flex justify-around md:justify-start gap-2 bg-gray-50">
                         <div>
                             <LoadingButton type="submit" :isLoading="isLoading" :disabled="form.processing"
                                            class="px-8 py-2.5">
@@ -334,10 +334,5 @@ selectedState.value = props.states.find(e => e.id === form.state_id)
 watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;
 });
-
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

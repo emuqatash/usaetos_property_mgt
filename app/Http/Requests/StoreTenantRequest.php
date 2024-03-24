@@ -35,10 +35,6 @@ class StoreTenantRequest extends FormRequest
             'last_name' => 'required',
             'phone_number_1' => 'required',
             'email' => ['required', 'email'],
-            'address' => 'required',
-            'city' => 'required',
-            'state_id' => 'required',
-            'zip' => 'required',
             'tenant_type_id' => 'required',
         ];
     }

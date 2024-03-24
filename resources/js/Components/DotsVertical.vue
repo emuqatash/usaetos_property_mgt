@@ -3,6 +3,7 @@ import {ref,onMounted, onUnmounted, defineEmits} from 'vue';
 import {DotsVerticalIcon} from "@heroicons/vue/outline";
 
 const emit = defineEmits(['submit-form']);
+const {hasRole} = usePermission()
 
 let props = defineProps({
     eachRecord: Number,
@@ -39,6 +40,7 @@ const deleteRecordAction = ref('deleteRecord');
 const tenantContractAction = ref('viewTenantContract');
 const propertyExpensesAction = ref('viewPropertyExpenses');
 const propertyMonthlyRentAction = ref('viewPropertyMonthlyRent');
+import {usePermission} from "@/Composables/permissions.js";
 
 
 const toggleDropdown = () => {
@@ -116,8 +118,9 @@ onUnmounted(() => {
 
                     <a href="#" v-on:click.prevent="duplicateRecord(eachRecord)" v-if="allowDuplicate"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Duplicate</a>
-
-                    <a href="#" v-on:click.prevent="deleteRecord(eachRecord)" v-if="allowDelete"
+<!--                     v-if="allowDelete && hasRole('admin', 'superuser')""-->
+                    <a href="#" v-on:click.prevent="deleteRecord(eachRecord)"
+                       v-if="allowDelete && hasRole('admin', 'superuser')"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-300">Delete</a>
                 </div>
             </div>

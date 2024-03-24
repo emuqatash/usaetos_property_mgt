@@ -20,3 +20,13 @@
 .labelClass {
 @apply block tracking-wide text-gray-700 text-xs font-bold mb-2;
 }
+
+.imageClass {
+    @apply relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600
+    focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2
+    hover:text-indigo-500;
+}
+
+.divClass {
+    @apply sm:grid sm:grid-cols-1 sm:items-start;
+}

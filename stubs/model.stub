@@ -16,7 +16,7 @@ class {{ class }} extends Model
             'field_name',
             'field_name',
             'field_name',
-            'field_name',
+            'company_id',
         ];
 
     // public $timestamps = false;
@@ -25,4 +25,10 @@ class {{ class }} extends Model
         {
             return $this->belongsTo(Company::class);
         }
+
+    // Delete or keep below as per business requirements
+            protected static function booted(): void
+            {
+                static::addGlobalScope(new CompanyScope());
+            }
 }

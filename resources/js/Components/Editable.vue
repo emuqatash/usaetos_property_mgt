@@ -19,6 +19,7 @@
             :required="required"
             :class="inputClass"
             :disabled="disabled"
+            :placeholder="placeholder"
         >
         <div v-if="error" class="text-red-500 text-xs mt-1">{{ error }}</div>
     </template>
@@ -83,7 +84,7 @@ export default defineComponent({
             default: () => [],
         },
         placeholder: {
-            type: String,
+            type: [String,Number],
             required: false,
             default: '',
         },

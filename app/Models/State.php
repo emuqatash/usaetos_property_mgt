@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
+use App\Models\Scopes\StateScope;
 use Illuminate\Database\Eloquent\Model;
 
 class State extends Model
@@ -22,5 +24,10 @@ class State extends Model
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new StateScope());
     }
 }

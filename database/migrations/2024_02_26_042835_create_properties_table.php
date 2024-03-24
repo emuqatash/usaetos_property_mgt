@@ -30,6 +30,9 @@ return new class extends Migration
             $table->integer('payments_left')->nullable();
             $table->date('handover_date')->nullable();
             $table->string('property_status', 20)->default('Vacant')->nullable();
+            $table->string('property_type', 20)->nullable();
+            $table->boolean('active')->default(true);
+            $table->foreignId('country_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });

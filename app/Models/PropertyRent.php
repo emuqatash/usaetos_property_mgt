@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,8 +30,8 @@ class PropertyRent extends Model
         return $this->belongsTo(Property::class);
     }
 
-//    public function tenantContracts(): HasMany
-//    {
-//        return $this->hasMany(TenantContract::class,'property_id','property_id');
-//    }
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
+    }
 }

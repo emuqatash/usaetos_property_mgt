@@ -1,17 +1,28 @@
 <template>
 <AuthenticatedLayout :sub-menu="'PROPERTYEXPENSES'">
 <AppModal :modalActive="modalActive">
-    <div class="w-full h-full p-4 justify-between border-b border-gray-100 overflow-auto max-h-screen">
+    <div class="w-full h-full p-6 mx-auto justify-between border-b border-gray-100 overflow-auto max-h-screen">
     <form @submit.prevent="submit">
         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
             {{ form.progress.percentage }}%
         </progress>
-        <div class="lg:flex">
-            <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6">Create or Edit Property Expenses</p>
+        <div>
+            <div class="space-y-6 md:space-y-2 relative border-b border-gray-100 ">
+                <p class="text-xl font-semibold mb-6" v-if="!form.id">Create Property Expenses</p>
+                <p class="text-xl font-semibold mb-6" v-if="form.id">Update Property Expenses</p>
+            </div>
+            <div>
                 <!--1row-->
-                <div class="lg:flex gap-2 space-y-4 md:space-y-0">
-                    <div class="md:w-4/12">
+                <div class="lg:flex mt-6 lg:gap-2 lg:pb-4 border-b border-gray-900/10 space-y-6 lg:space-y-0">
+                    <div class="lg:w-7/12">
+                        <Editable
+                            type="text"
+                            label="Description"
+                            :input-value="form.description"
+                            @update:value="form.description = $event"
+                            :error="form.errors.description"/>
+                    </div>
+                    <div class="lg:w-3/12">
                         <Editable
                             type="date"
                             label="Payment Date"
@@ -19,7 +30,20 @@
                             @update:value="form.payment_date = $event"
                             :error="form.errors.payment_date" />
                     </div>
-                    <div class="md:w-10/12">
+                    <div class="lg:w-2/12">
+                        <Editable
+                            type="number"
+                            label="Payment amount"
+                            :input-value="form.payment_amount"
+                            @update:value="form.payment_amount = $event"
+                            :error="form.errors.payment_amount" />
+                    </div>
+                </div>
+
+
+                <!--2row-->
+                <div class="lg:flex mt-6 lg:gap-2 lg:pb-4 border-b border-gray-900/10 space-y-6 lg:space-y-0">
+                    <div class="lg:w-4/12">
                         <label class="labelClass">
                             Category
                         </label>
@@ -36,31 +60,7 @@
                         <div v-if="form.errors.property_expense_category_id" v-text="form.errors.property_expense_category_id"
                              class="text-red-500 text-xs mt-1"></div>
                     </div>
-                </div>
-
-                <!--2row-->
-                <div class="lg:flex">
-                    <div class="flex-grow">
-                        <Editable
-                            type="text"
-                            label="Description"
-                            :input-value="form.description"
-                            @update:value="form.description = $event"
-                            :error="form.errors.description"/>
-                    </div>
-                </div>
-
-                <!--3row-->
-                <div class="lg:flex gap-2">
-                    <div class="flex-grow">
-                        <Editable
-                            type="number"
-                            label="Payment amount"
-                            :input-value="form.payment_amount"
-                            @update:value="form.payment_amount = $event"
-                            :error="form.errors.payment_amount" />
-                    </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-4/12">
                         <Editable
                             type="text"
                             label="Receipt id"
@@ -68,7 +68,7 @@
                             @update:value="form.receipt_id = $event"
                             :error="form.errors.receipt_id" />
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-4/12">
                         <Editable
                             type="text"
                             label="Supplier"
@@ -81,7 +81,7 @@
         </div>
 
         <!--Upload attachments-->
-        <div class="space-y-2">
+        <div class="space-y-2 mt-6">
             <h2 class="ml-4 text-sm font-bold">File Attachments</h2>
             <div class="overflow-hidden rounded-lg blueGray-200 shadow p-6">
                 <div
@@ -113,7 +113,7 @@
                                 <div
                                     class="mt-4 flex text-sm leading-6 text-gray-600"
                                 >
-                                    <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                    <p class="mt-4 text-md imageClass">Upload a file</p>
                                     <p class="pl-1 mt-4">or drag and drop</p>
                                 </div>
                             </file-upload>
@@ -123,9 +123,8 @@
                 </div>
             </div>
         </div>
-{{form.property_expense_category_id}}
         <!--Buttons-->
-        <div class="p-6 flex justify-around md:justify-start gap-2 bg-gray-50">
+        <div class="flex items-center justify-between md:justify-end gap-x-6 mt-6">
             <div>
                 <LoadingButton type="submit" :isLoading="isLoading" :disabled="form.processing"
                                class="px-8 py-2.5">
@@ -256,11 +255,5 @@ watch(selectedCategory, (newState) => {
 const categoryCustomLabel = (property) => {
     return `${property.name}`;
 };
-
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
-
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

@@ -1,6 +1,5 @@
 <template>
     <AuthenticatedLayout :sub-menu="'TENANTS'">
-        <!-- Modal -->
         <AppModal :modalActive="modalActive">
             <div class="w-full h-full p-4 justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">
@@ -8,17 +7,25 @@
                         {{ form.progress.percentage }}%
                     </progress>
                     <div class="lg:flex">
-                        <div class="p-8 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                            <p class="text-xl font-semibold mb-6">Create Tenant</p>
+                        <div class="p-8 md:p-4 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
+                            <div class="lg:flex lg:gap-20 items-center">
+                                <div>
+                                    <p class="text-xl font-semibold mb-4" v-if="!form.id">Create Tenant</p>
+                                    <p class="text-xl font-semibold mb-4" v-if="form.id">Update Tenant</p>
+                                </div>
+                                <div class="divClass mb-4">
+                                    <Toggle v-model="form.active" />
+                                </div>
+                            </div>
 <!--1raw-->
                             <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                                 <div>
                                     <Editable type="text"
-                                              label="First Name"
-                                              :input-value="form.first_name"
-                                              @update:value="form.first_name = $event"
-                                              :error="form.errors.first_name"
-                                              required/>
+                                      label="First Name"
+                                      :input-value="form.first_name"
+                                      @update:value="form.first_name = $event"
+                                      :error="form.errors.first_name"
+                                      required/>
                                 </div>
                                 <div>
                                     <Editable
@@ -79,11 +86,11 @@
                                 </div>
                             </div>
 <!--3raw-->
-                            <div class="lg:flex gap-10">
+                            <div class="lg:flex gap-10 space-y-6">
                                 <!------------Radio------------>
-                                <div>
-                                    <p :class="labelClass">Tenant Type</p>
-                                    <div class="md:flex md:space-x-6 mt-4">
+                                <div class="lg:pt-6 border rounded-md p-2">
+                                    <p class="labelClass">Tenant Type</p>
+                                    <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
                                         <div v-for="tenantType in tenantTypes" :key="tenantType.id"
                                              class="flex items-center">
                                             <input
@@ -100,64 +107,17 @@
                                     <div v-if="form.errors.tenant_type_id" v-text="form.errors.tenant_type_id"
                                          class="text-red-500 text-xs mt-1"></div>
                                 </div>
-                                <div class="flex-grow">
+                                <div class="w-full">
                                     <Editable
-                                        type="text"
-                                        label="Address"
-                                        :input-value="form.address"
-                                        @update:value="form.address = $event"
-                                        :error="form.errors.address"
-                                        required/>
-                                </div>
-                            </div>
- <!--4raw-->
-                            <div class="md:flex gmd:w-4/12 md:space-x-2 space-y-2 md:space-y-0">
-                                <div>
-                                    <Editable
-                                        type="text"
-                                        label="City"
-                                        :input-value="form.city"
-                                        @update:value="form.city = $event"
-                                        :error="form.errors.city"
-                                        required/>
-                                </div>
-                                <div class="md:w-4/12">
-                                    <Editable
-                                        type="text"
-                                        label="Zip"
-                                        :input-value="form.zip"
-                                        @update:value="form.zip = $event"
-                                        :error="form.errors.zip"
-                                        required/>
-                                </div>
-                                <div class="md:w-8/12">
-                                    <label for="State" class="labelClass">
-                                        State
-                                    </label>
-                                    <Multiselect
-                                        v-model="selectedState"
-                                        :options="states"
-                                        :searchable="true"
-                                        placeholder="Select State..."
-                                        label="name"
-                                        track-by="id"
-                                        id="state_id"
-                                        :multiple="false"
+                                        type="textarea"
+                                        label="Remarks"
+                                        :input-value="form.remarks"
+                                        @update:value="form.remarks = $event"
+                                        :error="form.errors.remarks"
                                     />
                                 </div>
                             </div>
-                            <div v-if="form.errors.state_id" v-text="form.errors.state_id"
-                                 class="text-red-500 text-xs mt-1"></div>
-<!--5raw-->
-                            <div class="w-full">
-                                <Editable
-                                    type="textarea"
-                                    label="Remarks"
-                                    :input-value="form.remarks"
-                                    @update:value="form.remarks = $event"
-                                    :error="form.errors.remarks"
-                                />
-                            </div>
+<!--4raw-->
                             <!--Upload attachments-->
                             <div class="md:pt-2 space-y-2">
                                 <h2 class="text-sm font-bold">File Attachments</h2>
@@ -188,10 +148,8 @@
                                                     drop
                                                     :drop-directory="true"
                                                 >
-                                                    <div
-                                                        class="flex text-sm leading-6 text-gray-600"
-                                                    >
-                                                        <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                                    <div class="flex text-sm leading-6 text-gray-600">
+                                                        <p class="mt-4 text-md imageClass">Upload a file</p>
                                                         <p class="pl-1 mt-4">or drag and drop</p>
                                                     </div>
                                                 </file-upload>
@@ -233,16 +191,15 @@ import {ref, watch} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {PhotographIcon} from '@heroicons/vue/solid';
 import LoadingButton from '@/Components/LoadingButton.vue';
+import Toggle from "@/Components/Toggle.vue";
 
 let props = defineProps({
     tenant: Object,
-    states: Object,
     tenantTypes: Object,
 })
 
 const modalActive = ref(true)
 const isLoading = ref(false);
-const selectedState = ref([]);
 
 let form = useForm({
     'id': props.tenant ? props.tenant.id : '',
@@ -252,15 +209,10 @@ let form = useForm({
     'phone_number_1': props.tenant ? props.tenant.phone_number_1 : '',
     'phone_number_2': props.tenant ? props.tenant.phone_number_2 : '',
     'email': props.tenant ? props.tenant.email : '',
-    'address': props.tenant ? props.tenant.address : '',
-    'city': props.tenant ? props.tenant.city : '',
-    'state_id': props.tenant ? props.tenant.state_id : '',
-    'zip': props.tenant ? props.tenant.zip : '',
     'document_id': props.tenant ? props.tenant.document_id : '',
     'document2_id': props.tenant ? props.tenant.document2_id : '',
-    'profile_photo_path': props.tenant ? props.tenant.profile_photo_path : '',
     'remarks': props.tenant ? props.tenant.remarks : '',
-    // 'image': props.tenant ? props.tenant.image : '',
+    'active': props.tenant ? !!props.tenant.active : true,
     'attachment_file_name': props.tenant ? props.tenant.tenant_attachment_files : [],
     'attachment_file': props.tenant ? props.tenant.attachment_file : '',
     'attachmentFiles': props.tenant ? props.tenant.attachmentFiles : '',
@@ -330,14 +282,5 @@ const showTenantList = () => {
     router.get(route('tenant.index'))
 }
 
-selectedState.value = props.states.find(e => e.id === form.state_id)
-watch(selectedState, (newState) => {
-    form.state_id = newState ? newState.id : null;
-});
-
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

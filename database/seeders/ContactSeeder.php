@@ -24,7 +24,7 @@ class ContactSeeder extends Seeder
                 'city' => $faker->city,
                 'state_id' => $faker->numberBetween(1, 50),
                 'zip' => $faker->postcode,
-                'company_id' => 1,
+                'company_id' => $faker->numberBetween(1, 2),
             ]);
         }
     }

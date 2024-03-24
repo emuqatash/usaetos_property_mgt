@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -68,6 +69,11 @@ class JobWork extends Model
     public function specification(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Specification::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
     }
 }
 
