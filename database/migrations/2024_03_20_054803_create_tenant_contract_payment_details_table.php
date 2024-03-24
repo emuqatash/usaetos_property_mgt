@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenant_contract_payment_dates', function (Blueprint $table) {
+        Schema::create('tenant_contract_payment_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_contract_id')->nullable()->constrained()->onDelete('cascade');
+            $table->date('payment_date');
+            $table->decimal('payment_amount', 20, 2);
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenant_contract_payment_dates');
+        Schema::dropIfExists('tenant_contract_payment_details');
     }
 };

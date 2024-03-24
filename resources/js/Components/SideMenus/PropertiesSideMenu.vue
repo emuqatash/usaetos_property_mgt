@@ -13,7 +13,7 @@
                     <li>
                         <div class="border-t border-gray-300 lg:mt-4"></div>
                         <Link :href="route('property.index', { active: '1' })"
-                              :class="[$page.props.filters?.active === '1' ? 'text-blue-600 bg-gray-100' : 'text-black hover:text-blue-500 hover:bg-gray-100',
+                              :class="[$page.props.filters?.active === '1' ? 'text-blue-600 bg-gray-200' : 'text-black hover:text-blue-500 hover:bg-gray-200',
                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                             <CheckCircleIcon  class="w-6  section-button-icon mr-2 hidden md:inline-block"/>
                             Active ({{$page.props.counts.active}})
@@ -21,7 +21,7 @@
                     </li>
                     <li>
                         <Link :href="route('property.index', { active: 'Inactive' })"
-                              :class="[$page.props.filters?.active === 'Inactive' ? 'text-blue-600 bg-gray-100' : 'text-black hover:text-blue-500 hover:bg-gray-100',
+                              :class="[$page.props.filters?.active === 'Inactive' ? 'text-blue-600 bg-gray-200' : 'text-black hover:text-blue-500 hover:bg-gray-200',
                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                             <XCircleIcon   class="w-6  section-button-icon mr-2 hidden md:inline-block"/>
                             Inactive ({{$page.props.counts.inactive}})

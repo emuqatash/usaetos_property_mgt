@@ -2,33 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Model;
 
 class TenantContractPaymentDetail extends Model
 {
-    use HasFactory;
-
         protected $fillable = [
-            'field_name',
-            'field_name',
-            'field_name',
-            'field_name',
-            'field_name',
-            'field_name',
-            'country_id', // Delete or keep below as per business requirements
+            'tenant_contract_id',
+            'payment_date',
+            'payment_amount',
+            'company_id',
         ];
 
     // public $timestamps = false;
+
+    public function tenantContract(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(TenantContract::class);
+    }
 
         public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
         {
             return $this->belongsTo(Company::class);
         }
 
-    // Delete or keep below as per business requirements
-            protected static function booted(): void
-            {
-                static::addGlobalScope(new CompanyScope());
-            }
+// Delete or keep below as per business requirements
+        protected static function booted(): void
+        {
+            static::addGlobalScope(new CompanyScope());
+        }
 }

@@ -38,9 +38,11 @@ class PropertyRentController extends Controller
     public function createPropertyRent($property_id)
     {
         $propertyRent = PropertyRent::all()->toArray();
-        $monthlyRent = TenantContract::where('property_id', $property_id)->latest()->value('monthly_rent');
+        $rent_amount = TenantContract::where('property_id', $property_id)->latest()->value('rent_amount');
+        $lateFee = TenantContract::where('property_id', $property_id)->latest()->value('late_fee');
         return Inertia('PropertyRent/Edit',
-            ['propertyRent' => $propertyRent, 'property_id' => $property_id, 'monthlyRent' => $monthlyRent]);
+            ['propertyRent' => $propertyRent, 'property_id' => $property_id, 'rent_amount' => $rent_amount,
+            'lateFee' => $lateFee]);
     }
 
     public function store(StorePropertyRentRequest $request)

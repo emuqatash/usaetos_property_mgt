@@ -1,5 +1,5 @@
 <template>
-<AuthenticatedLayout :sub-menu="'PROPERTYRENTS'">
+<AuthenticatedLayout :sub-menu="'TENANTCONTRACTS'">
 <AppModal :modalActive="modalActive">
     <div class="w-full h-full p-4 justify-between border-b border-gray-100 overflow-auto max-h-screen">
     <form @submit.prevent="submit">
@@ -8,8 +8,8 @@
         </progress>
 <!--        <div class="lg:flex">-->
             <div class="p-6 space-y-6 md:space-y-2 relative border-b border-gray-100 ">
-                <p class="text-xl font-semibold mb-6" v-if="!form.id">Add Rent Payment</p>
-                <p class="text-xl font-semibold mb-6" v-if="form.id">Update Rent Payment</p>
+                <p class="text-xl font-semibold mb-6" v-if="!form.id">Add Payment Plan</p>
+                <p class="text-xl font-semibold mb-6" v-if="form.id">Update Payment Plan</p>
                 <!--1row-->
                 <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                     <div class="flex-grow">
@@ -31,7 +31,7 @@
                 </div>
             </div>
 <!--        </div>-->
-    {{form.payment_date}}
+
         <!--Buttons-->
         <div class="p-6 flex justify-around md:justify-start gap-2 bg-gray-50">
             <div>
@@ -63,8 +63,8 @@ import AppModal from "@/Components/AppModal.vue";
 import moment from 'moment';
 
 let props = defineProps({
-    propertyRents: Object,
-    property_id: {
+    tenantContractPaymentDetails: Object,
+    tenantContract_id: {
         type: [Number, String]
     },
     monthlyRent: {
@@ -78,24 +78,24 @@ let props = defineProps({
 //     console.log(form.payment_date)
 // });
 
-if(props.propertyRents && !props.propertyRents.payment_date) {
-    props.propertyRents.payment_date = moment().format('MM/DD/YYYY');
+if(props.tenantContractPaymentDetails && !props.tenantContractPaymentDetails.payment_date) {
+    props.tenantContractPaymentDetails.payment_date = moment().format('MM/DD/YYYY');
 }
 
 const modalActive = ref(true)
 const isLoading = ref(false)
 
 let form = useForm({
-    'id': props.propertyRents ? props.propertyRents.id : '',
-    'property_id': props.propertyRents ? props.propertyRents.property_id : props.property_id,
+    'id': props.tenantContractPaymentDetails ? props.tenantContractPaymentDetails.id : '',
+    'tenantContract_id': props.tenantContractPaymentDetails ? props.tenantContractPaymentDetails.tenantContract_id : props.tenantContract_id,
 
-    'payment_amount': props.propertyRents ? props.propertyRents.payment_amount : props.monthlyRent,
-    // 'payment_date': props.propertyRents ? props.propertyRents.payment_date : currentDate.value,
-    'payment_date': props.propertyRents ? props.propertyRents.payment_date : '',
+    'payment_amount': props.tenantContractPaymentDetails ? props.tenantContractPaymentDetails.payment_amount : props.monthlyRent,
+    // 'payment_date': props.tenantContractPaymentDetails ? props.tenantContractPaymentDetails.payment_date : currentDate.value,
+    'payment_date': props.tenantContractPaymentDetails ? props.tenantContractPaymentDetails.payment_date : '',
 })
 
 let submit = () => {
-    form.post(route('property-rent.store'), {
+    form.post(route('tenant-contract-payment-detail.store'), {
         onStart: () => {
             isLoading.value = true
         },
@@ -108,9 +108,9 @@ let submit = () => {
     })
 }
 const cancel = () => {
-    form.get(route('property-rent.show',
-        (props.propertyRents && props.propertyRents.property_id) ?
-            props.propertyRents.property_id :  props.property_id))
+    form.get(route('tenant-contract-payment-detail.show',
+        (props.tenantContractPaymentDetails && props.tenantContractPaymentDetails.tenantContract_id) ?
+            props.tenantContractPaymentDetails.tenantContract_id :  props.tenantContract_id))
 }
 
 const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'

@@ -14,8 +14,8 @@ use App\Http\Controllers\SpecificationController;
 use App\Http\Controllers\TenantAttachmentController;
 use App\Http\Controllers\TenantContractAttachmentController;
 use App\Http\Controllers\TenantContractController;
+use App\Http\Controllers\TenantContractPaymentDetailController;
 use App\Http\Controllers\TenantController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -58,16 +58,16 @@ Route::middleware('auth',)->group(function () {
     Route::get('/settings/team/{user}',
         \App\Http\Controllers\Settings\Team\ViewUserProfileController::class)->name('settings.team.user');
 
-    Route::get('/jobs/new', \App\Http\Controllers\Jobs\NewJobsController::class)->name('jobs.new');
-
-    Route::get('/estimates/drafts',
-        \App\Http\Controllers\Estimates\DraftEstimatesController::class)->name('estimates.drafts');
-
-    Route::get('/invoices/drafts',
-        \App\Http\Controllers\Invoices\DraftInvoicesController::class)->name('invoices.drafts');
-
-    Route::get('/purchase-orders/drafts',
-        \App\Http\Controllers\PurchaseOrders\DraftPurchaseOrdersController::class)->name('purchase-orders.drafts');
+//    Route::get('/jobs/new', \App\Http\Controllers\Jobs\NewJobsController::class)->name('jobs.new');
+//
+//    Route::get('/estimates/drafts',
+//        \App\Http\Controllers\Estimates\DraftEstimatesController::class)->name('estimates.drafts');
+//
+//    Route::get('/invoices/drafts',
+//        \App\Http\Controllers\Invoices\DraftInvoicesController::class)->name('invoices.drafts');
+//
+//    Route::get('/purchase-orders/drafts',
+//        \App\Http\Controllers\PurchaseOrders\DraftPurchaseOrdersController::class)->name('purchase-orders.drafts');
 
     Route::delete('/contact-attachment-files/{id}', [ContactAttachmentController::class, 'destroy'])->name('contact-attachment-files.destroy');
     Route::resource('contacts', ContactController::class);
@@ -100,6 +100,11 @@ Route::middleware('auth',)->group(function () {
     Route::get('/property-rent/{id}/duplicate',  [PropertyRentController::class, 'duplicate'])->name('property-rent.duplicate');
     Route::get('/property-rent/{id}/createPropertyRent',  [PropertyRentController::class, 'createPropertyRent'])->name('property-rent.createPropertyRent');
     Route::resource('property-rent', PropertyRentController::class)->only(['show', 'edit', 'store', 'destroy']);
+
+//    Route::get('/tenant-contract-payment-detail/{id}/duplicate',  [TenantContractPaymentDetailController::class, 'duplicate'])->name('tenant-contract-payment-detail.duplicate');
+//    Route::get('/tenant-contract-payment-detail/{id}/createPropertyRent',  [TenantContractPaymentDetailController::class, 'createPaymentDetail'])->name('tenant-contract-payment-detail.createPaymentDetail');
+    Route::resource('tenant-contract-payment-detail', TenantContractPaymentDetailController::class);
+
 
     //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTenantContractRequest;
 use App\Models\Property;
 use App\Models\Tenant;
 use App\Models\TenantContract;
+use App\Models\TenantContractPaymentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -42,6 +43,7 @@ class TenantContractController extends Controller
     public function store(StoreTenantContractRequest $request)
     {
         $tenantContract = $request->all();
+//        dd($tenantContract);
         if ($request->input('id') > 0) {
             $tenantContract_data = $request->all();
             $tenantContract = TenantContract::find($request->input('id'));
@@ -50,6 +52,24 @@ class TenantContractController extends Controller
             $tenantContract['company_id'] = Auth::user()->company_id;
             $tenantContract['country_id'] = Auth::user()->country_id;
             $tenantContract = TenantContract::create($tenantContract);
+        }
+
+        if (isset($request->tenant_contract_id) && is_array($request->tenant_contract_id)
+            && count($request->tenant_contract_id) > 0) {
+            foreach ($request->tenant_contract_id as $detail) {
+                $detailId = $detail['id'];
+                $paymentDate = $detail['payment_date'];
+                $paymentAmount = $detail['payment_amount'];
+
+                TenantContractPaymentDetail::updateOrCreate([
+                    'id' => $detailId,
+                ], [
+                    'company_id' => Auth::user()->company_id,
+                    'tenant_contract_id' =>  $tenantContract->id,
+                    'payment_date' => $paymentDate,
+                    'payment_amount' => $paymentAmount,
+                ]);
+            }
         }
 
         if ($request->hasfile('attachmentFiles')) {
@@ -78,11 +98,11 @@ class TenantContractController extends Controller
     public function edit($tenantContract_id)
     {
         $tenantContracts = TenantContract::find($tenantContract_id);
-//        dd($tenantContracts);
         $tenantContracts->load('tenantContractAttachmentFiles');
+        $tenantContractPaymentDetails = TenantContractPaymentDetail::where('tenant_contract_id',$tenantContract_id)->get();
         $properties = Property::all()->toArray();
         return Inertia('TenantContract/Edit',
-            ['properties' => $properties,'tenantContracts' => $tenantContracts]);
+            ['properties' => $properties,'tenantContracts' => $tenantContracts, 'tenantContractPaymentDetails' => $tenantContractPaymentDetails]);
     }
 
     public function destroy(TenantContract $tenantContract)

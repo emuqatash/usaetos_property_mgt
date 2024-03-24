@@ -5,15 +5,16 @@
                 <div class="flex items-center col-span-7 sm:col-span-1 xl:col-span-2">
                     <Link :href="route('dashboard')" class="flex items-center ">
                         <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800 mr-2" />
-                        <div class="hidden xl:block text-lg font-semibold">Usaetos Property Management</div>
+                        <div class="hidden xl:block text-lg font-semibold">LeaseEase Property Management</div>
                      </Link>
                 </div>
                 <div class="hidden sm:flex sm:col-span-5 xl:col-span-4 justify-center  overflow-x-auto">
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-6">
-                            <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
-                            <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tenants</Link>
+                            <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-200 text-blue-600 ' : 'text-black hover:bg-gray-200 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
+                            <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-200 text-blue-600 ' : 'text-black hover:bg-gray-200 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tenants</Link>
                             <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*Maintenance*</Link>
+                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*FollowUp*</Link>
 <!--                            <Link :href="route('jobworks.index')" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tasks</Link>-->
 <!--                            <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>-->
 <!--                            <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>-->
@@ -21,14 +22,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex col-span-1 sm:col-span-2 justify-end">
+                <div class="flex col-span-1 sm:col-span-2 justify-end space-x-4">
                     <AppButton
-                        class="xl:mr-4 hidden md:block"
+                        class="hidden md:block"
                         @click="showContact()"
                     >
                         <UserAddIcon  class="w-6 lg:h-5 section-button-icon xl:mr-2" />
                         Contacts
                     </AppButton>
+                    <CogIcon class="w-10 h-10 text-blue-600 hover:text-blue-500"/>
                     <Link :href="route('settings.profile')" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-500">
                         <span class="font-medium leading-none text-white">{{ userInitials }}</span>
                     </Link>
@@ -59,6 +61,7 @@
 <!--                    <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">PO</Link>-->
 <!--                    <Link :href="route('supply.items')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Supply</Link>-->
                     <Link :href="route('settings.profile')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Profile</Link>
+                    <Link :href="route('settings.profile')" :class="[$page.url.startsWith('/supply') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'block rounded-md px-3 py-2 text-base font-semibold']">Settings</Link>
                 </div>
             </div>
             <div class="bg-white grid grid-cols-8 py-4 px-8 sm:min-h-screen sm:mt-4">
@@ -106,6 +109,7 @@ import ExpensesSideMenu from "@/Components/SideMenus/ExpensesSideMenu.vue";
 import PropertyRentSideMenu from "@/Components/SideMenus/PropertyRentSideMenu.vue";
 import TenantContractsSideMenu from "@/Components/SideMenus/TenantContractsSideMenu.vue";
 import DashboardSideMenu from "@/Components/SideMenus/DashboardSideMenu.vue";
+import {CogIcon, FolderAddIcon} from '@heroicons/vue/solid';
 
 const showMobileMenu = ref(false)
 const page = usePage()

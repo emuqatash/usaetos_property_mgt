@@ -13,7 +13,7 @@
                                     <p class="text-xl font-semibold mb-4" v-if="!form.id">Create Tenant</p>
                                     <p class="text-xl font-semibold mb-4" v-if="form.id">Update Tenant</p>
                                 </div>
-                                <div :class="`${divClass} mb-4`">
+                                <div class="divClass mb-4">
                                     <Toggle v-model="form.active" />
                                 </div>
                             </div>
@@ -21,11 +21,11 @@
                             <div class="lg:flex gap-2 space-y-4 md:space-y-0">
                                 <div>
                                     <Editable type="text"
-                                              label="First Name"
-                                              :input-value="form.first_name"
-                                              @update:value="form.first_name = $event"
-                                              :error="form.errors.first_name"
-                                              required/>
+                                      label="First Name"
+                                      :input-value="form.first_name"
+                                      @update:value="form.first_name = $event"
+                                      :error="form.errors.first_name"
+                                      required/>
                                 </div>
                                 <div>
                                     <Editable
@@ -89,7 +89,7 @@
                             <div class="lg:flex gap-10 space-y-6">
                                 <!------------Radio------------>
                                 <div class="lg:pt-6 border rounded-md p-2">
-                                    <p :class="labelClass">Tenant Type</p>
+                                    <p class="labelClass">Tenant Type</p>
                                     <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
                                         <div v-for="tenantType in tenantTypes" :key="tenantType.id"
                                              class="flex items-center">
@@ -117,7 +117,6 @@
                                     />
                                 </div>
                             </div>
-
 <!--4raw-->
                             <!--Upload attachments-->
                             <div class="md:pt-2 space-y-2">
@@ -149,10 +148,8 @@
                                                     drop
                                                     :drop-directory="true"
                                                 >
-                                                    <div
-                                                        class="flex text-sm leading-6 text-gray-600"
-                                                    >
-                                                        <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                                    <div class="flex text-sm leading-6 text-gray-600">
+                                                        <p class="mt-4 text-md imageClass">Upload a file</p>
                                                         <p class="pl-1 mt-4">or drag and drop</p>
                                                     </div>
                                                 </file-upload>
@@ -285,10 +282,5 @@ const showTenantList = () => {
     router.get(route('tenant.index'))
 }
 
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
-const divClass = ref('sm:grid sm:grid-cols-1 sm:items-start sm:py-6');
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

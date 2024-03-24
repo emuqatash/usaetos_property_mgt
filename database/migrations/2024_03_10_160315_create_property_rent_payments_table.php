@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('property_rents', function (Blueprint $table) {
             $table->id();
             $table->decimal('payment_amount', 20, 2);
+            $table->decimal('late_fee', 20, 2)->default(0);
             $table->date('payment_date');
             $table->foreignId('property_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');

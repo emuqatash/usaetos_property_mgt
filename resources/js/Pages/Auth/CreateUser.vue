@@ -40,7 +40,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout v-if="show">
+
         <Head title="Register" />
 
         <form @submit.prevent="submit" >
@@ -118,5 +118,5 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
+
 </template>

@@ -6,6 +6,7 @@ import {ref} from 'vue'
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { UserAddIcon } from '@heroicons/vue/outline';
 import Register from "@/Pages/Auth/Register.vue";
+import CreateUser from "@/Pages/Auth/CreateUser.vue";
 
 const showInviteUser = ref(false)
 // @click="showInviteUser = true"
@@ -21,7 +22,7 @@ const props = defineProps({
 
     <AuthenticatedLayout :sub-menu="'SETTINGS'">
 <!--        <invite-user v-model:show="showInviteUser" v-model:errors="props.errors" />-->
-        <Register v-model:show="showInviteUser" v-model:errors="props.errors" />
+        <CreateUser v-model:show="showInviteUser" v-model:errors="props.errors" />
         <div class="space-y-16 sm:space-y-20">
                 <div class="px-4 sm:px-6 lg:px-8">
                     <div class="sm:flex sm:items-center">

@@ -22,6 +22,14 @@
                     </div>
                     <div class="flex-grow">
                         <Editable
+                            type="text"
+                            label="Late Fee"
+                            :input-value="form.late_fee"
+                            @update:value="form.late_fee = $event"
+                            :error="form.errors.late_fee"/>
+                    </div>
+                    <div class="flex-grow">
+                        <Editable
                             type="date"
                             label="Payment Date"
                             :input-value="form.payment_date"
@@ -31,7 +39,6 @@
                 </div>
             </div>
 <!--        </div>-->
-    {{form.payment_date}}
         <!--Buttons-->
         <div class="p-6 flex justify-around md:justify-start gap-2 bg-gray-50">
             <div>
@@ -67,7 +74,10 @@ let props = defineProps({
     property_id: {
         type: [Number, String]
     },
-    monthlyRent: {
+    rent_amount: {
+        type: [Number, String]
+    },
+    lateFee: {
         type: [Number, String]
     },
 })
@@ -89,9 +99,9 @@ let form = useForm({
     'id': props.propertyRents ? props.propertyRents.id : '',
     'property_id': props.propertyRents ? props.propertyRents.property_id : props.property_id,
 
-    'payment_amount': props.propertyRents ? props.propertyRents.payment_amount : props.monthlyRent,
-    // 'payment_date': props.propertyRents ? props.propertyRents.payment_date : currentDate.value,
+    'payment_amount': props.propertyRents ? props.propertyRents.payment_amount : props.rent_amount,
     'payment_date': props.propertyRents ? props.propertyRents.payment_date : '',
+    'late_fee': props.propertyRents ? props.propertyRents.late_fee : props.lateFee,
 })
 
 let submit = () => {
@@ -112,7 +122,5 @@ const cancel = () => {
         (props.propertyRents && props.propertyRents.property_id) ?
             props.propertyRents.property_id :  props.property_id))
 }
-
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

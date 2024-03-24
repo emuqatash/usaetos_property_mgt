@@ -16,7 +16,7 @@ class {{ class }} extends Model
             'field_name',
             'field_name',
             'field_name',
-            'country_id', // Delete or keep below as per business requirements
+            'company_id',
         ];
 
     // public $timestamps = false;

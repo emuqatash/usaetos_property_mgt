@@ -81,19 +81,21 @@
                             <div class="lg:flex gap-10 space-y-6">
                                 <!------------Radio------------>
                                 <div class="lg:pt-6">
-                                    <p :class="labelClass">Contact Type</p>
-                                    <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
-                                        <div v-for="contactType in contactTypes" :key="contactType.id"
-                                             class="flex items-center">
-                                            <input
-                                                type="radio"
-                                                :value="contactType.id"
-                                                id="contact_type_id"
-                                                v-model="form.contact_type_id"
-                                                class="text-blue-600 focus:ring-blue-500"
-                                            />
-                                            <label :for="contactType.id"
-                                                   class="ml-2 text-sm text-gray-600">{{ contactType.name }}</label>
+                                    <div class="border rounded-md p-2">
+                                        <p class="labelClass">Contact Type</p>
+                                        <div class="md:flex md:space-x-6 space-y-3 md:space-y-0 mt-4">
+                                            <div v-for="contactType in contactTypes" :key="contactType.id"
+                                                 class="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    :value="contactType.id"
+                                                    id="contact_type_id"
+                                                    v-model="form.contact_type_id"
+                                                    class="text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <label :for="contactType.id"
+                                                       class="ml-2 text-sm text-gray-600">{{ contactType.name }}</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div v-if="form.errors.contact_type_id" v-text="form.errors.contact_type_id"
@@ -192,7 +194,7 @@
                                             <div
                                                 class="mt-4 flex text-sm leading-6 text-gray-600"
                                             >
-                                                <p class="mt-4 text-md" :class="imageClass">Upload a file</p>
+                                                <p class="mt-4 text-md imageClass">Upload a file</p>
                                                 <p class="pl-1 mt-4">or drag and drop</p>
                                             </div>
                                         </file-upload>
@@ -332,10 +334,5 @@ selectedState.value = props.states.find(e => e.id === form.state_id)
 watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;
 });
-
-const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
-const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 ' +
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ' +
-    'hover:text-indigo-500')
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
