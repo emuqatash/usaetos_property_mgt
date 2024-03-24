@@ -34,7 +34,7 @@ const saveContractDetails = () => {
     <Head title="Settings | Business" />
 
     <AuthenticatedLayout :sub-menu="'SETTINGS'">
-        <div class="space-y-16 sm:space-y-20">
+        <div class="space-y-16 sm:space-y-20" >
             <div>
                 <h2 class="text-base font-semibold leading-7 text-gray-900">Business Profile</h2>
                 <p class="mt-1 text-sm leading-6 text-gray-500">Below are the basic details included for your business.</p>

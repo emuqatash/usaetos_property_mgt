@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'db78697d6676da3d069590fd636a50ea2009dbcc',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '041888f4fd495b40a612c518ab9b7fb6e956de9f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -434,9 +434,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'db78697d6676da3d069590fd636a50ea2009dbcc',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '041888f4fd495b40a612c518ab9b7fb6e956de9f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1132,6 +1132,15 @@
             'install_path' => __DIR__ . '/../spatie/laravel-ignition',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '6.4.0',
+            'version' => '6.4.0.0',
+            'reference' => '05cce017fe3ac78f60a3fce78c07fe6e8e6e6e52',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-permission',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'stella-maris/clock' => array(
             'pretty_version' => '0.1.7',

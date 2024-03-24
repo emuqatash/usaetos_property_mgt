@@ -6,8 +6,10 @@ use App\Http\Requests\StoreTenantContractRequest;
 use App\Models\Property;
 use App\Models\Tenant;
 use App\Models\TenantContract;
+use App\Models\TenantContractPaymentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class TenantContractController extends Controller
 {
@@ -21,15 +23,15 @@ class TenantContractController extends Controller
                     ->where('contract_no', 'like', "%{$search}%")
                     ->orWhere('residential_tenancy_agreement', 'like', "%{$search}%");
             })
-            ->orderBy('contract_no')
+            ->orderBy('end_date', 'desc')
             ->paginate(5)
             ->withQueryString()
             ->through(fn($tenantContract) => [
                 'id' => $tenantContract->id,
                 'contract_no' => $tenantContract->contract_no,
                 'residential_tenancy_agreement' => $tenantContract->residential_tenancy_agreement,
-                'start_date' => $tenantContract->start_date,
-                'end_date' => $tenantContract->end_date,
+                'start_date' => Carbon::parse($tenantContract->start_date)->format('d-M-Y'),
+                'end_date' => Carbon::parse($tenantContract->end_date)->format('d-M-Y'),
                 'property_no' => $tenantContract->property->property_no,
             ]);
 
@@ -41,13 +43,33 @@ class TenantContractController extends Controller
     public function store(StoreTenantContractRequest $request)
     {
         $tenantContract = $request->all();
+//        dd($tenantContract);
         if ($request->input('id') > 0) {
             $tenantContract_data = $request->all();
             $tenantContract = TenantContract::find($request->input('id'));
             $tenantContract->update($tenantContract_data);
         } else {
             $tenantContract['company_id'] = Auth::user()->company_id;
+            $tenantContract['country_id'] = Auth::user()->country_id;
             $tenantContract = TenantContract::create($tenantContract);
+        }
+
+        if (isset($request->tenant_contract_id) && is_array($request->tenant_contract_id)
+            && count($request->tenant_contract_id) > 0) {
+            foreach ($request->tenant_contract_id as $detail) {
+                $detailId = $detail['id'];
+                $paymentDate = $detail['payment_date'];
+                $paymentAmount = $detail['payment_amount'];
+
+                TenantContractPaymentDetail::updateOrCreate([
+                    'id' => $detailId,
+                ], [
+                    'company_id' => Auth::user()->company_id,
+                    'tenant_contract_id' =>  $tenantContract->id,
+                    'payment_date' => $paymentDate,
+                    'payment_amount' => $paymentAmount,
+                ]);
+            }
         }
 
         if ($request->hasfile('attachmentFiles')) {
@@ -76,11 +98,11 @@ class TenantContractController extends Controller
     public function edit($tenantContract_id)
     {
         $tenantContracts = TenantContract::find($tenantContract_id);
-//        dd($tenantContracts);
         $tenantContracts->load('tenantContractAttachmentFiles');
+        $tenantContractPaymentDetails = TenantContractPaymentDetail::where('tenant_contract_id',$tenantContract_id)->get();
         $properties = Property::all()->toArray();
         return Inertia('TenantContract/Edit',
-            ['properties' => $properties,'tenantContracts' => $tenantContracts]);
+            ['properties' => $properties,'tenantContracts' => $tenantContracts, 'tenantContractPaymentDetails' => $tenantContractPaymentDetails]);
     }
 
     public function destroy(TenantContract $tenantContract)

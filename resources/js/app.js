@@ -21,6 +21,13 @@ createInertiaApp({
             .component('Multiselect', Multiselect)
             .component('MultiSelectDropdown', MultiSelectDropdown)
             .component('file-upload', VueUploadComponent)
+            .mixin({
+                methods: {
+                    userHasRole(...roles) {
+                        return roles.includes(this.$page.props.auth.user.role);
+                    }
+                }
+            })
             .mount(el);
     },
     progress: {

@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout :sub-menu="'SETTINGS'">
+    <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <!-- Modal -->
         <AppModal :modalActive="modalActive">
             <div class="w-full h-full p-4 flex justify-between border-b border-gray-100">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex px-6">
+            <div class="flex px-6 fixed-popup-form">
                 <div class="w-1/3 overflow-y-scroll max-h-[600px]">
                     <template v-if="contact.data.length">
                         <ul v-for="(eachContact, index) in contact.data" :key="index"
@@ -33,20 +33,11 @@
                                 @click="selectRow(eachContact)"
                                 :class="{ 'bg-gray-100': selectedId === eachContact.id }">
                                 <div class="flex">
-<!--                                    <img-->
-<!--                                        v-if="eachContact.profile_photo_path"-->
-<!--                                        :src="getImageUrl(eachContact.profile_photo_path)"-->
-<!--                                        alt="Contact Photo"-->
-<!--                                        class="h-12 w-12 flex-none rounded-full bg-gray-50 hidden md:inline-block">-->
-<!--                                    <UserIcon v-if="!eachContact.profile_photo_path"-->
-<!--                                              class="rounded-full bg-gray-400 text-gray-50 p-1 h-12 w-12 flex-none-->
-<!--                                               hidden md:inline-block"-->
-<!--                                    />-->
                                     <div class="min-w-0">
-                                        <p class="text-sm font-semibold leading-6 text-gray-900 ml-2">
+                                        <p class="text-sm font-semibold leading-6 text-gray-900 lg:ml-2">
                                             {{ eachContact.first_name }}
                                             {{ eachContact.last_name }}</p>
-                                        <p class="mt-1 truncate text-xs leading-5 text-gray-500 ml-2">
+                                        <p class="mt-1 truncate text-xs leading-5 text-gray-500 lg:ml-2">
                                             {{ eachContact.contact_type_name }}</p>
                                     </div>
                                 </div>
@@ -169,3 +160,9 @@ const getImageUrl = (path) => {
     return path ? `/storage/${path}` : null;
 };
 </script>
+<style>
+.fixed-popup-form {
+    width: 100%; /* You can adjust as per your requirement */
+    height: 70vh; /* Adjust as per your requirement */
+}
+</style>

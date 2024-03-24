@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,4 +29,10 @@ class TenantAttachmentFile extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
+    }
+
 }

@@ -3,44 +3,33 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Scopes\CompanyScope;
+use App\Models\Scopes\StateScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
         'role_id',
-        'company_id'
+        'company_id',
+        'country_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
@@ -60,6 +49,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Company::class);
     }
 
+    public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
     public function jobs(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(JobWork::class, 'job_user', 'user_id', 'job_id');
@@ -71,23 +65,34 @@ class User extends Authenticatable implements JWTSubject
     }
 
 //    Below to functions (getJWTIdentifier, getJWTCustomClaims) related to API - JWT
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
     public function getJWTCustomClaims()
     {
         return [];
     }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
+        static::addGlobalScope(new StateScope());
+
+        static::creating(function ($model) {
+            if (session('company_id')) {
+                $model->company_id = session()->get('company_id');
+            }
+        });
+
+        static::created(function ($model) {
+            if (!session('company_id')) {
+                $model->company_id = $model->id;
+            }
+            $model->assignRole('User');
+            $model->save();
+        });
+    }
+
 }

@@ -5,6 +5,18 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import AppModal from "@/Components/AppModal.vue";
+import {ref} from "vue";
+
+const props = defineProps({
+    show: {
+        type: Boolean,
+        default: false
+    },
+    errors: Object,
+})
+
+
 
 const form = useForm({
     name: '',
@@ -12,6 +24,13 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
+
+const emit = defineEmits(['update:show', 'update:errors'])
+
+const close = () => {
+    emit('update:errors', null)
+    emit('update:show', false)
+}
 
 const submit = () => {
     form.post(route('register'), {
@@ -21,10 +40,10 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout v-if="show">
         <Head title="Register" />
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" >
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -87,15 +106,15 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Already registered?
-                </Link>
+<!--                <Link-->
+<!--                    :href="route('login')"-->
+<!--                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"-->
+<!--                >-->
+<!--                    Already registered?-->
+<!--                </Link>-->
 
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                    Create
                 </PrimaryButton>
             </div>
         </form>

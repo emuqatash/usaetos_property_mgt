@@ -6,6 +6,7 @@ use App\Http\Requests\StorePropertyRentRequest;
 use App\Models\Property;
 use App\Models\PropertyRent;
 use App\Models\TenantContract;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +28,7 @@ class PropertyRentController extends Controller
             ->through(fn($propertyRent) => [
                 'id' => $propertyRent->id,
                 'payment_amount' => $propertyRent->payment_amount,
-                'payment_date' => $propertyRent->payment_date,
+                'payment_date' => Carbon::parse($propertyRent->payment_date)->format('d-M-Y'),
             ]);
 
         $property = Property::find($propertyId);
@@ -37,9 +38,11 @@ class PropertyRentController extends Controller
     public function createPropertyRent($property_id)
     {
         $propertyRent = PropertyRent::all()->toArray();
-        $monthlyRent = TenantContract::where('property_id', $property_id)->latest()->value('monthly_rent');
+        $rent_amount = TenantContract::where('property_id', $property_id)->latest()->value('rent_amount');
+        $lateFee = TenantContract::where('property_id', $property_id)->latest()->value('late_fee');
         return Inertia('PropertyRent/Edit',
-            ['propertyRent' => $propertyRent, 'property_id' => $property_id, 'monthlyRent' => $monthlyRent]);
+            ['propertyRent' => $propertyRent, 'property_id' => $property_id, 'rent_amount' => $rent_amount,
+            'lateFee' => $lateFee]);
     }
 
     public function store(StorePropertyRentRequest $request)

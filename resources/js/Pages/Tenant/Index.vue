@@ -28,9 +28,9 @@
                 <thead>
                 <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Email</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Phone</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Tenant Type</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">City</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Contract Expiry</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Phone</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -41,9 +41,9 @@
                     <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                         {{ eachTenant.first_name }}
                         {{ eachTenant.last_name }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.email }}</td>
-                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 ">{{ eachTenant.phone_number_1 }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.tenant_type_name }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.property_no }}</td>
+                    <td class="flex-wrap px-3 py-4 text-sm text-gray-500 ">{{ eachTenant.latest_end_date }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 hidden md:inline-block">{{ eachTenant.phone_number_1 }}</td>
                     <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0" >
                         <DotsVertical :eachRecord="eachTenant.id" @submit-form="recordAction" :tenancyContract="true"/>
                     </td>

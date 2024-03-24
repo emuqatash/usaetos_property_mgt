@@ -263,7 +263,7 @@ let handleSubmit = () => {
     })
 }
 
-// Google maps Rest API Autocomplete address
+/////////////////////Google maps Rest API Autocomplete address////////////////////
 const addresses = ref([]);
 const fetchAddressSuggestions = debounce(async () => {
     if (form.job_location.length > 2) {
@@ -284,6 +284,7 @@ const selectAddress = (address) => {
     form.job_location = address.description;
     addresses.value = [];
 }
+////////////////////////////////////////////////////////////////////////////////
 
 // For style and design
 const labelClass = ref('labelClass');

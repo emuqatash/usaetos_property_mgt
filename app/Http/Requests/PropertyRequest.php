@@ -20,6 +20,7 @@ class PropertyRequest extends FormRequest
             'city' => 'required',
             'state_id' => 'required',
             'address' => 'required',
+            'property_type' => 'required',
         ];
     }
 }

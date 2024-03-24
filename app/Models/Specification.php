@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CompanyScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Specification extends Model
@@ -28,5 +29,10 @@ class Specification extends Model
     public function specificationAttachmentFiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(SpecificationAttachmentFile::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CompanyScope());
     }
 }
