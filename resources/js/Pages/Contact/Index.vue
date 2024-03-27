@@ -1,7 +1,7 @@
 <template>
     <AuthenticatedLayout :sub-menu="'DASHBOARD'">
         <!-- Modal -->
-        <AppModal :modalActive="modalActive">
+        <AppModal :modalActive="modalActive" width="w-full sm:max-w-5xl">
             <div class="w-full h-full p-4 flex justify-between border-b border-gray-100">
                 <div class="flex items-center">
                     <SearchIcon class="w-5 h-5 mr-2.5 text-gray-500"/>

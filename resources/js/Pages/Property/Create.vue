@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="handleSubmit">
-        <div class="space-y-8 p-4 lg:w-4/5 mx-auto">
+        <div class="space-y-8 p-4 lg:w-10/12 mx-auto">
             <div>
                 <div class="flex items-center justify-between">
                     <h2 class="text-2xl font-bold leading-7 text-gray-900" v-if="!form.id">Create Property</h2>
@@ -296,7 +296,6 @@ const propertyTypes = ref(['Apartment', 'Commercial', 'Duplex', 'House', 'Mixed-
 
 
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>.multiselect__single, .multiselect__input, .multiselect__tags {
     min-height: 28px; /* adjust according to your need */
 }</style>

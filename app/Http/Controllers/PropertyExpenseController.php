@@ -22,8 +22,8 @@ class PropertyExpenseController extends Controller
                     ->where('description', 'like', "%{$search}%")
                     ->orWhere('category', 'like', "%{$search}%");
             })
-            ->orderBy('payment_date')
-            ->paginate(5)
+            ->orderBy('payment_date','desc')
+            ->paginate(10)
             ->withQueryString()
             ->through(fn($propertyExpense) => [
                 'id' => $propertyExpense->id,

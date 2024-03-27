@@ -19,7 +19,7 @@
 
             <div class="p-6  relative border-b border-gray-100 ">
                 <div class="lg:flex gap-2 space-y-4 md:space-y-0">
-                    <div class="flex-grow">
+                    <div class="lg:w-2/12">
                         <Editable type="text"
                                   label="Property No"
                                   :input-value="form.property_no"
@@ -27,7 +27,7 @@
                                   :error="form.errors.property_no"
                                   :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-7/12">
                         <Editable
                             type="text"
                             label="Address"
@@ -36,7 +36,7 @@
                             :error="form.errors.address"
                             :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-3/12">
                         <Editable
                             type="text"
                             label="City"
@@ -211,4 +211,3 @@ const deleteRecordConfirmed = (id) => {
     modalActive.value = false;
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

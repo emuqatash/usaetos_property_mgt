@@ -1,13 +1,13 @@
 <template>
 <AuthenticatedLayout :sub-menu="'PROPERTYEXPENSES'">
-<AppModal :modalActive="modalActive">
+<AppModal :modalActive="modalActive" width="w-full sm:max-w-5xl">
     <div class="w-full h-full p-6 mx-auto justify-between border-b border-gray-100 overflow-auto max-h-screen">
     <form @submit.prevent="submit">
         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
             {{ form.progress.percentage }}%
         </progress>
         <div>
-            <div class="space-y-6 md:space-y-2 relative border-b border-gray-100 ">
+            <div class="space-y-6 md:space-y-2 relative border-b border-gray-100">
                 <p class="text-xl font-semibold mb-6" v-if="!form.id">Create Property Expenses</p>
                 <p class="text-xl font-semibold mb-6" v-if="form.id">Update Property Expenses</p>
             </div>
@@ -256,4 +256,3 @@ const categoryCustomLabel = (property) => {
     return `${property.name}`;
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

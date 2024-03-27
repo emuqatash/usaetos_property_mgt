@@ -13,8 +13,8 @@
                         <div class="flex space-x-6">
                             <Link :href="route('property.index')" :class="[$page.url.startsWith('/property') ? 'bg-gray-200 text-blue-600 ' : 'text-black hover:bg-gray-200 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Properties</Link>
                             <Link :href="route('tenant.index')" :class="[$page.url.startsWith('/tenant') ? 'bg-gray-200 text-blue-600 ' : 'text-black hover:bg-gray-200 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tenants</Link>
-                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*Maintenance*</Link>
-                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*FollowUp*</Link>
+<!--                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*Maintenance*</Link>-->
+<!--                            <Link :href="route('tenant.index', { jobStatus: 'New' })" :class="[$page.url.startsWith('/tenants') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">*FollowUp*</Link>-->
 <!--                            <Link :href="route('jobworks.index')" :class="[$page.url.startsWith('/job') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Tasks</Link>-->
 <!--                            <Link :href="route('invoices.drafts')" :class="[$page.url.startsWith('/invoices') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">Invoices</Link>-->
 <!--                            <Link :href="route('purchase-orders.drafts')" :class="[$page.url.startsWith('/purchase-orders') ? 'bg-gray-100 text-blue-600 ' : 'text-black hover:bg-gray-100 hover:text-gray-800 ', 'rounded-md px-3 py-2 text-sm font-semibold']">PO</Link>-->
@@ -30,7 +30,6 @@
                         <UserAddIcon  class="w-6 lg:h-5 section-button-icon xl:mr-2" />
                         Contacts
                     </AppButton>
-                    <CogIcon class="w-10 h-10 text-blue-600 hover:text-blue-500"/>
                     <Link :href="route('settings.profile')" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-500">
                         <span class="font-medium leading-none text-white">{{ userInitials }}</span>
                     </Link>
@@ -109,7 +108,6 @@ import ExpensesSideMenu from "@/Components/SideMenus/ExpensesSideMenu.vue";
 import PropertyRentSideMenu from "@/Components/SideMenus/PropertyRentSideMenu.vue";
 import TenantContractsSideMenu from "@/Components/SideMenus/TenantContractsSideMenu.vue";
 import DashboardSideMenu from "@/Components/SideMenus/DashboardSideMenu.vue";
-import {CogIcon, FolderAddIcon} from '@heroicons/vue/solid';
 
 const showMobileMenu = ref(false)
 const page = usePage()

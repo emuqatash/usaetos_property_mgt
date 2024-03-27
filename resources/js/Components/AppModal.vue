@@ -5,8 +5,8 @@
                 <div v-show="modalActive"
                      class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                     <div
-                        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all
-                         sm:my-8 w-full sm:max-w-5xl">
+                        :class="`relative ${width} transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all
+                         sm:my-8`">
                         <!-- Modal Content -->
                         <slot/>
                     </div>
@@ -24,6 +24,10 @@ const props = (defineProps({
         default: false
     },
     formMode: {
+        type: String,
+        default: ''
+    },
+    width: {
         type: String,
         default: ''
     }

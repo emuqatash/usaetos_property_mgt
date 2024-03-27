@@ -1,6 +1,6 @@
 <template>
     <AuthenticatedLayout :sub-menu="'TENANTS'">
-        <AppModal :modalActive="modalActive">
+        <AppModal :modalActive="modalActive" width="w-full sm:max-w-5xl">
             <div class="w-full h-full p-4 justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">
                     <progress v-if="form.progress" :value="form.progress.percentage" max="100">
@@ -283,4 +283,3 @@ const showTenantList = () => {
 }
 
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

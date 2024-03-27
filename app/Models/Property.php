@@ -22,6 +22,7 @@ class Property extends Model
         'address',
         'city',
         'state_id',
+        'property_type',
         'zip',
         'date_of_purchase',
         'area_size',
