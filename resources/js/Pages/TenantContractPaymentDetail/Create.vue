@@ -115,4 +115,3 @@ const cancel = () => {
 
 const labelClass = 'block tracking-wide text-gray-700 text-xs font-bold mb-2'
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

@@ -1,6 +1,6 @@
 <template>
 <AuthenticatedLayout :sub-menu="'TENANTCONTRACTS'">
-<AppModal :modalActive="modalActive">
+<AppModal :modalActive="modalActive" width="w-full sm:max-w-5xl">
     <div class="w-full h-full justify-between border-b border-gray-100 overflow-auto max-h-screen fixed-popup-form">
     <form @submit.prevent="submit">
         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
@@ -492,10 +492,15 @@ const gracePeriodDate = computed(() => {
     }
 });
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
 .fixed-popup-form {
-    width: 100%; /* You can adjust as per your requirement */
-    height: 70vh; /* Adjust as per your requirement */
+    width: 100%;
+    height: 100vh;
+}
+
+@media (min-width: 640px) { /* change 640px to the breakpoint at which you want to change the height */
+    .fixed-popup-form {
+        height: 70vh;
+    }
 }
 </style>

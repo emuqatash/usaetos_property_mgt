@@ -1,5 +1,8 @@
 <template>
-    <div class="text-lg sm:text-2xl font-bold">Settings</div>
+    <div class="flex justify-start space-x-1">
+        <CogIcon class="w-6 h-6 text-blue-600 hover:text-blue-500 hidden md:block"/>
+        <div class="text-lg sm:text-2xl font-bold">Settings</div>
+    </div>
     <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-1 flex-col gap-y-7 mt-4 sm:mt-8 w-full sm:w-3/4 overflow-x-scroll sm:overflow-x-hidden px-2">
             <li>
@@ -37,6 +40,7 @@
 <script setup>
 import {Link} from '@inertiajs/vue3'
 import {usePermission} from "@/Composables/permissions.js";
+import {CogIcon} from '@heroicons/vue/solid';
 
 const {hasRole} = usePermission()
 

@@ -596,7 +596,6 @@ const imageClass = ref('relative cursor-pointer rounded-md bg-white font-semibol
 const jobTypes = ref(['Roof Replacement', 'Roof Repair', 'Other'])
 
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
 .file-uploads.file-uploads-html4 input,
 .file-uploads.file-uploads-html5 label {

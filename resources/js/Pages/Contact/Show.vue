@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <AppModal :modalActive="showActive">
+    <AppModal :modalActive="showActive" width="w-full sm:max-w-5xl">
         <div class="lg:flex justify-center">
             <div class="p-14 relative border-b border-gray-100 space-y-4">
                 <div class="flex flex-col items-center justify-center mb-4">

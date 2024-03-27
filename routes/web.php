@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\contactAttachmentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobAttachmentFileController;
@@ -43,6 +44,9 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth',)->group(function () {
+    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+    Route::get('user/{id}', [RegisteredUserController::class, 'destroy'])->name('user.destroy');
+
     Route::get('/settings/profile', \App\Http\Controllers\Settings\ProfileController::class)->name('settings.profile');
     Route::post('/settings/profile',
         \App\Http\Controllers\Settings\UpdateProfileController::class)->name('settings.profile.update');
@@ -97,12 +101,10 @@ Route::middleware('auth',)->group(function () {
     Route::get('/property-expense/{id}/createPropertyExpense',  [PropertyExpenseController::class, 'createPropertyExpense'])->name('property-expense.createPropertyExpense');
     Route::resource('property-expense', PropertyExpenseController::class)->only(['show', 'edit', 'store', 'destroy']);
 
-    Route::get('/property-rent/{id}/duplicate',  [PropertyRentController::class, 'duplicate'])->name('property-rent.duplicate');
-    Route::get('/property-rent/{id}/createPropertyRent',  [PropertyRentController::class, 'createPropertyRent'])->name('property-rent.createPropertyRent');
+    Route::get('/property-rent/createPropertyRent/{property_id}',  [PropertyRentController::class, 'createPropertyRent'])->name('property-rent.createPropertyRent');
+//    Route::get('/property-rent/paymentDateChange/{property_id}', [PropertyRentController::class, 'paymentDateChange'])->name('property-rent.paymentDateChange');
     Route::resource('property-rent', PropertyRentController::class)->only(['show', 'edit', 'store', 'destroy']);
 
-//    Route::get('/tenant-contract-payment-detail/{id}/duplicate',  [TenantContractPaymentDetailController::class, 'duplicate'])->name('tenant-contract-payment-detail.duplicate');
-//    Route::get('/tenant-contract-payment-detail/{id}/createPropertyRent',  [TenantContractPaymentDetailController::class, 'createPaymentDetail'])->name('tenant-contract-payment-detail.createPaymentDetail');
     Route::resource('tenant-contract-payment-detail', TenantContractPaymentDetailController::class);
 
 

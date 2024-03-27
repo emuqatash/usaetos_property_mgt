@@ -1,12 +1,11 @@
 <template>
-<AuthenticatedLayout :sub-menu="'TENANTCONTRACTS'" class="P-2">
-<div class="space-y-8 p-4">
+<AuthenticatedLayout :sub-menu="'TENANTCONTRACTS'">
     <form @submit.prevent="submit">
-        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-            {{ form.progress.percentage }}%
-        </progress>
         <div>
-            <div class="flex justify-between items-center mb-8">
+            <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                {{ form.progress.percentage }}%
+            </progress>
+            <div class="flex justify-between items-center mb-4 lg:mb-14">
                 <SecondaryButton class="xl:text-sm font-bold" @click="backToList">
                     <ArrowLeftIcon class="w-10 h-5 inline-block section-button-icon text-blue-800"/>
                     <span class="hidden md:inline-block">Back</span>
@@ -17,9 +16,8 @@
                 </SecondaryButton>
             </div>
 
-            <div class="p-6  relative border-b border-gray-100 ">
                 <div class="lg:flex gap-2 space-y-4 md:space-y-0">
-                    <div class="flex-grow">
+                    <div class="lg:w-3/12">
                         <Editable type="text"
                                   label="First Name"
                                   :input-value="form.first_name"
@@ -27,7 +25,7 @@
                                   :error="form.errors.first_name"
                                   :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-3/12">
                         <Editable
                             type="text"
                             label="Last Name"
@@ -36,7 +34,7 @@
                             :error="form.errors.last_name"
                             :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-2/12">
                         <Editable
                             type="text"
                             label="Phone Number 1"
@@ -45,7 +43,7 @@
                             :error="form.errors.phone_number_1"
                             :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-4/12">
                         <Editable
                             type="text"
                             label="Email"
@@ -56,7 +54,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </form>
 
     <template v-if="tenantContracts?.data?.length">
@@ -64,8 +61,13 @@
             <table class="min-w-full divide-y divide-gray-300">
                 <thead>
                 <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Contract no</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Start Date</th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                        Contract no
+                    </th>
+                    <th scope="col"
+                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">
+                        Start Date
+                    </th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">End Date</th>
                     <th scope="col" class="py-3.5 text-left text-sm font-semibold text-gray-900">Property No</th>
                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
@@ -79,11 +81,18 @@
                     :class="{'bg-gray-100': selectedRow === eachTenantContract.id, 'divide-y divide-gray-10 ': selectedRows.includes(eachTenantContract.id) }"
                     @click="selectRow(eachTenantContract.id)">
                     <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                        {{ eachTenantContract.contract_no }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ eachTenantContract.start_date }}</td>
-                    <td class="flex-wrap py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachTenantContract.end_date }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap py-3 text-sm text-gray-500">{{ eachTenantContract.property_no }}</td>
-                    <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0" >
+                        {{ eachTenantContract.contract_no }}
+                    </td>
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {{ eachTenantContract.start_date }}
+                    </td>
+                    <td class="flex-wrap py-4 text-sm text-gray-500 hidden md:inline-block">
+                        {{ eachTenantContract.end_date }}
+                    </td>
+                    <td class="flex-wrap lg:whitespace-nowrap py-3 text-sm text-gray-500">
+                        {{ eachTenantContract.property_no }}
+                    </td>
+                    <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0">
                         <DotsVertical :eachRecord="eachTenantContract.id" @submit-form="recordAction"
                                       :allowDuplicate="true"/>
                     </td>
@@ -91,7 +100,7 @@
                 </tbody>
             </table>
             <!--------------------pagination--------------------------->
-            <Pagination :pagination="tenantContracts" />
+            <Pagination :pagination="tenantContracts"/>
             <!--------------------pagination--------------------------->
             <!--------------------Popup Confirmation Delete--------------------------->
             <ConfirmationModal
@@ -108,7 +117,6 @@
     <template v-else>
         <EmptyState @page-Create-Active="createNewRecord" :title="'Tenancy Contract'"/>
     </template>
-</div>
 </AuthenticatedLayout>
 </template>
 
@@ -195,7 +203,7 @@ let submit = () => {
 
 const recordAction = (id, action) => {
     recordId.value = id;
-    switch(action) {
+    switch (action) {
         case 'viewRecord':
             router.get(route('tenant-contract.edit', id))
             break;
@@ -210,15 +218,17 @@ const recordAction = (id, action) => {
 }
 
 let selectedRow = ref(null);
+
 function selectRow(id) {
     selectedRow.value = id;
 }
+
 const backToList = () => {
     router.get(route('tenant.index'))
 }
 
 const createNewRecord = () => {
-    router.get(route('tenant-contract.createTenantContract', props.tenant.id ))
+    router.get(route('tenant-contract.createTenantContract', props.tenant.id))
 }
 const closeModel = () => {
     modalActive.value = false;
@@ -230,4 +240,3 @@ const deleteRecordConfirmed = (id) => {
 
 const labelClass = ref('block tracking-wide text-gray-700 text-xs font-bold mb-2')
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
