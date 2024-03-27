@@ -15,6 +15,8 @@ class PropertyRent extends Model
         'property_id',
         'payment_amount',
         'payment_date',
+        'late_fee',
+        'grace_period',
         'company_id'
     ];
 

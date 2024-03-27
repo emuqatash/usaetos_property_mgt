@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -83,6 +84,8 @@ class User extends Authenticatable implements JWTSubject
         static::creating(function ($model) {
             if (session('company_id')) {
                 $model->company_id = session()->get('company_id');
+                $model->country_id = session()->get('country_id');
+                $model->role_id = 3;
             }
         });
 
@@ -90,7 +93,7 @@ class User extends Authenticatable implements JWTSubject
             if (!session('company_id')) {
                 $model->company_id = $model->id;
             }
-            $model->assignRole('User');
+            $model->assignRole('user');
             $model->save();
         });
     }

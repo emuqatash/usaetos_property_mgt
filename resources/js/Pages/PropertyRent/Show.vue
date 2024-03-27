@@ -1,12 +1,11 @@
 <template>
-<AuthenticatedLayout :sub-menu="'PROPERTYRENTS'" class="P-2">
-<div class="space-y-8 p-4">
+<AuthenticatedLayout :sub-menu="'PROPERTYRENTS'">
     <form @submit.prevent="submit">
-        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-            {{ form.progress.percentage }}%
-        </progress>
         <div>
-            <div class="flex justify-between items-center mb-8">
+            <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                {{ form.progress.percentage }}%
+            </progress>
+            <div class="flex justify-between items-center mb-4 lg:mb-14">
                 <SecondaryButton class="xl:text-sm font-bold" @click="backToList">
                     <ArrowLeftIcon class="w-10 h-5 inline-block section-button-icon text-blue-800"/>
                     <span class="hidden md:inline-block">Back</span>
@@ -17,17 +16,16 @@
                 </SecondaryButton>
             </div>
 
-            <div class="p-6  relative border-b border-gray-100 ">
                 <div class="lg:flex gap-2 space-y-4 md:space-y-0">
-                    <div class="flex-grow">
+                    <div class="lg:w-2/12">
                         <Editable type="text"
-                                  label="Property No"
-                                  :input-value="form.property_no"
-                                  @update:value="form.property_no = $event"
-                                  :error="form.errors.property_no"
-                                  :disabled="true"/>
+                          label="Property No"
+                          :input-value="form.property_no"
+                          @update:value="form.property_no = $event"
+                          :error="form.errors.property_no"
+                          :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-7/12">
                         <Editable
                             type="text"
                             label="Address"
@@ -36,7 +34,7 @@
                             :error="form.errors.address"
                             :disabled="true"/>
                     </div>
-                    <div class="flex-grow">
+                    <div class="lg:w-3/12">
                         <Editable
                             type="text"
                             label="City"
@@ -47,7 +45,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
     </form>
 
     <template v-if="propertyRents?.data?.length">
@@ -55,9 +53,11 @@
             <table class="min-w-full divide-y divide-gray-300">
                 <thead>
                 <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Payment date</th>
+                    <th scope="col" class="py-3.5 lg:pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">date</th>
                     <th scope="col" class="py-3.5 text-left text-sm font-semibold text-gray-900">Amount</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                    <th scope="col" class="py-3.5 text-left text-sm font-semibold text-gray-900 hidden md:inline-block">Grace Period</th>
+                    <th scope="col" class="py-3.5 text-left text-sm font-semibold text-gray-900 ">Late fee</th>
+                    <th scope="col" class="relative py-3.5  ">
                         <span class="sr-only">Edit</span>
                     </th>
                 </tr>
@@ -67,12 +67,13 @@
                     v-for="(eachPropertyRent, index) in propertyRents.data" :key="index"
                     :class="{'bg-gray-100': selectedRow === eachPropertyRent.id, 'divide-y divide-gray-10 ': selectedRows.includes(eachPropertyRent.id) }"
                     @click="selectRow(eachPropertyRent.id)">
-                    <td class="flex-wrap lg:whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                    <td class="flex-wrap lg:whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {{ eachPropertyRent.payment_date }}</td>
-                    <td class="flex-wrap lg:whitespace-nowrap py-3 text-sm text-gray-500">{{ eachPropertyRent.payment_amount }}</td>
-                    <td class="relative whitespace-nowrap py-4 pr-4 text-right text-sm font-medium sm:pr-0" >
-                        <DotsVertical :eachRecord="eachPropertyRent.id" @submit-form="recordAction"
-                                      :allowDuplicate="true"/>
+                    <td class="flex-wrap lg:whitespace-nowrap lg:py-4 text-sm text-gray-500">{{ eachPropertyRent.payment_amount }}</td>
+                    <td class="flex-wrap lg:py-4 text-sm text-gray-500 hidden md:inline-block">{{ eachPropertyRent.grace_period }}</td>
+                    <td class="flex-wrap lg:whitespace-nowrap lg:py-4 text-sm text-gray-500">{{ eachPropertyRent.late_fee }}</td>
+                    <td class="relative whitespace-nowrap lg:py-4 text-right text-sm font-medium sm:pr-0">
+                        <DotsVertical :eachRecord="eachPropertyRent.id" @submit-form="recordAction" />
                     </td>
                 </tr>
                 </tbody>
@@ -94,7 +95,7 @@
     <template v-else>
         <EmptyState @page-Create-Active="createNewRecord" :title="'Rent Payment'"/>
     </template>
-</div>
+
 </AuthenticatedLayout>
 </template>
 
@@ -132,6 +133,8 @@ let form = useForm({
     //Property Expenses information
     'payment_amount': props.propertyRents ? props.propertyRents.payment_amount : '',
     'payment_date': props.propertyRents ? props.propertyRents.payment_date : '',
+    'late_fee': props.propertyRents ? props.propertyRents.late_fee : '',
+    'grace_period': props.propertyRents ? props.propertyRents.grace_period : '',
 })
 
 
@@ -154,9 +157,6 @@ const recordAction = (id, action) => {
     switch(action) {
         case 'viewRecord':
             router.get(route('property-rent.edit', id))
-            break;
-        case 'duplicateRecord':
-            router.get(route('property-rent.duplicate', id))
             break;
         case 'deleteRecord':
             deleteRecordId.value = id;
@@ -186,4 +186,3 @@ const deleteRecordConfirmed = (id) => {
 
 const labelClass = ref('block tracking-wide text-gray-700 text-xs font-bold mb-2')
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

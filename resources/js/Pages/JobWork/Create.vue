@@ -300,4 +300,3 @@ const jobTypes = ref(['Roof Replacement', 'Roof Repair', 'Other'])
 const roofTypes = ref(['Wood', 'Composite', 'Flat', 'Metal', 'Other'])
 
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

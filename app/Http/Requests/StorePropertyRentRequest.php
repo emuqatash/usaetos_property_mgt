@@ -18,6 +18,8 @@ class StorePropertyRentRequest extends FormRequest
             'property_id'=> 'required',
             'payment_date' => 'required',
             'payment_amount' => 'required',
+            'late_fee' => 'required',
+            'grace_period' => 'required',
         ];
     }
 }

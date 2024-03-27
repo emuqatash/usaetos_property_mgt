@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('property_rents', function (Blueprint $table) {
             $table->id();
-            $table->decimal('payment_amount', 20, 2);
-            $table->decimal('late_fee', 20, 2)->default(0);
-            $table->date('payment_date');
             $table->foreignId('property_id')->nullable()->constrained()->onDelete('cascade');
+            $table->decimal('payment_amount', 20, 2);
+            $table->date('payment_date');
+            $table->decimal('late_fee', 20, 2)->default(0);
+            $table->decimal('grace_period', 20, 2)->default(0);
             $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });

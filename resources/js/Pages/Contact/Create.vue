@@ -1,7 +1,7 @@
 <template>
     <AuthenticatedLayout :sub-menu="'DASHBOARD'">
-        <AppModal :modalActive="modalActive">
-            <div class="w-full h-full justify-between border-b border-gray-100 overflow-auto max-h-screen">
+        <AppModal :modalActive="modalActive" width="w-full sm:max-w-5xl">
+        <div class="w-full h-full justify-between border-b border-gray-100 overflow-auto max-h-screen">
                 <form @submit.prevent="submit">
                     <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                         {{ form.progress.percentage }}%
@@ -335,4 +335,3 @@ watch(selectedState, (newState) => {
     form.state_id = newState ? newState.id : null;
 });
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

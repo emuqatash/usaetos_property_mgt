@@ -16,21 +16,12 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
     public function create(): Response
     {
         return Inertia::render('Auth/Register');
     }
-
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
-    {
+        public function store(Request $request)
+        {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
@@ -45,8 +36,13 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+//        Auth::login($user);
+//        return redirect(RouteServiceProvider::HOME);
+    }
 
-        return redirect(RouteServiceProvider::HOME);
+    public function destroy(string $id)
+    {
+        $user = User::find($id);
+        $user->delete();
     }
 }

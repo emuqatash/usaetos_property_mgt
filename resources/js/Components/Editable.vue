@@ -92,11 +92,16 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+        customStyle: {
+            type: String,
+            required: false,
+            default: '',
+        },
     },
 
     data() {
         return {
-            inputClass: 'appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500',
+            inputClass: `appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 ${this.customStyle}`,
             labelClass: 'block tracking-wide text-gray-700 text-xs font-bold mb-2',
             inputButton: 'inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
         }
